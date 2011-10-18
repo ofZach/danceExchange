@@ -138,8 +138,8 @@
     NSString *frameDelayString = [NSString stringWithFormat:@"%f", frameDelay ];
     [request setPostValue:frameDelayString forKey:@"frameDelay"];
     
-//    [request startAsynchronous];
-    [request startSynchronous];
+    [request startAsynchronous];
+//    [request startSynchronous];
 }
 
 - (void)setDoubleValue:(double)doubleValue {

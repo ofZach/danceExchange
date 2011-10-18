@@ -11,3 +11,5 @@ bin/
 build/
 !data/
 capture/emptyExample.xcodeproj/project.xcworkspace/xcuserdata/aaron.xcuserdatad/UserInterfaceState.xcuserstate
+
+capture/emptyExample.xcodeproj/project.xcworkspace/xcuserdata/aaron.xcuserdatad/UserInterfaceState.xcuserstate

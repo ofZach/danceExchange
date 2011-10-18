@@ -14,14 +14,24 @@
         [self setNewestId:0];
         // check to see that the videos directory exists...
         NSURL *videoPath = [NSURL URLWithString:@"../data/videos/" relativeToURL:[[NSBundle mainBundle] bundleURL]];
+        NSURL *tempPath = [NSURL URLWithString:@"../data/temp/" relativeToURL:[[NSBundle mainBundle] bundleURL]];
+        
         BOOL isDir;
         BOOL videoDirectoryExists = [[NSFileManager defaultManager] fileExistsAtPath:[videoPath path] isDirectory:&isDir];
         if ( !videoDirectoryExists ) {
-            NSLog( @"directory doesn't exist yet" );
             NSError *error = nil ;
             [[NSFileManager defaultManager] createDirectoryAtPath:[videoPath path] withIntermediateDirectories:YES attributes:nil error:&error];
             if ( error != nil ) {
-                NSLog( @"there was an error creating the directory: %@", [error localizedDescription] );
+                NSLog( @"there was an error creating the video directory: %@", [error localizedDescription] );
+            }
+        }
+        
+        BOOL tempDirectoryExists = [[NSFileManager defaultManager] fileExistsAtPath:[tempPath path] isDirectory:&isDir];
+        if ( !tempDirectoryExists ) {
+            NSError *error = nil;
+            [[NSFileManager defaultManager] createDirectoryAtPath:[tempPath path] withIntermediateDirectories:YES attributes:nil error:&error];
+            if ( error != nil ) {
+                NSLog( @"there was an error creating the temp directory: %@", [error localizedDescription] );
             }
         }
     }
@@ -43,7 +53,7 @@
     [request setDidFinishSelector:@selector(dancesSinceRequestDidFinish:)];
     [request setDidFailSelector:@selector(dancesSinceRequestDidFail:)];
     [request setTimeOutSeconds:120];
-    [request startSynchronous];
+    [request startAsynchronous];
 }
 
 - (void)dancesSinceRequestDidFinish:(ASIHTTPRequest *)request {

@@ -66,7 +66,7 @@ public:
         
         if ( !paused && firstFrame > 0 ) {
             if ( alpha < 1.0 ) {
-                alpha = fminf( 1.0, alpha + .05 );
+                alpha = fminf( 1.0, alpha + .01 );
             }
             pos += vel;
         }

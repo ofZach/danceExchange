@@ -3,9 +3,7 @@
 //--------------------------------------------------------------
 void testApp::setup() {
     
-    drawTextures = true;
-    aFrame = 0;
-    newestId = 0;
+    drawTextures = false;
     paused = false;
     
     fov = 60.0;
@@ -25,9 +23,12 @@ void testApp::setup() {
     cam.cacheMatrices();
 //    cam.disableMouseInput();
     
+    globe.init( 300 );
+    
 	ofEnableSmoothing();
     ofDisableArbTex();
     ofSetVerticalSync( true );
+    ofSetFrameRate( 60.0 );
 	ofBackground(0, 0, 0);
 	
 	numPoints = 10000;
@@ -50,6 +51,22 @@ void testApp::setup() {
     frameCount = 0;
     loadingParticle = 0;
     
+    // parse cities csv file
+    NSURL *citiesPath = [NSURL URLWithString:@"../data/cities.txt" relativeToURL:[[NSBundle mainBundle] bundleURL]];
+    NSError *error;
+    NSString *citiesRaw = [NSString stringWithContentsOfURL:citiesPath encoding:NSUTF8StringEncoding error:&error];
+    NSArray *cityLines = [citiesRaw componentsSeparatedByString:@"\n"];
+    for ( NSString *city in cityLines ) {
+        
+        NSArray *cityInfo = [city componentsSeparatedByString:@","];
+        string cityName = [[cityInfo objectAtIndex:0] cStringUsingEncoding:[NSString defaultCStringEncoding]];
+        ofVec2f latLon( [[cityInfo objectAtIndex:1] floatValue], [[cityInfo objectAtIndex:2] floatValue] );
+        
+        cities.push_back( cityName );
+        cityLatLonHash[ cityName ] = latLon;
+    }
+    currentCityIndex = 8;
+    updateCity();
     
     dbHelper = [[DBHelper alloc] init];
     [dbHelper setRequestInterval:5.0];
@@ -74,6 +91,7 @@ void testApp::updateParticles( int deltaMillis ) {
     
     for ( int i=0; i<dpVector.size(); i++ ) {
         DanceParticle *dp = dpVector[i];
+//        if ( i==0 ) cout << dp->alpha << endl;
         if ( dp == loadingParticle && dp->smallVideoLoaded && dp->firstFrame < 0 ) {
             // integrate the frames into the textures
             addFramesToTextures( dp );
@@ -105,6 +123,7 @@ void testApp::updateParticles( int deltaMillis ) {
             
             pointilist.addPoint( dp->pos.x, dp->pos.y, dp->pos.z, // 3D position
                                 100.0, // size
+//                                1.0, 1.0, 1.0, dp->alpha, // rgba
                                 1.0, 1.0, 1.0, dp->alpha, // rgba
                                 dp->texIndex, 0, dp->firstFrame + dp->currentFrame // texture unit, rotation (not used in this), cell number
                                 );
@@ -117,8 +136,6 @@ void testApp::updateNetworkIO() {
     vector<DanceInfo> danceInfos = dbHelper.danceInfos;
     if ( danceInfos.size() > 0 ) {
         for ( int i=0; i<danceInfos.size(); i++ ) {
-            
-            newestId = danceInfos[i].id > newestId ? danceInfos[i].id : newestId;
             
             DanceParticle *dp = new DanceParticle( danceInfos[i] );
             dpVector.push_back( dp );
@@ -133,7 +150,6 @@ void testApp::updateNetworkIO() {
     if ( isRequestingRecentDances && ![dbHelper isRequestingRecentDanceInfos] && ![dbHelper isProcessingDanceInfosWithoutVideos] ) {
         cout << "initial request finished..." << endl;
         isRequestingRecentDances = false;
-//        [dbHelper setNewestId:newestId];
         [dbHelper requestDancesSince];
     }
     
@@ -182,13 +198,9 @@ void testApp::addFramesToTextures( DanceParticle * dp ) {
     }
 }
 
-void testApp::draw(){
-    ofEnableAlphaBlending();
-//    ofBackground( 255, 255, 255 );
-	
-//	glPushMatrix();
-    
-    
+void testApp::draw(){  
+    glEnable( GL_DEPTH_TEST );
+    ofEnableAlphaBlending();  
     
     float camZ = cam.getPosition().z;
     if ( camZ > 0 )
@@ -196,37 +208,54 @@ void testApp::draw(){
     cam.lookAt( ofVec3f(), ofVec3f( 0, -1, 0 ) );
     
     cam.begin();
-//    glScalef(1, -1, 1);
+    
+//    if ( !  paused ) globe.yRotation+=.5;
+//    globe.draw();
+//    ofVec3f sf = globe.getWorldCoordForLatLon( cityLatLonHash[cities[currentCityIndex]] );
+//    ofSphere( sf.x, sf.y, sf.z, 10 );
+    
     glPushMatrix();
-//    glTranslatef( ofGetWidth()/2, ofGetHeight()/2, 0 );
 	pointilist.draw();
     glPopMatrix();
     cam.end();
     
     
     ofSetupScreen();
-
-	ofSetColor( 255, 255, 255 );
-    if ( frames.size() > 0 ) {
-        frames[frameIndex++]->draw( 0, 0 );
-        if ( frameIndex == frames.size() )
-            frameIndex = 0;
-    }
+    glDisable( GL_DEPTH_TEST );
     
-    if ( testImage.getTextureReference().isAllocated() )
-        testImage.draw( 0, 0);
-	ofDrawBitmapString("fps: "+ofToString(ofGetFrameRate(),2) + "\nnum particles: " + ofToString(dpVector.size(), 2), 10, 15);
+	ofDrawBitmapString( "fps: "+ofToString(ofGetFrameRate(),2) + "\nnum particles: " + ofToString(dpVector.size(), 2), 10, 15 );
+    ofDrawBitmapString( cities[currentCityIndex], 10, 45 );
     
     if ( drawTextures ) {
         for ( int i = 0; i < textures.size(); i++ ) {
             ofTexture &tex = textures[i];
             tex.draw( i * 200, ofGetHeight() - 200, 200, 200 );
         }
-//        textures[0].draw(0,0); 
     }
 }
 
+void testApp::updateCity() {
+    // in the future, this function would setup whatever animated transitions take place when
+    // switching the city of focus in globe mode
+    
+    ofVec2f latLon = cityLatLonHash[ cities[ currentCityIndex ] ];
+    globe.setLatLon( latLon );
+    
+}
+
 void testApp::keyPressed(int key){
+    
+    if ( key == OF_KEY_DOWN ) {
+        if ( ++currentCityIndex >= cities.size() )
+            currentCityIndex = 0;
+        updateCity();
+    }
+    else if ( key == OF_KEY_UP ) {
+        if ( --currentCityIndex < 0 )
+            currentCityIndex = cities.size() - 1;
+        updateCity();
+    }
+    
     if ( key == ' ' ) {
         drawTextures = !drawTextures;
 //        [dbHelper requestRecentDances:1000];

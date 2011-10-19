@@ -34,6 +34,7 @@
                 NSLog( @"there was an error creating the temp directory: %@", [error localizedDescription] );
             }
         }
+        
     }
     
     return self;

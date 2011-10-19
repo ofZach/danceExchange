@@ -3,6 +3,10 @@
 //--------------------------------------------------------------
 void testApp::setup() {
     
+    upKey = downKey = leftKey = rightKey = false;
+    
+    mode = STARFIELD_MODE;
+    
     drawTextures = false;
     paused = false;
     
@@ -23,7 +27,7 @@ void testApp::setup() {
     cam.cacheMatrices();
 //    cam.disableMouseInput();
     
-    globe.init( 300 );
+    globe.init( 200 );
     
 	ofEnableSmoothing();
     ofDisableArbTex();
@@ -81,6 +85,11 @@ void testApp::update(){
 	int currentMillis = ofGetElapsedTimeMillis();
 	int deltaMillis = currentMillis - lastMillis;
 	lastMillis = currentMillis;
+    
+//    if ( upKey ) globe.xRotation++;
+//    if ( downKey ) globe.xRotation--;
+//    if ( leftKey ) globe.yRotation++;
+//    if ( rightKey ) globe.yRotation--;
     
     frustumHelp.calcNearAndFarClipCoordinates( cam );
     
@@ -209,10 +218,10 @@ void testApp::draw(){
     
     cam.begin();
     
-//    if ( !  paused ) globe.yRotation+=.5;
 //    globe.draw();
-//    ofVec3f sf = globe.getWorldCoordForLatLon( cityLatLonHash[cities[currentCityIndex]] );
-//    ofSphere( sf.x, sf.y, sf.z, 10 );
+    
+    ofVec3f sf = globe.getWorldCoordForLatLon( cityLatLonHash[ "San Francisco" ] );
+    ofVec3f sfScreen = cam.worldToScreen( sf );
     
     glPushMatrix();
 	pointilist.draw();
@@ -245,6 +254,15 @@ void testApp::updateCity() {
 
 void testApp::keyPressed(int key){
     
+    if ( key == OF_KEY_DOWN )
+        downKey = true;
+    if ( key == OF_KEY_UP )
+        upKey = true;
+    if ( key == OF_KEY_LEFT )
+        leftKey = true;
+    if ( key == OF_KEY_RIGHT )
+        rightKey = true;
+    
     if ( key == OF_KEY_DOWN ) {
         if ( ++currentCityIndex >= cities.size() )
             currentCityIndex = 0;
@@ -255,11 +273,13 @@ void testApp::keyPressed(int key){
             currentCityIndex = cities.size() - 1;
         updateCity();
     }
+    else if ( key == OF_KEY_LEFT ) {
+    }
+    else if ( key == OF_KEY_RIGHT ) {
+    }
     
     if ( key == ' ' ) {
         drawTextures = !drawTextures;
-//        [dbHelper requestRecentDances:1000];
-//        isRequestingRecentDances = true;
     }
     if ( key == 'f' ) {
         
@@ -281,6 +301,17 @@ void testApp::keyPressed(int key){
             cout << dp->pos << " new position" << endl;
         }
     }
+}
+
+void testApp::keyReleased(int key) {
+    if ( key == OF_KEY_DOWN )
+        downKey = false;
+    if ( key == OF_KEY_UP )
+        upKey = false;
+    if ( key == OF_KEY_LEFT )
+        leftKey = false;
+    if ( key == OF_KEY_RIGHT )
+        rightKey = false;
 }
 
 void testApp::mousePressed(int x, int y, int button){

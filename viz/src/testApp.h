@@ -9,29 +9,37 @@
 #include "FrustumHelp.h"
 #include "ofTexture.h"
 #include "Globe.h"
+#include "DPManager.h"
 
-const int FRAME_WIDTH = 100;
-const int FRAME_HEIGHT = 76;
-const int TEX_WIDTH = 40 * FRAME_WIDTH;//2048;
-const int TEX_HEIGHT = 53 * FRAME_HEIGHT;//2048;
-//const int TEX_WIDTH = 10 * FRAME_WIDTH;
-//const int TEX_HEIGHT = 13 * FRAME_HEIGHT;
-//const int TEX_WIDTH = 512;
-//const int TEX_HEIGHT = 512;
-const int FRAMES_PER_ROW = TEX_WIDTH / FRAME_WIDTH;
-const int FRAMES_PER_COL = TEX_HEIGHT / FRAME_HEIGHT;
-const int FRAMES_PER_TEX = FRAMES_PER_COL * FRAMES_PER_ROW;
-const int NUM_TEXTURES = 5;
+//const int FRAME_WIDTH = 100;
+//const int FRAME_HEIGHT = 76;
+//const int TEX_WIDTH = 40 * FRAME_WIDTH;//2048;
+//const int TEX_HEIGHT = 53 * FRAME_HEIGHT;//2048;
+//const int FRAMES_PER_ROW = TEX_WIDTH / FRAME_WIDTH;
+//const int FRAMES_PER_COL = TEX_HEIGHT / FRAME_HEIGHT;
+//const int FRAMES_PER_TEX = FRAMES_PER_COL * FRAMES_PER_ROW;
+//const int NUM_TEXTURES = 5;
+
+enum VizMode {
+    STARFIELD_MODE,
+    GLOBE_MODE
+};
 
 class testApp : public ofBaseApp{
 
 public:
+        VizMode mode;
+    
+        bool upKey, downKey, leftKey, rightKey;
+    
         bool drawTextures;
         ofEasyCam cam;
         float fov, nearClip, farClip;
         FrustumHelp frustumHelp;
         bool paused;
         
+        DPManager dpManager;
+    
         DBHelper *dbHelper;
         bool isRequestingRecentDances;
         
@@ -63,6 +71,7 @@ public:
         void updateCity();
 
 		void keyPressed  (int key);
+        void keyReleased (int key);
         void mousePressed(int x, int y, int button);
     
         // added this so i could allocate a non-power of two texture without modifying the core of OF

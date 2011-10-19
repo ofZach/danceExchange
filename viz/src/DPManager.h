@@ -4,6 +4,7 @@
 #include "DanceParticle.h"
 #include "Pointilist.h"
 #include "FrustumHelp.h"
+#include "ofxTween.h"
 
 const int FRAME_WIDTH = 100;
 const int FRAME_HEIGHT = 76;
@@ -13,6 +14,10 @@ const int FRAMES_PER_ROW = TEX_WIDTH / FRAME_WIDTH;
 const int FRAMES_PER_COL = TEX_HEIGHT / FRAME_HEIGHT;
 const int FRAMES_PER_TEX = FRAMES_PER_COL * FRAMES_PER_ROW;
 const int NUM_TEXTURES = 5;
+
+enum DPManagerTween {
+    DPMANAGER_GLOBAL_SCALE
+};
 
 class DPManager {
 public:
@@ -26,12 +31,18 @@ public:
     bool                                    paused;
     
     Pointilist                              pointilist;
+    float                                   globalScale;
+    ofxTween                                globalScaleTween;
+    ofxEasingQuad                           quadEasing;
+    
     
     void init();
     void update( int deltaMillis );
     void draw();
+    void tweenParticlesToScale( float desiredScale, float duration, float delay = 0 );
     void createParticle( DanceInfo &danceInfo );
     void addFramesToTextures( DanceParticle * dp );
+    void tweenEnded( int & theId );
     void allocateTexture(ofTexture &texture, int w, int h, int internalGlDataType, bool bUseARBExtention) {
         
         

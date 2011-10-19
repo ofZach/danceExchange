@@ -64,15 +64,13 @@ void testApp::update(){
 	int deltaMillis = currentMillis - lastMillis;
 	lastMillis = currentMillis;
     
-//    if ( upKey ) globe.xRotation++;
-//    if ( downKey ) globe.xRotation--;
-//    if ( leftKey ) globe.yRotation++;
-//    if ( rightKey ) globe.yRotation--;
     
     frustumHelp.calcNearAndFarClipCoordinates( cam );
     
     dpManager.frustumHelp.calcNearAndFarClipCoordinates( cam );
     dpManager.update( deltaMillis );
+    
+    globe.update( deltaMillis );
 }
 
 void testApp::updateNetworkIO() {
@@ -107,14 +105,13 @@ void testApp::draw(){
     
     cam.begin();
     
-//    globe.draw();
+    globe.draw();
     
     ofVec3f sf = globe.getWorldCoordForLatLon( cityLatLonHash[ "San Francisco" ] );
     ofVec3f sfScreen = cam.worldToScreen( sf );
     
     glPushMatrix();
     dpManager.draw();
-//	pointilist.draw();
     glPopMatrix();
     cam.end();
     
@@ -142,7 +139,33 @@ void testApp::updateCity() {
     
 }
 
+void testApp::switchMode( VizMode nextMode ) {
+    if ( mode == nextMode )
+        return;
+    
+    mode = nextMode;
+    switch ( mode ) {
+        case STARFIELD_MODE:
+            globe.tweenGlobeToScale( 0, 500 );
+            dpManager.tweenParticlesToScale( 1, 500 );
+            break;
+            
+        case GLOBE_MODE:
+            globe.tweenGlobeToScale( 1, 500 );
+            dpManager.tweenParticlesToScale( 0, 500 );
+            break;
+    }
+    
+}
+
 void testApp::keyPressed(int key){
+    
+    if ( key == '1' ) {
+        switchMode( STARFIELD_MODE );
+    }
+    else if ( key == '2' ) {
+        switchMode( GLOBE_MODE );
+    }
     
     if ( key == OF_KEY_DOWN )
         downKey = true;
@@ -153,16 +176,25 @@ void testApp::keyPressed(int key){
     if ( key == OF_KEY_RIGHT )
         rightKey = true;
     
-    if ( key == OF_KEY_DOWN ) {
-        if ( ++currentCityIndex >= cities.size() )
-            currentCityIndex = 0;
-        updateCity();
+    if ( key == 'c' ) {
+        // pick a random city for the globe to spin to if we are in globe mode
+        if ( mode == GLOBE_MODE ) {
+            currentCityIndex = ofRandom( 0, cities.size() );
+            updateCity();
+        }
     }
-    else if ( key == OF_KEY_UP ) {
-        if ( --currentCityIndex < 0 )
-            currentCityIndex = cities.size() - 1;
-        updateCity();
-    }
+    
+//    if ( key == OF_KEY_DOWN ) {
+//        if ( ++currentCityIndex >= cities.size() )
+//            currentCityIndex = 0;
+//        updateCity();
+//    }
+//    else if ( key == OF_KEY_UP ) {
+//        if ( --currentCityIndex < 0 )
+//            currentCityIndex = cities.size() - 1;
+//        updateCity();
+//    }
+    
     else if ( key == OF_KEY_LEFT ) {
     }
     else if ( key == OF_KEY_RIGHT ) {

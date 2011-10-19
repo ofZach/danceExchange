@@ -22,10 +22,16 @@ void DPManager::init() {
     frameCount = 0;
     loadingParticle = 0;
     paused = false;
+    globalScale = 1.0;
     
+    ofAddListener( globalScaleTween.end_E, this, &DPManager::tweenEnded );
 }
 
 void DPManager::update( int deltaMillis ) {    
+    
+    if ( globalScaleTween.isRunning() ) {
+        globalScale = globalScaleTween.update();
+    }
     
     for ( int i=0; i<dpVector.size(); i++ ) {
         DanceParticle *dp = dpVector[i];
@@ -60,7 +66,7 @@ void DPManager::update( int deltaMillis ) {
             }
             
             pointilist.addPoint( dp->pos.x, dp->pos.y, dp->pos.z, // 3D position
-                                100.0, // size
+                                200.0 * globalScale, // size
                                 //                                1.0, 1.0, 1.0, dp->alpha, // rgba
                                 1.0, 1.0, 1.0, dp->alpha, // rgba
                                 dp->texIndex, 0, dp->firstFrame + dp->currentFrame // texture unit, rotation (not used in this), cell number
@@ -72,6 +78,12 @@ void DPManager::update( int deltaMillis ) {
 void DPManager::draw() {
     
     pointilist.draw();
+}
+
+void DPManager::tweenParticlesToScale( float desiredScale, float duration, float delay ) {
+    
+    globalScaleTween.setParameters( DPMANAGER_GLOBAL_SCALE, quadEasing, ofxTween::easeInOut, globalScale, desiredScale, duration, delay );
+    
 }
 
 void DPManager::createParticle( DanceInfo &danceInfo ) {
@@ -122,4 +134,8 @@ void DPManager::addFramesToTextures( DanceParticle * dp ) {
             frameCount++;
         }
     }
+}
+
+void DPManager::tweenEnded( int & theId ) {
+    
 }

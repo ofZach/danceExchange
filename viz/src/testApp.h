@@ -47,6 +47,7 @@ public:
         void updateNetworkIO();
 		void draw();
         void updateCity();
+        void switchMode( VizMode nextMode );
 
 		void keyPressed  (int key);
         void keyReleased (int key);

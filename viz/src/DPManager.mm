@@ -1,6 +1,8 @@
 #include "DPManager.h"
 
-void DPManager::init( FrustumHelp &frustumHelp ) {
+void DPManager::init() {
+    
+//    this->frustumHelp = frustumHelp;
     
     pointilist.init( 1000, true );
     
@@ -23,7 +25,8 @@ void DPManager::init( FrustumHelp &frustumHelp ) {
     
 }
 
-void DPManager::update( int deltaMillis ) {
+void DPManager::update( int deltaMillis ) {    
+    
     for ( int i=0; i<dpVector.size(); i++ ) {
         DanceParticle *dp = dpVector[i];
         //        if ( i==0 ) cout << dp->alpha << endl;
@@ -68,6 +71,7 @@ void DPManager::update( int deltaMillis ) {
 
 void DPManager::draw() {
     
+    pointilist.draw();
 }
 
 void DPManager::createParticle( DanceInfo &danceInfo ) {

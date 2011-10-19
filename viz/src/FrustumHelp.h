@@ -20,6 +20,13 @@ public:
     float fov;
     float aspectRatio;
     
+    void setup( float nearClipVal, float farClipVal, float fov, float aspectRatio ) {
+        this->nearClipVal = nearClipVal;
+        this->farClipVal = farClipVal;
+        this->fov = fov;
+        this->aspectRatio = aspectRatio;
+    }
+    
     void calcFrustumPlane( ofVec3f &fNormal, ofVec3f &fPoint, float &fDist, const ofVec3f &v1, const ofVec3f &v2, const ofVec3f &v3 )
     {
         ofVec3f aux1, aux2;

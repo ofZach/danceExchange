@@ -27,7 +27,7 @@ public:
     
     Pointilist                              pointilist;
     
-    void init( FrustumHelp &frustumHelp );
+    void init();
     void update( int deltaMillis );
     void draw();
     void createParticle( DanceInfo &danceInfo );

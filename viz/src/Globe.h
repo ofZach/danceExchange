@@ -108,7 +108,7 @@ public:
         glMultMatrixf( mat.getPtr() );
         
         earthTexture.bind();
-        ofSphere( pos, radius );
+        ofxSphere( pos, radius );
         earthTexture.unbind();
         ofPopMatrix();
         

@@ -20,8 +20,7 @@ void testApp::setup() {
     frustumHelp.setup( nearClip, farClip, fov, ofGetWidth()/(float)ofGetHeight() );
     
     cam.cacheMatrices();
-//    cam.disableMouseInput();
-    
+	
     globe.init( 200 );
     
 	ofEnableSmoothing();
@@ -49,6 +48,8 @@ void testApp::setup() {
     }
     currentCityIndex = 8;
     updateCity();
+	
+	
     
     dbHelper = [[DBHelper alloc] init];
     [dbHelper setRequestInterval:5.0];
@@ -229,5 +230,6 @@ void testApp::keyReleased(int key) {
 }
 
 void testApp::mousePressed(int x, int y, int button){
+    cam.disableMouseInput();
     
 }

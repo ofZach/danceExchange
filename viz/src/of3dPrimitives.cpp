@@ -27,25 +27,25 @@ ofSphereParameters currentSphereParams;
 
 
 //----------------------------------------
-void ofSphere(float x, float y, float z, float radius) {
-	ofSphere(ofPoint(x, y, z), radius);
+void ofxSphere(float x, float y, float z, float radius) {
+	ofxSphere(ofPoint(x, y, z), radius);
 }
 
 //----------------------------------------
-void ofSphere(float x, float y, float radius) {
-	ofSphere(x, y, 0, radius);
+void ofxSphere(float x, float y, float radius) {
+	ofxSphere(x, y, 0, radius);
 }
 
 //----------------------------------------
-void ofSphere(const ofPoint& position, float radius) {
+void ofxSphere(const ofPoint& position, float radius) {
 	ofPushMatrix();
 	ofTranslate(position);
-	ofSphere(radius);
+	ofxSphere(radius);
 	ofPopMatrix();
 }
 
 //----------------------------------------
-void ofSphere(float radius) {
+void ofxSphere(float radius) {
 	
 	if( sphereScratchMesh.getNumVertices() == 0 ||
 	   !lastGeneratedSphereParams.equals( radius, currentSphereParams.numRings, currentSphereParams.numSegments ) ){

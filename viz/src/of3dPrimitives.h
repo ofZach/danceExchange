@@ -13,10 +13,10 @@ void ofDisablePrimitiveGenerateTexCoords();
 //----------------------------------------------------------
 // Sphere
 
-void ofSphere(float x, float y, float z, float radius);
-void ofSphere(float x, float y, float radius);
-void ofSphere(const ofPoint& position, float radius);
-void ofSphere(float radius);
+void ofxSphere(float x, float y, float z, float radius);
+void ofxSphere(float x, float y, float radius);
+void ofxSphere(const ofPoint& position, float radius);
+void ofxSphere(float radius);
 
 void ofSetSphereResolution( int _numRings, int _numSegments );
 void ofGenerateSphereMesh( ofMesh& _mesh, float _radius, int _numRings = 16, int _numSegments = 16 );

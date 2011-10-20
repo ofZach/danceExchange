@@ -50,16 +50,16 @@ void testApp::setup() {
     updateCity();
 	
 	
-    
-    dbHelper = [[DBHelper alloc] init];
-    [dbHelper setRequestInterval:5.0];
-    [dbHelper requestRecentDances:100];
-    isRequestingRecentDances = true;
+    // setup the networking
+	NM.dpManager = &dpManager;
+	NM.setup();
+	
 }
 
 void testApp::update(){
     
-    updateNetworkIO();
+	// update the networking. 
+    NM.update();
     
 	int currentMillis = ofGetElapsedTimeMillis();
 	int deltaMillis = currentMillis - lastMillis;
@@ -74,26 +74,6 @@ void testApp::update(){
     globe.update( deltaMillis );
 }
 
-void testApp::updateNetworkIO() {
-    
-    vector<DanceInfo> danceInfos = dbHelper.danceInfos;
-    if ( danceInfos.size() > 0 ) {
-        for ( int i=0; i<danceInfos.size(); i++ ) {
-            dpManager.createParticle( danceInfos[i] );
-        }
-        [dbHelper clearDanceInfos];
-//        cout << "local dance info count: " << danceInfos.size() << endl;
-//        cout << "db helper dance info count: " << dbHelper.danceInfos.size() << endl;
-    }
-    
-    if ( isRequestingRecentDances && ![dbHelper isRequestingRecentDanceInfos] && ![dbHelper isProcessingDanceInfosWithoutVideos] ) {
-        cout << "initial request finished..." << endl;
-        isRequestingRecentDances = false;
-        [dbHelper requestDancesSince];
-    }
-    
-    
-}
 
 void testApp::draw(){  
     glEnable( GL_DEPTH_TEST );

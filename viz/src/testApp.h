@@ -3,7 +3,9 @@
 #include "ofMain.h"
 #include "Pointilist.h"
 #include "threadMovieLoader.h"
-#include "DBHelper.h"
+
+#include "networkManager.h"
+
 #include "DanceParticle.h"
 #include "ofFbo.h"
 #include "FrustumHelp.h"
@@ -19,7 +21,8 @@ enum VizMode {
 class testApp : public ofBaseApp{
 
 public:
-        VizMode mode;
+        
+		VizMode mode;
     
         bool upKey, downKey, leftKey, rightKey;
     
@@ -31,20 +34,19 @@ public:
         
         DPManager dpManager;
     
-        DBHelper *dbHelper;
-        bool isRequestingRecentDances;
-        
+		networkManager NM;
+	
+	
         Globe globe;
         vector<string> cities;
         map<string,ofVec2f> cityLatLonHash;
         int currentCityIndex;
-    
-    
+
         int lastMillis;
     
 		void setup();
 		void update();
-        void updateNetworkIO();
+
 		void draw();
         void updateCity();
         void switchMode( VizMode nextMode );

@@ -3,9 +3,8 @@
 #include "ofMain.h"
 #include "Pointilist.h"
 #include "threadMovieLoader.h"
-
 #include "networkManager.h"
-
+#include "locationManager.h"
 #include "DanceParticle.h"
 #include "ofFbo.h"
 #include "FrustumHelp.h"
@@ -35,13 +34,12 @@ public:
         DPManager dpManager;
     
 		networkManager NM;
+		locationManager LM;
+		int currentCityIndex;
 	
 	
         Globe globe;
-        vector<string> cities;
-        map<string,ofVec2f> cityLatLonHash;
-        int currentCityIndex;
-
+        
         int lastMillis;
     
 		void setup();

@@ -1,11 +1,4 @@
-/*
- *  networkManager.h
- *  emptyExample
- *
- *  Created by zachary lieberman on 10/20/11.
- *  Copyright 2011 __MyCompanyName__. All rights reserved.
- *
- */
+#pragma once
 
 
 #include "ofMain.h"

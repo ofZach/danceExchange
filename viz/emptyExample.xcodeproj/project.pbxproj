@@ -16,6 +16,7 @@
 		927757031450974D006F4A95 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 927756FB1450974D006F4A95 /* main.mm */; };
 		927757041450974D006F4A95 /* testApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = 927756FC1450974D006F4A95 /* testApp.mm */; };
 		9277573D1450A193006F4A95 /* networkManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9277573C1450A193006F4A95 /* networkManager.mm */; };
+		92F9D3B91450CA7C00E33783 /* locationManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 92F9D3B81450CA7C00E33783 /* locationManager.mm */; };
 		932011D6144F6B0D00DF18A8 /* ofxEasing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 932011A2144F6B0D00DF18A8 /* ofxEasing.cpp */; };
 		932011D7144F6B0D00DF18A8 /* ofxEasingBack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 932011A4144F6B0D00DF18A8 /* ofxEasingBack.cpp */; };
 		932011D8144F6B0D00DF18A8 /* ofxEasingBounce.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 932011A6144F6B0D00DF18A8 /* ofxEasingBounce.cpp */; };
@@ -117,6 +118,8 @@
 		927756FC1450974D006F4A95 /* testApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = testApp.mm; sourceTree = "<group>"; };
 		9277573B1450A193006F4A95 /* networkManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = networkManager.h; sourceTree = "<group>"; };
 		9277573C1450A193006F4A95 /* networkManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = networkManager.mm; sourceTree = "<group>"; };
+		92F9D3B71450CA7C00E33783 /* locationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = locationManager.h; sourceTree = "<group>"; };
+		92F9D3B81450CA7C00E33783 /* locationManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = locationManager.mm; sourceTree = "<group>"; };
 		932011A1144F6B0D00DF18A8 /* easing_terms_of_use.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = easing_terms_of_use.html; sourceTree = "<group>"; };
 		932011A2144F6B0D00DF18A8 /* ofxEasing.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxEasing.cpp; sourceTree = "<group>"; };
 		932011A3144F6B0D00DF18A8 /* ofxEasing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxEasing.h; sourceTree = "<group>"; };
@@ -283,6 +286,15 @@
 				927756FA1450974D006F4A95 /* threadMovieLoader.h */,
 			);
 			path = utils;
+			sourceTree = "<group>";
+		};
+		92F9D3B41450CA6B00E33783 /* location */ = {
+			isa = PBXGroup;
+			children = (
+				92F9D3B71450CA7C00E33783 /* locationManager.h */,
+				92F9D3B81450CA7C00E33783 /* locationManager.mm */,
+			);
+			path = location;
 			sourceTree = "<group>";
 		};
 		93201143144F6B0D00DF18A8 /* ofxTween */ = {
@@ -503,6 +515,7 @@
 		E4B69E1C0A3A1BDC003C02F2 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				92F9D3B41450CA6B00E33783 /* location */,
 				927756E61450974D006F4A95 /* dances */,
 				927756EB1450974D006F4A95 /* graphics */,
 				927756F01450974D006F4A95 /* network */,
@@ -647,6 +660,7 @@
 				927757031450974D006F4A95 /* main.mm in Sources */,
 				927757041450974D006F4A95 /* testApp.mm in Sources */,
 				9277573D1450A193006F4A95 /* networkManager.mm in Sources */,
+				92F9D3B91450CA7C00E33783 /* locationManager.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

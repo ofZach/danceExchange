@@ -32,27 +32,17 @@ void testApp::setup() {
     dpManager.init();
     dpManager.frustumHelp = frustumHelp;
     
-    // parse cities csv file
-    NSURL *citiesPath = [NSURL URLWithString:@"../data/cities.txt" relativeToURL:[[NSBundle mainBundle] bundleURL]];
-    NSError *error;
-    NSString *citiesRaw = [NSString stringWithContentsOfURL:citiesPath encoding:NSUTF8StringEncoding error:&error];
-    NSArray *cityLines = [citiesRaw componentsSeparatedByString:@"\n"];
-    for ( NSString *city in cityLines ) {
-        
-        NSArray *cityInfo = [city componentsSeparatedByString:@","];
-        string cityName = [[cityInfo objectAtIndex:0] cStringUsingEncoding:[NSString defaultCStringEncoding]];
-        ofVec2f latLon( [[cityInfo objectAtIndex:1] floatValue], [[cityInfo objectAtIndex:2] floatValue] );
-        
-        cities.push_back( cityName );
-        cityLatLonHash[ cityName ] = latLon;
-    }
-    currentCityIndex = 8;
-    updateCity();
+   
 	
 	
     // setup the networking
 	NM.dpManager = &dpManager;
 	NM.setup();
+	
+	LM.setup();
+	currentCityIndex = 8;
+	globe.setLatLon( LM.latLonForCity(currentCityIndex)  );
+
 	
 }
 
@@ -88,7 +78,7 @@ void testApp::draw(){
     
     globe.draw();
     
-    ofVec3f sf = globe.getWorldCoordForLatLon( cityLatLonHash[ "San Francisco" ] );
+    ofVec3f sf = globe.getWorldCoordForLatLon( LM.cityLatLonHash[ "San Francisco" ] );
     ofVec3f sfScreen = cam.worldToScreen( sf );
     
     glPushMatrix();
@@ -101,7 +91,7 @@ void testApp::draw(){
     glDisable( GL_DEPTH_TEST );
     
 	ofDrawBitmapString( "fps: "+ofToString(ofGetFrameRate(),2) + "\nnum particles: " + ofToString(dpManager.dpVector.size(), 2), 10, 15 );
-    ofDrawBitmapString( cities[currentCityIndex], 10, 45 );
+    ofDrawBitmapString( LM.cities[currentCityIndex], 10, 45 );
     
     if ( drawTextures ) {
         for ( int i = 0; i < dpManager.textures.size(); i++ ) {
@@ -111,14 +101,6 @@ void testApp::draw(){
     }
 }
 
-void testApp::updateCity() {
-    // in the future, this function would setup whatever animated transitions take place when
-    // switching the city of focus in globe mode
-    
-    ofVec2f latLon = cityLatLonHash[ cities[ currentCityIndex ] ];
-    globe.setLatLon( latLon );
-    
-}
 
 void testApp::switchMode( VizMode nextMode ) {
     if ( mode == nextMode )
@@ -160,8 +142,8 @@ void testApp::keyPressed(int key){
     if ( key == 'c' ) {
         // pick a random city for the globe to spin to if we are in globe mode
         if ( mode == GLOBE_MODE ) {
-            currentCityIndex = ofRandom( 0, cities.size() );
-            updateCity();
+            currentCityIndex = ofRandom( 0, LM.cities.size() );
+            globe.setLatLon( LM.latLonForCity(currentCityIndex)  );
         }
     }
     

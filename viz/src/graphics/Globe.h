@@ -24,6 +24,8 @@ public:
     ofxTween                latLonTween;
     ofxEasingQuad           quadEasing;
     
+    ofEvent<int>            latLonTweenEnded;
+    
     void init( float radius ) {
         
         this->radius        = radius;
@@ -68,7 +70,9 @@ public:
     }
     
     void tweenEnded( int & theId ) {
-        cout << "scale tween ended with ID: " << theId << endl;
+        
+        if ( theId == GLOBE_LAT_LON )
+            ofNotifyEvent( latLonTweenEnded, theId );
     }
     
     void tweenGlobeToScale( float desiredScale, float duration, float delay = 0 ) {

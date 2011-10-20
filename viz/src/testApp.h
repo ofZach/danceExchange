@@ -47,6 +47,7 @@ public:
 
 		void draw();
         void updateCity();
+        void globeLatLonTweenEnded( int & theId );
         void switchMode( VizMode nextMode );
 
 		void keyPressed  (int key);

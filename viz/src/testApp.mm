@@ -22,6 +22,7 @@ void testApp::setup() {
     cam.cacheMatrices();
 	
     globe.init( 200 );
+    ofAddListener( globe.latLonTweenEnded, this, &testApp::globeLatLonTweenEnded );
     
 	ofEnableSmoothing();
     ofDisableArbTex();
@@ -101,6 +102,12 @@ void testApp::draw(){
     }
 }
 
+void testApp::globeLatLonTweenEnded( int & theId ) {
+    
+    cout << "globe lat lon tween ended" << endl;
+    // tell the DPManager to do something with particles for the corresponding city
+    
+}
 
 void testApp::switchMode( VizMode nextMode ) {
     if ( mode == nextMode )

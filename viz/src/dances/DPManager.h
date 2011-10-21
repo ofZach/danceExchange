@@ -30,6 +30,8 @@ public:
     int                                     frameCount;
     bool                                    paused;
     
+    vector<DanceParticle*>                  cityParticles;
+    
     Pointilist                              pointilist;
     float                                   globalScale;
     ofxTween                                globalScaleTween;
@@ -39,10 +41,13 @@ public:
     void init();
     void update( int deltaMillis );
     void draw();
+    void transitionToGlobeMode();
+    void transitionToStarfieldMode();
     void tweenParticlesToScale( float desiredScale, float duration, float delay = 0 );
     void createParticle( DanceInfo &danceInfo );
     void addFramesToTextures( DanceParticle * dp );
     void tweenEnded( int & theId );
+    void animateParticlesForCity( string cityName );
     void allocateTexture(ofTexture &texture, int w, int h, int internalGlDataType, bool bUseARBExtention) {
         
         

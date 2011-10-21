@@ -106,6 +106,8 @@ void testApp::globeLatLonTweenEnded( int & theId ) {
     
     cout << "globe lat lon tween ended" << endl;
     // tell the DPManager to do something with particles for the corresponding city
+    if ( mode == GLOBE_MODE )
+        dpManager.animateParticlesForCity( LM.cities[ currentCityIndex ] );
     
 }
 
@@ -117,12 +119,12 @@ void testApp::switchMode( VizMode nextMode ) {
     switch ( mode ) {
         case STARFIELD_MODE:
             globe.tweenGlobeToScale( 0, 500 );
-            dpManager.tweenParticlesToScale( 1, 500 );
+            dpManager.transitionToStarfieldMode();
             break;
             
         case GLOBE_MODE:
             globe.tweenGlobeToScale( 1, 500 );
-            dpManager.tweenParticlesToScale( 0, 500 );
+            dpManager.transitionToGlobeMode();
             break;
     }
     

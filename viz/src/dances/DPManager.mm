@@ -35,7 +35,6 @@ void DPManager::update( int deltaMillis ) {
     
     for ( int i=0; i<dpVector.size(); i++ ) {
         DanceParticle *dp = dpVector[i];
-        //        if ( i==0 ) cout << dp->alpha << endl;
         if ( dp == loadingParticle && dp->smallVideoLoaded && dp->firstFrame < 0 ) {
             // integrate the frames into the textures
             addFramesToTextures( dp );
@@ -46,7 +45,6 @@ void DPManager::update( int deltaMillis ) {
                                  0 ) );
             dp->pos.set( frustumHelp.getRandomPointOnFarPlane() );
             dp->vel.set( 0, 0, -10 );
-            //            dp->pos.set( -100, -100, 0 );
             // set loadingParticle to 0 so we can load the next one
             loadingParticle = 0;
         }
@@ -65,19 +63,68 @@ void DPManager::update( int deltaMillis ) {
                 dp->alpha = 0;
             }
             
-            pointilist.addPoint( dp->pos.x, dp->pos.y, dp->pos.z, // 3D position
-                                200.0 * globalScale, // size
-                                //                                1.0, 1.0, 1.0, dp->alpha, // rgba
-                                1.0, 1.0, 1.0, dp->alpha, // rgba
-                                dp->texIndex, 0, dp->firstFrame + dp->currentFrame // texture unit, rotation (not used in this), cell number
-                                );
+            if ( globalScale > 0 ) {
+                pointilist.addPoint( dp->pos.x, dp->pos.y, dp->pos.z, // 3D position
+                                    200.0 * globalScale, // size
+                                    1.0, 1.0, 1.0, dp->alpha, // rgba
+                                    dp->texIndex, 0, dp->firstFrame + dp->currentFrame // texture unit, rotation (not used in this), cell number
+                                    );
+            }
         }
+    }
+    
+    // if there are particles in the city particles vector, draw them
+    for ( int i=0; i<cityParticles.size(); i++ ) {
+        DanceParticle *dp = cityParticles[i];
+        pointilist.addPoint( dp->pos.x, dp->pos.y, dp->pos.z,
+                            200.0,
+                            1.0, 1.0, 1.0, dp->alpha,
+                            dp->texIndex, 0, dp->firstFrame + dp->currentFrame
+                            );
     }
 }
 
 void DPManager::draw() {
     
     pointilist.draw();
+}
+
+void DPManager::animateParticlesForCity( string cityName ) {
+    
+    // abruptly clear any that are there for now
+    cityParticles.clear();
+    
+    // go through and get all the particles corresponding to this city
+    for ( vector<DanceParticle*>::iterator it = dpVector.begin(); it != dpVector.end(); it++ ) {
+        DanceParticle* dp = *it;
+        if ( dp->info.city == cityName )
+            cityParticles.push_back( dp );
+    }
+    
+    // now go through the city particles and assign them positions
+    for ( vector<DanceParticle*>::iterator it = dpVector.begin(); it != dpVector.end(); it++ ) {
+        DanceParticle* dp = *it;
+        
+        float randomAngle = ofRandom( 0, TWO_PI );
+        ofVec3f position( cosf( randomAngle ), sinf( randomAngle ), 0 );
+        dp->pos.set( position * 300.0f );
+        dp->vel.set( 0, 0, 0 );
+    }
+    
+}
+
+void DPManager::transitionToGlobeMode() {
+    tweenParticlesToScale( 0, 500 );
+}
+
+void DPManager::transitionToStarfieldMode() {
+    tweenParticlesToScale( 1, 500 );
+    // clear city particles
+    cityParticles.clear();
+    for ( vector<DanceParticle*>::iterator it = dpVector.begin(); it != dpVector.end(); it++ ) {
+        DanceParticle *dp = *it;
+        dp->vel.set( 0, 0, -10 );
+    }
 }
 
 void DPManager::tweenParticlesToScale( float desiredScale, float duration, float delay ) {

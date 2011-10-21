@@ -48,6 +48,14 @@ public:
         smallVideoLoader->start( filename );
     }
     
+    void updateStarfield( int deltaMillis, bool paused ) {
+        
+    }
+    
+    void updateGlobe( int deltaMillis, bool paused ) {
+        
+    }
+    
     void update( int deltaMillis, bool paused ) {
         
         if ( !smallVideoLoaded && smallVideoLoader && smallVideoLoader->state == TH_STATE_JUST_LOADED ) {

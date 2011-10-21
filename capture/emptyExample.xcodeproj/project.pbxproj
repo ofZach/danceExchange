@@ -26,6 +26,7 @@
 		933D4114143BA59000D26894 /* ASIHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 933D407A143BA59000D26894 /* ASIHTTPRequest.m */; };
 		933D4115143BA59000D26894 /* ASIInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 933D407E143BA59000D26894 /* ASIInputStream.m */; };
 		933D4116143BA59000D26894 /* ASINetworkQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 933D4080143BA59000D26894 /* ASINetworkQueue.m */; };
+		9353FB051451F6B600EA6BE9 /* EmailView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9353FB041451F6B600EA6BE9 /* EmailView.cpp */; };
 		9375F96E143F5CE7008077AB /* opencv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9375F95A143F5CE7008077AB /* opencv.a */; };
 		9375F96F143F5CE7008077AB /* ofxCvColorImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9375F95D143F5CE7008077AB /* ofxCvColorImage.cpp */; };
 		9375F970143F5CE7008077AB /* ofxCvContourFinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9375F960143F5CE7008077AB /* ofxCvContourFinder.cpp */; };
@@ -135,6 +136,8 @@
 		933D407F143BA59000D26894 /* ASINetworkQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASINetworkQueue.h; sourceTree = "<group>"; };
 		933D4080143BA59000D26894 /* ASINetworkQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASINetworkQueue.m; sourceTree = "<group>"; };
 		933D4081143BA59000D26894 /* ASIProgressDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASIProgressDelegate.h; sourceTree = "<group>"; };
+		9353FB031451F66500EA6BE9 /* EmailView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmailView.h; sourceTree = "<group>"; };
+		9353FB041451F6B600EA6BE9 /* EmailView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EmailView.cpp; sourceTree = "<group>"; };
 		9375F904143F5CE7008077AB /* install.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = install.xml; sourceTree = "<group>"; };
 		9375F909143F5CE7008077AB /* cv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cv.h; sourceTree = "<group>"; };
 		9375F90A143F5CE7008077AB /* cv.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = cv.hpp; sourceTree = "<group>"; };
@@ -755,6 +758,8 @@
 				933D3F6A143A649700D26894 /* PreviewView.h */,
 				933D3F6C143A67D600D26894 /* TapView.h */,
 				933D3F6D143A67E200D26894 /* TapView.cpp */,
+				9353FB031451F66500EA6BE9 /* EmailView.h */,
+				9353FB041451F6B600EA6BE9 /* EmailView.cpp */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -885,6 +890,7 @@
 				9375F996143F680B008077AB /* ofxQtVideoSaverH264.cpp in Sources */,
 				9375F99A143F682F008077AB /* threadMovieLoader.cpp in Sources */,
 				9375F9C1143F936D008077AB /* VideoRecordingUtils.cpp in Sources */,
+				9353FB051451F6B600EA6BE9 /* EmailView.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

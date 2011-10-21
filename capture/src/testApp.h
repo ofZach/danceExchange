@@ -5,7 +5,7 @@
 #import "Helper.h"
 #include "PreviewView.h"
 #include "TapView.h"
-//#include "ofxGifEncoder.h"
+#include "EmailView.h"
 #include "ofxQtVideoSaver.h"
 
 class testApp : public ofBaseApp{
@@ -14,7 +14,7 @@ class testApp : public ofBaseApp{
         Helper *helper;
         PreviewView *previewView;
         TapView *tapView;
-//        ofxGifEncoder gifEncoder;
+        EmailView *emailView;
         ofxQtVideoSaver videoSaver;
     
         ofTrueTypeFont verdana;
@@ -32,6 +32,8 @@ class testApp : public ofBaseApp{
         bool isUploading;
         string uploadMessage;
     
+        bool isEmailing;
+    
         vector<ofImage*> frames;
         bool showFrames;
     
@@ -41,8 +43,9 @@ class testApp : public ofBaseApp{
         void saveVideoFiles();
 		void keyPressed  (int key);
 		void windowResized(int w, int h);
+        void destroyPreview();
 		
-    
+        void emailAddressEntered( string & emailAddress );
         void startCapturing(double & d);
         void startPreviewing();
     

@@ -12,6 +12,7 @@ void testApp::setup(){
     [helper setApp:this];
     
     previewView = 0;
+    emailView = 0;
     tapView = new TapView();
     ofAddListener(tapView->startCaptureEvent, this, &testApp::startCapturing);
     
@@ -31,6 +32,8 @@ void testApp::setup(){
     
     isUploading = false;
     uploadMessage = "";
+    
+    isEmailing = false;
     
     ofTrueTypeFont::setGlobalDpi(72);
     verdana.loadFont( "verdana.ttf", 24, true );
@@ -78,7 +81,18 @@ void testApp::update(){
         // the upload finished
         isUploading = false;
         uploadMessage = [helper sup];
+        
         cout << "upload message: " << uploadMessage << std::endl;
+        
+        emailView = new EmailView();
+        ofAddListener( emailView->emailAddressEnteredEvent, this, &testApp::emailAddressEntered );
+        ofAddListener( emailView->emailAddressSkippedEvent, this, &testApp::emailAddressEntered );
+    }
+    
+    if ( isEmailing && ![helper isEmailing] ) {
+        
+        isEmailing = false;
+        destroyPreview();
     }
 }
 
@@ -97,16 +111,36 @@ void testApp::draw(){
         if ( uploadMessage != "" ) {
             ofRectangle stringRect = verdana.getStringBoundingBox( uploadMessage, 0, 0 );
             float stringX = ofGetWidth() / 2.0 - stringRect.width / 2.0;
-            float stringY = ofGetHeight() / 2.0;// - stringRect.height / 2.0;
+            float stringY = ofGetHeight() / 2.0 - 100;// - stringRect.height / 2.0;
             ofSetColor( 255, 255, 255, 200 );
             verdana.drawString( uploadMessage, stringX, stringY );
         }
+    }
+    
+    if ( emailView ) {
+        emailView->draw();
     }
     
     if ( isUploading ) {
         ofSetColor( 255, 255, 255, 100);
         ofRect(0, 0, ofGetWidth() * [helper uploadProgress], ofGetHeight() );
     }
+}
+
+void testApp::emailAddressEntered( string & emailAddress ) {
+    
+    if ( emailAddress == "" ) {
+        cout << "no email address was entered" << endl;
+        destroyPreview();
+    }
+    else {
+        cout << "this email address was entered: " << emailAddress << endl;
+        
+        NSString *email = [NSString stringWithCString:emailAddress.c_str() encoding:[NSString defaultCStringEncoding]];
+        [helper sendEmailTo:email];
+        isEmailing = true;
+    }
+    
 }
 
 void testApp::startCapturing(double & d){
@@ -146,19 +180,37 @@ void testApp::saveVideoFiles() {
     isUploading = true;
 }
 
+void testApp::destroyPreview() {
+    
+    if ( previewView ) {
+        delete previewView;
+        previewView = 0;
+    }
+    
+    if ( emailView ) {
+        ofRemoveListener( emailView->emailAddressEnteredEvent, this, &testApp::emailAddressEntered );
+        ofRemoveListener( emailView->emailAddressSkippedEvent, this, &testApp::emailAddressEntered );
+        delete emailView;
+        emailView = 0;
+    }
+    
+    for ( int i = 0; i < frames.size(); i++ ) {
+        ofImage *img = frames[i];
+        delete img;
+    }
+    frames.clear();
+    uploadMessage = "";
+    tapView->reset();
+    
+}
+
 void testApp::keyPressed(int key){
+    if ( emailView ) return;
+    
     // if the preview view is active, we handle things here differently
     if ( previewView && !isUploading ) {
         if ( key == 'x' ) {
-            delete previewView;
-            previewView = 0;
-            for ( int i = 0; i < frames.size(); i++ ) {
-                ofImage *img = frames[i];
-                delete img;
-            }
-            frames.clear();
-            uploadMessage = "";
-            tapView->reset();
+            destroyPreview();
         }
 //        else if ( key == 'u' ) {
 //            cout << "start uploading..." << std::endl;

@@ -13,8 +13,10 @@ class testApp;
     double uploadProgress;
     bool isUploading;
     bool uploadFailed;
+    bool isEmailing;
     NSString *lastGifUrl;
     string sup;
+    string lastHash;
     
     testApp *app;
 }
@@ -22,8 +24,10 @@ class testApp;
 
 @property (nonatomic, assign) testApp *app;
 @property (nonatomic, assign) string sup;
+@property (nonatomic, assign) string lastHash;
 @property (assign, nonatomic) double uploadProgress;
 @property (assign, nonatomic) bool isUploading;
+@property (assign, nonatomic) bool isEmailing;
 @property (assign, nonatomic) bool uploadFailed;
 @property (assign, nonatomic) NSString *lastGifUrl;
 
@@ -31,6 +35,10 @@ class testApp;
 - (void)startVideoUploadRequest:(NSString *)fileNameMinusExtension withNumFrames:(int)num;
 - (void)uploadRequestDidFinish:(ASIHTTPRequest*)request;
 - (void)uploadRequestDidFail:(ASIHTTPRequest*)request;
+
+- (void)sendEmailTo:(NSString *)emailAddress;
+- (void)sendEmailRequestDidFinish:(ASIHTTPRequest*)request;
+- (void)sendEmailRequestDidFail:(ASIHTTPRequest*)request;
 
 - (void)savePngFrom:(unsigned char *)pixels withWidth:(int)width andHeight:(int)height;
 - (NSData*)getDataFromPixels:(unsigned char *)pixels withWidth:(int)width andHeight:(int)height;

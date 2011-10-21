@@ -2,8 +2,8 @@
 
 @implementation Helper
 
-@synthesize uploadProgress, isUploading, uploadFailed, lastGifUrl;
-@synthesize sup;
+@synthesize uploadProgress, isUploading, isEmailing, uploadFailed, lastGifUrl;
+@synthesize sup, lastHash;
 @synthesize app;
 
 - (id)init
@@ -11,6 +11,7 @@
     self = [super init];
     if (self) {
         frames = [[NSMutableArray alloc] init];
+        [self setIsEmailing:NO];
         [self setIsUploading:NO];
         [self setUploadProgress:0];
         [self setUploadFailed:NO];
@@ -158,11 +159,12 @@
     NSString *imageLocation = [dictionary valueForKey:@"image_location"];
     NSDictionary *animInfo = [dictionary valueForKey:@"data"];
     NSString *hash = [animInfo valueForKey:@"hash"];
-    
+//    [self setLastHash:[animInfo valueForKey:@"hash"]];
     lastGifUrl = [NSString stringWithFormat:@"%@%@%@.gif", baseUrl, imageLocation, hash];
     
 //    std::string hi = "";
     sup = [[self lastGifUrl] cStringUsingEncoding:[NSString defaultCStringEncoding]];
+    lastHash = [[animInfo valueForKey:@"hash"] cStringUsingEncoding:[NSString defaultCStringEncoding]];
     
     [frames removeAllObjects];
     
@@ -210,6 +212,32 @@
     [imageData writeToFile:[NSString stringWithFormat:@"%@/aaron.jpg", desktopPath] atomically:NO]; 
     
     [imageRep release];
+}
+
+- (void)sendEmailTo:(NSString *)emailAddress {
+    
+    NSURL *url = [NSURL URLWithString:@"http://aaron-meyers.com/smirnoff/sendEmail.php"];
+    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setPostValue:emailAddress forKey:@"email"];
+    NSString *hashString = [NSString stringWithCString:lastHash.c_str() encoding:[NSString defaultCStringEncoding]];
+    [request setPostValue:hashString forKey:@"hash"];
+    
+    [request setDelegate:self];
+    [request setDidFinishSelector:@selector(sendEmailRequestDidFinish:)];
+    [request setDidFailSelector:@selector(sendEmailRequestDidFail:)];
+    
+    [request startAsynchronous];
+    [self setIsEmailing:YES];
+}
+
+- (void)sendEmailRequestDidFinish:(ASIHTTPRequest *)request {
+    NSLog( @"sendEmailRequestDidFinish: %@", [request responseString] );
+    [self setIsEmailing:NO];
+}
+
+- (void)sendEmailRequestDidFail:(ASIHTTPRequest *)request {
+    NSLog( @"sendEmailRequestDidFail: %@", [[request error] localizedDescription] );
+    [self setIsEmailing:NO];
 }
 
 @end

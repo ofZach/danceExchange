@@ -47,7 +47,7 @@ public:
     void createParticle( DanceInfo &danceInfo );
     void addFramesToTextures( DanceParticle * dp );
     void tweenEnded( int & theId );
-    void animateParticlesForCity( string cityName );
+    void animateParticlesForCity( string cityName, ofVec3f worldPos );
     void allocateTexture(ofTexture &texture, int w, int h, int internalGlDataType, bool bUseARBExtention) {
         
         

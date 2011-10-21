@@ -76,8 +76,12 @@ void DPManager::update( int deltaMillis ) {
     // if there are particles in the city particles vector, draw them
     for ( int i=0; i<cityParticles.size(); i++ ) {
         DanceParticle *dp = cityParticles[i];
+        // for now, call the particles globe update because we know this particle is doing something
+        // in relation to the globe, but this should really get restructured somehow
+        dp->updateGlobe( deltaMillis, false );
         pointilist.addPoint( dp->pos.x, dp->pos.y, dp->pos.z,
-                            200.0,
+                            50.0 * dp->posTween.getTarget( 0 ),
+//                            50.0,
                             1.0, 1.0, 1.0, dp->alpha,
                             dp->texIndex, 0, dp->firstFrame + dp->currentFrame
                             );
@@ -89,7 +93,7 @@ void DPManager::draw() {
     pointilist.draw();
 }
 
-void DPManager::animateParticlesForCity( string cityName ) {
+void DPManager::animateParticlesForCity( string cityName, ofVec3f worldPos ) {
     
     // abruptly clear any that are there for now
     cityParticles.clear();
@@ -102,13 +106,17 @@ void DPManager::animateParticlesForCity( string cityName ) {
     }
     
     // now go through the city particles and assign them positions
-    for ( vector<DanceParticle*>::iterator it = dpVector.begin(); it != dpVector.end(); it++ ) {
-        DanceParticle* dp = *it;
+    for ( int i=0; i<cityParticles.size(); i++ ) {
+        DanceParticle* dp = cityParticles[i];
         
         float randomAngle = ofRandom( 0, TWO_PI );
-        ofVec3f position( cosf( randomAngle ), sinf( randomAngle ), 0 );
-        dp->pos.set( position * 300.0f );
+        float xyScale = 200.0;
+        ofVec3f position( cosf( randomAngle ) * xyScale, sinf( randomAngle ) * xyScale, worldPos.z );
+        dp->pos.set( worldPos );
+        dp->startPos.set( worldPos );
+        dp->targetPos.set( position );
         dp->vel.set( 0, 0, 0 );
+        dp->startPosTween( i * 70 );
     }
     
     cout << "there are " << cityParticles.size() << " dances for " << cityName << endl;

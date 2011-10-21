@@ -65,7 +65,6 @@ void testApp::update(){
     globe.update( deltaMillis );
 }
 
-
 void testApp::draw(){  
     glEnable( GL_DEPTH_TEST );
     ofEnableAlphaBlending();  
@@ -106,8 +105,9 @@ void testApp::globeLatLonTweenEnded( int & theId ) {
     
     cout << "globe lat lon tween ended" << endl;
     // tell the DPManager to do something with particles for the corresponding city
-    if ( mode == GLOBE_MODE )
-        dpManager.animateParticlesForCity( LM.cities[ currentCityIndex ] );
+    if ( mode == GLOBE_MODE ) {
+        dpManager.animateParticlesForCity( LM.cities[ currentCityIndex ], globe.getWorldCoordForLatLon( LM.latLonForCity( currentCityIndex ) ) );
+    }
     
 }
 

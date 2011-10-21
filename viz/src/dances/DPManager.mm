@@ -111,6 +111,8 @@ void DPManager::animateParticlesForCity( string cityName ) {
         dp->vel.set( 0, 0, 0 );
     }
     
+    cout << "there are " << cityParticles.size() << " dances for " << cityName << endl;
+    
 }
 
 void DPManager::transitionToGlobeMode() {

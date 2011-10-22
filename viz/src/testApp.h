@@ -23,9 +23,7 @@ public:
         
 		VizMode mode;
     
-        bool upKey, downKey, leftKey, rightKey;
-    
-        bool drawTextures;
+		bool drawTextures;
         ofEasyCam cam;
         float fov, nearClip, farClip;
         FrustumHelp frustumHelp;

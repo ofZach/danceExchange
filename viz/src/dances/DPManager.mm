@@ -35,7 +35,7 @@ void DPManager::update( int deltaMillis ) {
     
     for ( int i=0; i<dpVector.size(); i++ ) {
         DanceParticle *dp = dpVector[i];
-        if ( dp == loadingParticle && dp->smallVideoLoaded && dp->firstFrame < 0 ) {
+        if ( dp == loadingParticle && dp->DV->smallVideoLoaded && dp->DV->firstFrame < 0 ) {
             // integrate the frames into the textures
             addFramesToTextures( dp );
             // the frames are now integrated into the texture so this particle can now be a part of the scene
@@ -48,13 +48,13 @@ void DPManager::update( int deltaMillis ) {
             // set loadingParticle to 0 so we can load the next one
             loadingParticle = 0;
         }
-        else if ( !loadingParticle && !dp->smallVideoLoaded ) {
-            dp->loadSmallVideo();
+        else if ( !loadingParticle && !dp->DV->smallVideoLoaded ) {
+            dp->DV->loadSmallVideo();
             loadingParticle = dp;
         }
         else {
             dp->update( deltaMillis, paused );
-            if ( dp->firstFrame < 0 )
+            if ( dp->DV->firstFrame < 0 )
                 continue;
             
             if ( !frustumHelp.isPointInFrustum( dp->pos ) ) {
@@ -67,7 +67,7 @@ void DPManager::update( int deltaMillis ) {
                 pointilist.addPoint( dp->pos.x, dp->pos.y, dp->pos.z, // 3D position
                                     200.0 * globalScale, // size
                                     1.0, 1.0, 1.0, dp->alpha, // rgba
-                                    dp->texIndex, 0, dp->firstFrame + dp->currentFrame // texture unit, rotation (not used in this), cell number
+                                    dp->DV->texIndex, 0, dp->DV->firstFrame + dp->DV->currentFrame // texture unit, rotation (not used in this), cell number
                                     );
             }
         }
@@ -83,7 +83,7 @@ void DPManager::update( int deltaMillis ) {
                             50.0 * dp->posTween.getTarget( 0 ),
 //                            50.0,
                             1.0, 1.0, 1.0, dp->alpha,
-                            dp->texIndex, 0, dp->firstFrame + dp->currentFrame
+                            dp->DV->texIndex, 0, dp->DV->firstFrame + dp->DV->currentFrame
                             );
     }
 }
@@ -101,7 +101,7 @@ void DPManager::animateParticlesForCity( string cityName, ofVec3f worldPos ) {
     // go through and get all the particles corresponding to this city
     for ( vector<DanceParticle*>::iterator it = dpVector.begin(); it != dpVector.end(); it++ ) {
         DanceParticle* dp = *it;
-        if ( dp->info.city == cityName )
+        if ( dp->DV->info.city == cityName )
             cityParticles.push_back( dp );
     }
     
@@ -147,7 +147,7 @@ void DPManager::createParticle( DanceInfo &danceInfo ) {
     
     DanceParticle *dp = new DanceParticle( danceInfo );
     dpVector.push_back( dp );
-    dpMap[dp->info.hash] = dp;
+    dpMap[dp->DV->info.hash] = dp;
     
 }
 
@@ -157,20 +157,20 @@ void DPManager::addFramesToTextures( DanceParticle * dp ) {
     // figure out which frame on that texture we are starting at
     int texFrame = frameCount % FRAMES_PER_TEX;
     // is the number of frames in this animation going to overflow? we don't deal with that
-    if ( dp->info.numFrames + texFrame >= FRAMES_PER_TEX ) {
+    if ( dp->DV->info.numFrames + texFrame >= FRAMES_PER_TEX ) {
         texIndex++;
         frameCount = texIndex * FRAMES_PER_TEX;
     }
     
-    dp->firstFrame = frameCount % FRAMES_PER_TEX;
-    dp->texIndex = texIndex;
+    dp->DV->firstFrame = frameCount % FRAMES_PER_TEX;
+    dp->DV->texIndex = texIndex;
     
     //    cout << "adding frames into texIndex: " << texIndex << endl;
     
     // if the texIndex is less than our maximum number of textures, we can proceed
     if ( texIndex < NUM_TEXTURES ) {
         ofTexture &activeTexture = textures.at( texIndex );
-        for ( int i = 0; i < dp->info.numFrames; i++ ) {
+        for ( int i = 0; i < dp->DV->info.numFrames; i++ ) {
             texFrame = frameCount % FRAMES_PER_TEX;
             
             int col = texFrame % FRAMES_PER_ROW;
@@ -180,7 +180,7 @@ void DPManager::addFramesToTextures( DanceParticle * dp ) {
             int theY = row * FRAME_HEIGHT;
             
             //            GLvoid * pixels = (GLvoid *)(dp->smallVideoLoader->pixels + ( i * 100 * 76 * 3 ));
-            unsigned char * pixels = dp->smallVideoLoader->pixels + ( i * 100 * 76 * TH_MOVIE_CHANNELS );
+            unsigned char * pixels = dp->DV->smallVideoLoader->pixels + ( i * 100 * 76 * TH_MOVIE_CHANNELS );
             glEnable( activeTexture.getTextureData().textureTarget );
             glBindTexture( activeTexture.getTextureData().textureTarget, activeTexture.getTextureData().textureID );
             //            glTexSubImage2D( activeTexture.getTextureData().textureTarget, 0, theX, theY, 100, 76, activeTexture.getTextureData().glType, activeTexture.getTextureData().pixelType, pixels );

@@ -16,6 +16,7 @@
 		927757031450974D006F4A95 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 927756FB1450974D006F4A95 /* main.mm */; };
 		927757041450974D006F4A95 /* testApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = 927756FC1450974D006F4A95 /* testApp.mm */; };
 		9277573D1450A193006F4A95 /* networkManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9277573C1450A193006F4A95 /* networkManager.mm */; };
+		92CFB33D1453207F008A440D /* danceVideo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92CFB33C1453207F008A440D /* danceVideo.cpp */; };
 		92F9D3B91450CA7C00E33783 /* locationManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 92F9D3B81450CA7C00E33783 /* locationManager.mm */; };
 		932011D6144F6B0D00DF18A8 /* ofxEasing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 932011A2144F6B0D00DF18A8 /* ofxEasing.cpp */; };
 		932011D7144F6B0D00DF18A8 /* ofxEasingBack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 932011A4144F6B0D00DF18A8 /* ofxEasingBack.cpp */; };
@@ -50,7 +51,7 @@
 		937E44D21443E11F00A4A12B /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 937E44D11443E11F00A4A12B /* libz.dylib */; };
 		937E44D41443E13300A4A12B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 937E44D31443E13300A4A12B /* SystemConfiguration.framework */; };
 		BBAB23CB13894F3D00AA2426 /* GLUT.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
-		E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4328148138ABC890047C5CB /* openFrameworksDebug.a */; };
+		E4328149138ABC9F0047C5CB /* openFrameworks.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4328148138ABC890047C5CB /* openFrameworks.a */; };
 		E45BE97B0E8CC7DD009D7055 /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9710E8CC7DD009D7055 /* AGL.framework */; };
 		E45BE97C0E8CC7DD009D7055 /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9720E8CC7DD009D7055 /* ApplicationServices.framework */; };
 		E45BE97D0E8CC7DD009D7055 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9730E8CC7DD009D7055 /* AudioToolbox.framework */; };
@@ -118,6 +119,8 @@
 		927756FC1450974D006F4A95 /* testApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = testApp.mm; sourceTree = "<group>"; };
 		9277573B1450A193006F4A95 /* networkManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = networkManager.h; sourceTree = "<group>"; };
 		9277573C1450A193006F4A95 /* networkManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = networkManager.mm; sourceTree = "<group>"; };
+		92CFB33B1453207F008A440D /* danceVideo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = danceVideo.h; sourceTree = "<group>"; };
+		92CFB33C1453207F008A440D /* danceVideo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = danceVideo.cpp; sourceTree = "<group>"; };
 		92F9D3B71450CA7C00E33783 /* locationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = locationManager.h; sourceTree = "<group>"; };
 		92F9D3B81450CA7C00E33783 /* locationManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = locationManager.mm; sourceTree = "<group>"; };
 		932011A1144F6B0D00DF18A8 /* easing_terms_of_use.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = easing_terms_of_use.html; sourceTree = "<group>"; };
@@ -216,7 +219,7 @@
 				937E44D41443E13300A4A12B /* SystemConfiguration.framework in Frameworks */,
 				937E44D21443E11F00A4A12B /* libz.dylib in Frameworks */,
 				E4EB6799138ADC1D00A09F29 /* GLUT.framework in Frameworks */,
-				E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */,
+				E4328149138ABC9F0047C5CB /* openFrameworks.a in Frameworks */,
 				E45BE97B0E8CC7DD009D7055 /* AGL.framework in Frameworks */,
 				E45BE97C0E8CC7DD009D7055 /* ApplicationServices.framework in Frameworks */,
 				E45BE97D0E8CC7DD009D7055 /* AudioToolbox.framework in Frameworks */,
@@ -242,6 +245,8 @@
 				927756E81450974D006F4A95 /* DanceParticle.h */,
 				927756E91450974D006F4A95 /* DPManager.h */,
 				927756EA1450974D006F4A95 /* DPManager.mm */,
+				92CFB33B1453207F008A440D /* danceVideo.h */,
+				92CFB33C1453207F008A440D /* danceVideo.cpp */,
 			);
 			path = dances;
 			sourceTree = "<group>";
@@ -481,7 +486,7 @@
 		E4328144138ABC890047C5CB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E4328148138ABC890047C5CB /* openFrameworksDebug.a */,
+				E4328148138ABC890047C5CB /* openFrameworks.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -591,10 +596,10 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		E4328148138ABC890047C5CB /* openFrameworksDebug.a */ = {
+		E4328148138ABC890047C5CB /* openFrameworks.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			path = openFrameworksDebug.a;
+			path = openFrameworks.a;
 			remoteRef = E4328147138ABC890047C5CB /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -661,6 +666,7 @@
 				927757041450974D006F4A95 /* testApp.mm in Sources */,
 				9277573D1450A193006F4A95 /* networkManager.mm in Sources */,
 				92F9D3B91450CA7C00E33783 /* locationManager.mm in Sources */,
+				92CFB33D1453207F008A440D /* danceVideo.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

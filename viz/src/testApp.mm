@@ -3,7 +3,6 @@
 //--------------------------------------------------------------
 void testApp::setup() {
     
-    upKey = downKey = leftKey = rightKey = false;
     
     mode = STARFIELD_MODE;
     
@@ -139,15 +138,7 @@ void testApp::keyPressed(int key){
         switchMode( GLOBE_MODE );
     }
     
-    if ( key == OF_KEY_DOWN )
-        downKey = true;
-    if ( key == OF_KEY_UP )
-        upKey = true;
-    if ( key == OF_KEY_LEFT )
-        leftKey = true;
-    if ( key == OF_KEY_RIGHT )
-        rightKey = true;
-    
+  
     if ( key == 'c' ) {
         // pick a random city for the globe to spin to if we are in globe mode
         if ( mode == GLOBE_MODE ) {
@@ -190,14 +181,6 @@ void testApp::keyPressed(int key){
 }
 
 void testApp::keyReleased(int key) {
-    if ( key == OF_KEY_DOWN )
-        downKey = false;
-    if ( key == OF_KEY_UP )
-        upKey = false;
-    if ( key == OF_KEY_LEFT )
-        leftKey = false;
-    if ( key == OF_KEY_RIGHT )
-        rightKey = false;
 }
 
 void testApp::mousePressed(int x, int y, int button){

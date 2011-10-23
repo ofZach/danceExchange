@@ -68,10 +68,10 @@ void TapView::draw() {
     }
 }
 
-void TapView::beginCountdown( double countDelay ) {
+void TapView::beginCountdown( double countDelay, bool immediate ) {
     
     average = countDelay;
-    countdownTicks = 0;
+    countdownTicks = ( immediate ? 1 : 0 );
     countdownMillis = 0;
     isCountingDown = true;
     numTaps = MAX_TAPS;
@@ -94,11 +94,7 @@ void TapView::tap() {
         for ( int i=0; i<tapDiffs.size(); i++ ) {
             total += tapDiffs[i];
         }
-        beginCountdown( total / (double)tapDiffs.size() );
-//        average = total / (double)tapDiffs.size();
-//        countdownTicks = 0;
-//        countdownMillis = 0;
-//        isCountingDown = true;
+        beginCountdown( total / (double)tapDiffs.size(), false );
     }
     else {
         lastTap = now;

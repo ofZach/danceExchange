@@ -21,8 +21,8 @@ void PreviewView::update() {
     }
 }
 
-void PreviewView::draw() {
+void PreviewView::draw( int theX, int theY, int theWidth, int theHeight ) {
     ofImage *img = frames[frameIndex];
     ofSetColor( 255, 255, 255 );
-    img->draw( 0, 0, ofGetWidth(), ofGetHeight() );
+    img->draw( theX, theY, theWidth, theHeight );
 }

@@ -13,5 +13,5 @@ public:
     
     void init( vector<ofImage*> &frames, double interval ); 
     void update();
-    void draw();
+    void draw( int theX = 0, int theY = 0, int theWidth = ofGetWidth(), int theHeight = ofGetHeight() );
 };

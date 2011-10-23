@@ -11,8 +11,10 @@
 class testApp : public ofBaseApp{
 
 	public:
+    
         Helper *helper;
         PreviewView *previewView;
+        vector<PreviewView*> previewViews;
         TapView *tapView;
         EmailView *emailView;
         ofxQtVideoSaver videoSaver;
@@ -34,7 +36,9 @@ class testApp : public ofBaseApp{
     
         bool isEmailing;
     
-        vector<ofImage*> frames;
+        vector<ofImage*> frames[4];
+        int currentCaptureIndex;
+        int chosenCaptureIndex;
         bool showFrames;
     
 		void setup();

@@ -3,6 +3,7 @@
 static int FRAMES_PER_BEAT = 6;
 static int BEATS_PER_CAPTURE = 4;
 static int LOCKED_BPM = 110;
+static int NUM_CAPTURES = 4;
 
 void testApp::setup(){
     ofSetVerticalSync( TRUE );
@@ -60,20 +61,28 @@ void testApp::update(){
         tapView->update();
     }
     
-    if ( previewView ) {
-        previewView->update();
+    
+    if ( previewViews.size() > 0 ) {
+        for ( int i=0; i<previewViews.size(); i++ ) {
+            previewViews[i]->update();
+        }
     }
+//    if ( previewView ) {
+//        previewView->update();
+//    }
     
     if ( isCapturing ) {
         captureMillis += deltaMillis;
         if ( captureMillis > captureInterval ) {
             captureFrame();
             captureMillis -= captureInterval;
-            cout << "frames captured: " << frames.size() << std::endl;
+            cout << "capture " << (currentCaptureIndex+1) << " frames captured: " << frames[currentCaptureIndex].size() << std::endl;
             
-            if ( frames.size() == FRAMES_PER_BEAT * BEATS_PER_CAPTURE ) {
-                isCapturing = false;
-                startPreviewing();
+            if ( frames[currentCaptureIndex].size() == FRAMES_PER_BEAT * BEATS_PER_CAPTURE ) {
+                if ( ++currentCaptureIndex == NUM_CAPTURES ) {
+                    isCapturing = false;
+                    startPreviewing();
+                }
             }
         }
     }
@@ -107,8 +116,20 @@ void testApp::draw(){
         tapView->draw();
     }
     
-    if ( previewView ) {
-        previewView->draw();
+    if ( previewViews.size() > 0 ) {
+        if ( previewViews.size() == 1 ) {
+            previewViews[0]->draw();
+        }
+        else if ( previewViews.size() == 4 ) {
+            int previewWidth = ofGetWidth() / 2;
+            int previewHeight = ofGetHeight() / 2;
+            
+            previewViews[0]->draw( 0, 0, previewWidth, previewHeight );
+            previewViews[1]->draw( previewWidth, 0, previewWidth, previewHeight );
+            previewViews[2]->draw( 0, previewHeight, previewWidth, previewHeight );
+            previewViews[3]->draw( previewWidth, previewHeight, previewWidth, previewHeight );                                
+        }
+        
         if ( uploadMessage != "" ) {
             ofRectangle stringRect = verdana.getStringBoundingBox( uploadMessage, 0, 0 );
             float stringX = ofGetWidth() / 2.0 - stringRect.width / 2.0;
@@ -117,6 +138,17 @@ void testApp::draw(){
             verdana.drawString( uploadMessage, stringX, stringY );
         }
     }
+    
+//    if ( previewView ) {
+//        previewView->draw();
+//        if ( uploadMessage != "" ) {
+//            ofRectangle stringRect = verdana.getStringBoundingBox( uploadMessage, 0, 0 );
+//            float stringX = ofGetWidth() / 2.0 - stringRect.width / 2.0;
+//            float stringY = ofGetHeight() / 2.0 - 100;// - stringRect.height / 2.0;
+//            ofSetColor( 255, 255, 255, 200 );
+//            verdana.drawString( uploadMessage, stringX, stringY );
+//        }
+//    }
     
     if ( emailView ) {
         emailView->draw();
@@ -145,6 +177,8 @@ void testApp::emailAddressEntered( string & emailAddress ) {
 }
 
 void testApp::startCapturing(double & d){
+    currentCaptureIndex = 0;
+    chosenCaptureIndex = 0;
     captureFrame();
     isCapturing = true;
     captureMillis = 0;
@@ -153,8 +187,14 @@ void testApp::startCapturing(double & d){
 }
 
 void testApp::startPreviewing() {
-    previewView = new PreviewView();
-    previewView->init( frames, captureInterval );
+    
+    for ( int i=0; i<NUM_CAPTURES; i++ ) {
+        PreviewView *pv = new PreviewView();
+        pv->init( frames[i], captureInterval );
+        previewViews.push_back( pv );
+    }
+//    previewView = new PreviewView();
+//    previewView->init( frames[0], captureInterval );
 }
 
 void testApp::captureFrame() {
@@ -162,16 +202,18 @@ void testApp::captureFrame() {
     ofImage *frame = new ofImage();
     ofPixels pixels = grabber.getPixelsRef();
     frame->setFromPixels( pixels );
-//    frame->resize( 640, 360 );
-    frames.push_back( frame );
+    frames[currentCaptureIndex].push_back( frame );
 }
 
 void testApp::saveVideoFiles() {
     
-    videoSaver.setup( frames[0]->width, frames[0]->height );
+    if ( chosenCaptureIndex >= NUM_CAPTURES )
+        chosenCaptureIndex = 0;
+    
+    videoSaver.setup( frames[chosenCaptureIndex][0]->width, frames[chosenCaptureIndex][0]->height );
     videoSaver.startMovie();
-    for ( int i=0; i<frames.size(); i++ ) {
-        ofImage *img = frames[i];
+    for ( int i=0; i<frames[chosenCaptureIndex].size(); i++ ) {
+        ofImage *img = frames[chosenCaptureIndex][i];
         videoSaver.addFrame( img->getPixels(), captureInterval / 1000.0 );
     }
     videoSaver.finishMovie();
@@ -183,9 +225,17 @@ void testApp::saveVideoFiles() {
 
 void testApp::destroyPreview() {
     
-    if ( previewView ) {
-        delete previewView;
-        previewView = 0;
+//    if ( previewView ) {
+//        delete previewView;
+//        previewView = 0;
+//    }
+    
+    if ( previewViews.size() > 0 ) {
+        for ( int i=0; i<previewViews.size(); i++ ) {
+            PreviewView *pv = previewViews[i];
+            delete pv;
+        }
+        previewViews.clear();
     }
     
     if ( emailView ) {
@@ -195,11 +245,13 @@ void testApp::destroyPreview() {
         emailView = 0;
     }
     
-    for ( int i = 0; i < frames.size(); i++ ) {
-        ofImage *img = frames[i];
-        delete img;
+    for ( int i = 0; i < NUM_CAPTURES; i++ ) {
+        for ( int j = 0; j < frames[i].size(); j++ ) {
+            ofImage *img = frames[i][j];
+            delete img;
+        }
+        frames[i].clear();
     }
-    frames.clear();
     uploadMessage = "";
     tapView->reset();
     
@@ -209,45 +261,28 @@ void testApp::keyPressed(int key){
     if ( emailView ) return;
     
     // if the preview view is active, we handle things here differently
-    if ( previewView && !isUploading ) {
+    if ( previewViews.size() > 0 && !isUploading ) {
         if ( key == 'x' ) {
             destroyPreview();
         }
-//        else if ( key == 'u' ) {
-//            cout << "start uploading..." << std::endl;
-//            for ( int i=0; i<frames.size(); i++ ) {
-//                ofImage *img = frames[i];
-//                [helper addFrame:img->getPixels() withWidth:img->width andHeight:img->height];
-//            }
-//            [helper startGifRequest:captureInterval];
-//            isUploading = true;
-//        }
-//        else if ( key == 's' ) {
-//            gifEncoder.setup( frames[0]->width, frames[0]->height, captureInterval / 1000.0, 256 );
-//            gifEncoder.setDitherMode( OFX_GIF_DITHER_BAYER16x16 );
-//            for ( int i=0; i<frames.size(); i++ ) {
-//                ofImage *img = frames[i];
-//                gifEncoder.addFrame( *img );
-//            }
-//            gifStartTime = ofGetElapsedTimeMillis();
-//            gifEncoder.save( "test.gif" );
-//        }
-        else if ( key == 'm' ) {
+        else if ( key == '1' ) {
+            chosenCaptureIndex = 0;
             saveVideoFiles();
         }
-//        // if there is an upload message, then we finished an upload
-//        // open the gif's url and clear out preview mode
-//        else if ( key == ' ' && uploadMessage != "" ) {
-//            ofLaunchBrowser( uploadMessage );
-//            delete previewView;
-//            previewView = 0;
-//            for ( int i = 0; i < frames.size(); i++ ) {
-//                ofImage *img = frames[i];
-//                delete img;
-//            }
-//            frames.clear();
-//            tapView->reset();
-//            uploadMessage = "";
+        else if ( key == '2' ) {
+            chosenCaptureIndex = 1;
+            saveVideoFiles();
+        }
+        else if ( key == '3' ) {
+            chosenCaptureIndex = 2;
+            saveVideoFiles();
+        }
+        else if ( key == '4' ) {
+            chosenCaptureIndex = 3;
+            saveVideoFiles();
+        }
+//        else if ( key == 'm' ) {
+//            saveVideoFiles();
 //        }
     }
     else {
@@ -256,7 +291,7 @@ void testApp::keyPressed(int key){
         }
         else if ( key == 'c' ) {
             cout << " beginning countdown" << endl;
-            tapView->beginCountdown( ( 60.0 / (double)LOCKED_BPM ) * 1000.0 );
+            tapView->beginCountdown( ( 60.0 / (double)LOCKED_BPM ) * 1000.0, true );
         }
         else if ( key == ' ' ) {
             tapView->tap();

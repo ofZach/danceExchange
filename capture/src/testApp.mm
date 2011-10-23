@@ -2,6 +2,7 @@
 
 static int FRAMES_PER_BEAT = 6;
 static int BEATS_PER_CAPTURE = 4;
+static int LOCKED_BPM = 110;
 
 void testApp::setup(){
     ofSetVerticalSync( TRUE );
@@ -252,6 +253,10 @@ void testApp::keyPressed(int key){
     else {
         if ( key == 'p' ) {
             
+        }
+        else if ( key == 'c' ) {
+            cout << " beginning countdown" << endl;
+            tapView->beginCountdown( ( 60.0 / (double)LOCKED_BPM ) * 1000.0 );
         }
         else if ( key == ' ' ) {
             tapView->tap();

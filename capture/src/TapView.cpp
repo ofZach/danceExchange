@@ -68,6 +68,15 @@ void TapView::draw() {
     }
 }
 
+void TapView::beginCountdown( double countDelay ) {
+    
+    average = countDelay;
+    countdownTicks = 0;
+    countdownMillis = 0;
+    isCountingDown = true;
+    numTaps = MAX_TAPS;
+}
+
 void TapView::tap() {
     if ( isCountingDown )
         return;
@@ -85,11 +94,11 @@ void TapView::tap() {
         for ( int i=0; i<tapDiffs.size(); i++ ) {
             total += tapDiffs[i];
         }
-        average = total / (double)tapDiffs.size();
-//        cout << "the average is " << average << " millis" << std::endl;
-        countdownTicks = 0;
-        countdownMillis = 0;
-        isCountingDown = true;
+        beginCountdown( total / (double)tapDiffs.size() );
+//        average = total / (double)tapDiffs.size();
+//        countdownTicks = 0;
+//        countdownMillis = 0;
+//        isCountingDown = true;
     }
     else {
         lastTap = now;

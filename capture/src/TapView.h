@@ -29,5 +29,6 @@ public:
     void update();
     void draw();
     void tap();
+    void beginCountdown( double countDelay );
     void reset();
 };

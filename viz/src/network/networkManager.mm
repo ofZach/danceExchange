@@ -22,7 +22,8 @@ void networkManager::update(){
 	vector<DanceInfo> danceInfos = dbHelper.danceInfos;
     if ( danceInfos.size() > 0 ) {
         for ( int i=0; i<danceInfos.size(); i++ ) {
-            dpManager->createParticle( danceInfos[i] );
+//            dpManager->createParticle( danceInfos[i] );
+            dvManager->createDanceVideo( danceInfos[i] );
         }
         [dbHelper clearDanceInfos];
 		//        cout << "local dance info count: " << danceInfos.size() << endl;

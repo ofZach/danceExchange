@@ -11,6 +11,7 @@
 #include "ofTexture.h"
 #include "Globe.h"
 #include "DPManager.h"
+#include "DVManager.h"
 
 enum VizMode {
     STARFIELD_MODE,
@@ -29,7 +30,10 @@ public:
         FrustumHelp frustumHelp;
         bool paused;
         
+        Pointilist pointilist;
+    
         DPManager dpManager;
+        DVManager dvManager;
     
 		networkManager NM;
 		locationManager LM;
@@ -46,6 +50,7 @@ public:
 		void draw();
         void updateCity();
         void globeLatLonTweenEnded( int & theId );
+        void danceVideoLoaded( danceVideo & dv );
         void switchMode( VizMode nextMode );
 
 		void keyPressed  (int key);

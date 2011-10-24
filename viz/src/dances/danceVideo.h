@@ -10,28 +10,44 @@ public:
     
 	DanceInfo info;
     
+    // dance info stuff
+    int                 id; // database id
+    string              hash; // database hash value
+    string              city; // city name
+    string              url; // some url... i forget!
+    string              creationTime; // the time it was created
+    int                 numFrames; // number of frames in the loop
+    
+    
     bool                smallVideoLoaded;
     threadMovieLoader*  smallVideoLoader;
     int                 smallVideoLoadStartMillis;
     
     int                 texIndex;
     int                 firstFrame;
-    int                 numFrames;
     int                 currentFrame;
     int                 frameDelay;
     int                 milliCounter;
     
    
     danceVideo( DanceInfo info ) {
-		printf("here \n");
+//		printf("here \n");
         this->info = info;
+        
+        this->id              = info.id;
+        this->hash            = info.hash;
+        this->city            = info.city;
+        this->url             = info.url;
+        this->creationTime    = info.creationTime;
+        this->numFrames       = info.numFrames;
+        
+        
         smallVideoLoaded = false;
         smallVideoLoader = 0;
         texIndex = -1;
         firstFrame = -1;
-        numFrames = info.numFrames;
         currentFrame = 0;
-        frameDelay = 50;
+        frameDelay = 100;
         milliCounter = 0;
     }
     
@@ -55,12 +71,13 @@ public:
             int diff = now - smallVideoLoadStartMillis;
 			smallVideoLoaded = true;
         }
-        
-        milliCounter += deltaMillis;
-        if ( milliCounter >= frameDelay ) {
-            milliCounter -= frameDelay;
-            if ( ++currentFrame == numFrames )
-                currentFrame = 0;
+        else {
+            milliCounter += deltaMillis;
+            if ( milliCounter >= frameDelay ) {
+                milliCounter -= frameDelay;
+                if ( ++currentFrame == numFrames )
+                    currentFrame = 0;
+            }
         }
         
 	}

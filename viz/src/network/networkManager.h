@@ -4,6 +4,7 @@
 #include "ofMain.h"
 #include "DBHelper.h"
 #include "DPManager.h"
+#include "DVManager.h"
 
 
 class networkManager {
@@ -17,7 +18,8 @@ class networkManager {
 	
 		DBHelper *dbHelper;
 		DPManager * dpManager;
-	
+        DVManager * dvManager;
+    
 		bool isRequestingRecentDances;
 	
 	

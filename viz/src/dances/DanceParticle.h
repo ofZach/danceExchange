@@ -20,9 +20,10 @@ public:
     ofVec3f             vel;
     float               alpha;
     
-    DanceParticle( DanceInfo info ) {
-		DV = new danceVideo (info);
-	}
+    DanceParticle( danceVideo *dv ) {
+        this->DV = dv;
+        
+    }
     
    
     void startPosTween( int delay ) {
@@ -41,15 +42,13 @@ public:
     }
     
     void update( int deltaMillis, bool paused ) {
+        
+        if ( alpha < 1.0 ) {
+            alpha = fminf( 1.0, alpha + .01 );
+        }
+        pos += vel;
+		
 		DV->update(deltaMillis, paused);
-		
-		if ( !paused && DV->firstFrame > 0 ) {
-			if ( alpha < 1.0 ) {
-				alpha = fminf( 1.0, alpha + .01 );
-			}
-			pos += vel;
-		}
-		
 	}
     
 };

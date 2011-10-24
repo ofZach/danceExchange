@@ -50,6 +50,7 @@
 		937E44D01443E09700A4A12B /* CJSONSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 937E44C51443E09700A4A12B /* CJSONSerializer.m */; };
 		937E44D21443E11F00A4A12B /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 937E44D11443E11F00A4A12B /* libz.dylib */; };
 		937E44D41443E13300A4A12B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 937E44D31443E13300A4A12B /* SystemConfiguration.framework */; };
+		9385676C1455DFFF005BA542 /* DVManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9385676B1455DFFF005BA542 /* DVManager.mm */; };
 		BBAB23CB13894F3D00AA2426 /* GLUT.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
 		E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4328148138ABC890047C5CB /* openFrameworksDebug.a */; };
 		E45BE97B0E8CC7DD009D7055 /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9710E8CC7DD009D7055 /* AGL.framework */; };
@@ -191,6 +192,8 @@
 		937E44C61443E09700A4A12B /* JSONRepresentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONRepresentation.h; sourceTree = "<group>"; };
 		937E44D11443E11F00A4A12B /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = /usr/lib/libz.dylib; sourceTree = "<absolute>"; };
 		937E44D31443E13300A4A12B /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = /System/Library/Frameworks/SystemConfiguration.framework; sourceTree = "<absolute>"; };
+		9385676A1455DFE0005BA542 /* DVManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVManager.h; sourceTree = "<group>"; };
+		9385676B1455DFFF005BA542 /* DVManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DVManager.mm; sourceTree = "<group>"; };
 		BBAB23BE13894E4700AA2426 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = ../../../libs/glut/lib/osx/GLUT.framework; sourceTree = "<group>"; };
 		E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openFrameworksLib.xcodeproj; path = ../../../libs/openFrameworksCompiled/project/osx/openFrameworksLib.xcodeproj; sourceTree = SOURCE_ROOT; };
 		E45BE9710E8CC7DD009D7055 /* AGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGL.framework; path = /System/Library/Frameworks/AGL.framework; sourceTree = "<absolute>"; };
@@ -247,6 +250,8 @@
 				927756EA1450974D006F4A95 /* DPManager.mm */,
 				92CFB33B1453207F008A440D /* danceVideo.h */,
 				92CFB33C1453207F008A440D /* danceVideo.cpp */,
+				9385676A1455DFE0005BA542 /* DVManager.h */,
+				9385676B1455DFFF005BA542 /* DVManager.mm */,
 			);
 			path = dances;
 			sourceTree = "<group>";
@@ -667,6 +672,7 @@
 				9277573D1450A193006F4A95 /* networkManager.mm in Sources */,
 				92F9D3B91450CA7C00E33783 /* locationManager.mm in Sources */,
 				92CFB33D1453207F008A440D /* danceVideo.cpp in Sources */,
+				9385676C1455DFFF005BA542 /* DVManager.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

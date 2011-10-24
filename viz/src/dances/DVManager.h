@@ -1,40 +1,30 @@
 #pragma once
 
 #include "ofMain.h"
-#include "DanceParticle.h"
 #include "Pointilist.h"
-#include "FrustumHelp.h"
-#include "ofxTween.h"
+#include "DanceInfo.h"
+#include "danceVideo.h"
 
-enum DPManagerTween {
-    DPMANAGER_GLOBAL_SCALE
-};
-
-class DPManager {
+class DVManager {
 public:
     
-    FrustumHelp                             frustumHelp;
-    vector<DanceParticle*>                  dpVector;
-    map<string,DanceParticle*>              dpMap;
-    bool                                    paused;
+    Pointilist                  *pointilist;
     
-    vector<DanceParticle*>                  cityParticles;
+    vector<danceVideo*>         unloadedDanceVideos;
+    vector<danceVideo*>         danceVideos;
+    vector<ofTexture>           textures;
+    danceVideo                  *loadingVideo;
+    int                         frameCount;
+    bool                        paused;
     
-    Pointilist                              *pointilist;
-    float                                   globalScale;
-    ofxTween                                globalScaleTween;
-    ofxEasingQuad                           quadEasing;
+    ofEvent<danceVideo>        danceVideoLoadedEvent;
     
     
-    void init( Pointilist *pointilist );
+    void init( Pointilist * pointilist );
     void update( int deltaMillis );
-    void draw();
-    void transitionToGlobeMode();
-    void transitionToStarfieldMode();
-    void tweenParticlesToScale( float desiredScale, float duration, float delay = 0 );
-    void createParticle( danceVideo *dv );
-    void tweenEnded( int & theId );
-    void animateParticlesForCity( string cityName, ofVec3f worldPos );
+    void createDanceVideo( DanceInfo & danceInfo );
+    
+    void addFramesToTextures( danceVideo * dv );
     void allocateTexture(ofTexture &texture, int w, int h, int internalGlDataType, bool bUseARBExtention) {
         
         

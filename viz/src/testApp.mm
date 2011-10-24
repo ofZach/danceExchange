@@ -29,13 +29,18 @@ void testApp::setup() {
     ofSetFrameRate( 60.0 );
 	ofBackground(0, 0, 0);
 	
-    dpManager.init();
+    pointilist.init( 1000, true );
+    
+    dpManager.init( &pointilist );
     dpManager.frustumHelp = frustumHelp;
     
-   
+    dvManager.init( &pointilist );
+    ofAddListener( dvManager.danceVideoLoadedEvent, this, &testApp::danceVideoLoaded );
+    
 	
 	
     // setup the networking
+    NM.dvManager = &dvManager;
 	NM.dpManager = &dpManager;
 	NM.setup();
 	
@@ -57,6 +62,8 @@ void testApp::update(){
     
     
     frustumHelp.calcNearAndFarClipCoordinates( cam );
+    
+    dvManager.update( deltaMillis );
     
     dpManager.frustumHelp.calcNearAndFarClipCoordinates( cam );
     dpManager.update( deltaMillis );
@@ -93,11 +100,17 @@ void testApp::draw(){
     ofDrawBitmapString( LM.cities[currentCityIndex], 10, 45 );
     
     if ( drawTextures ) {
-        for ( int i = 0; i < dpManager.textures.size(); i++ ) {
-            ofTexture &tex = dpManager.textures[i];
+        for ( int i = 0; i < dvManager.textures.size(); i++ ) {
+            ofTexture &tex = dvManager.textures[i];
             tex.draw( i * 200, ofGetHeight() - 200, 200, 200 );
         }
     }
+}
+
+void testApp::danceVideoLoaded( danceVideo & dv ) {
+    
+    dpManager.frustumHelp.calcNearAndFarClipCoordinates( cam );
+    dpManager.createParticle( &dv );
 }
 
 void testApp::globeLatLonTweenEnded( int & theId ) {

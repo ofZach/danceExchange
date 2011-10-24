@@ -4,6 +4,7 @@ static int FRAMES_PER_BEAT = 6;
 static int BEATS_PER_CAPTURE = 4;
 static int LOCKED_BPM = 110;
 static int NUM_CAPTURES = 4;
+static int WHITE_FLASH = 200;
 
 void testApp::setup(){
     ofSetVerticalSync( TRUE );
@@ -15,6 +16,7 @@ void testApp::setup(){
     
     previewView = 0;
     emailView = 0;
+    chosenPreviewView = 0;
     tapView = new TapView();
     ofAddListener(tapView->startCaptureEvent, this, &testApp::startCapturing);
     
@@ -87,6 +89,10 @@ void testApp::update(){
         }
     }
     
+    if ( whiteFlashTween.isRunning() ) {
+        whiteFlashTween.update();
+    }
+    
     if ( isUploading && ![helper isUploading] ) {
         // the upload finished
         isUploading = false;
@@ -124,11 +130,14 @@ void testApp::draw(){
             int previewWidth = ofGetWidth() / 2;
             int previewHeight = ofGetHeight() / 2;
             
-            previewViews[0]->draw( 0, 0, previewWidth, previewHeight );
-            previewViews[1]->draw( previewWidth, 0, previewWidth, previewHeight );
-            previewViews[2]->draw( 0, previewHeight, previewWidth, previewHeight );
-            previewViews[3]->draw( previewWidth, previewHeight, previewWidth, previewHeight );                                
+            previewViews[0]->draw();// 0, 0, previewWidth, previewHeight );
+            previewViews[1]->draw();// previewWidth, 0, previewWidth, previewHeight );
+            previewViews[2]->draw();// 0, previewHeight, previewWidth, previewHeight );
+            previewViews[3]->draw();// previewWidth, previewHeight, previewWidth, previewHeight );                                
         }
+        
+        if ( chosenPreviewView )
+            chosenPreviewView->draw();
         
         if ( uploadMessage != "" ) {
             ofRectangle stringRect = verdana.getStringBoundingBox( uploadMessage, 0, 0 );
@@ -137,6 +146,11 @@ void testApp::draw(){
             ofSetColor( 255, 255, 255, 200 );
             verdana.drawString( uploadMessage, stringX, stringY );
         }
+    }
+    
+    if ( whiteFlashTween.isRunning() ) {
+        ofSetColor( 255, 255, 255, (int)(255.0 * whiteFlashTween.getTarget( 0 )) );
+        ofRect( 0, 0, ofGetWidth(), ofGetHeight() );
     }
     
 //    if ( previewView ) {
@@ -193,22 +207,53 @@ void testApp::startPreviewing() {
         pv->init( frames[i], captureInterval );
         previewViews.push_back( pv );
     }
+    
+    if ( previewViews.size() == 1 ) {
+        previewViews[0]->startSizeTween( 0, ofGetWidth()/2, 0, ofGetHeight()/2, 400, 0 );
+        previewViews[0]->setCenter( ofGetWidth()/2, ofGetHeight()/2 );
+    }
+    else if ( previewViews.size() == 4 ) {
+        
+        int previewWidth = ofGetWidth() / 2;
+        int previewHeight = ofGetHeight() / 2;
+        
+        previewViews[0]->startSizeTween( 0, previewWidth, 0, previewHeight, 400, 0 );
+        previewViews[0]->setCenter( previewWidth/2.0, previewHeight/2.0 );
+        
+        previewViews[1]->startSizeTween( 0, previewWidth, 0, previewHeight, 400, 100 );
+        previewViews[1]->setCenter( previewWidth + previewWidth/2.0, previewHeight/2.0 );
+        
+        previewViews[2]->startSizeTween( 0, previewWidth, 0, previewHeight, 400, 200 );
+        previewViews[2]->setCenter( previewWidth/2.0, previewHeight + previewHeight/2.0 );
+        
+        previewViews[3]->startSizeTween( 0, previewWidth, 0, previewHeight, 400, 300 );
+        previewViews[3]->setCenter( previewWidth + previewWidth/2.0, previewHeight + previewHeight/2.0 );
+        
+    }
 //    previewView = new PreviewView();
 //    previewView->init( frames[0], captureInterval );
 }
 
 void testApp::captureFrame() {
     
+    if ( frames[currentCaptureIndex].size() % FRAMES_PER_BEAT == 0 )
+        whiteFlashTween.setParameters( easingQuad, ofxTween::easeOut, 1, 0, WHITE_FLASH, 0 );
+    
     ofImage *frame = new ofImage();
     ofPixels pixels = grabber.getPixelsRef();
     frame->setFromPixels( pixels );
     frames[currentCaptureIndex].push_back( frame );
+    
 }
 
 void testApp::saveVideoFiles() {
     
     if ( chosenCaptureIndex >= NUM_CAPTURES )
         chosenCaptureIndex = 0;
+    
+    chosenPreviewView = previewViews[ chosenCaptureIndex ];
+    chosenPreviewView->startSizeTween( chosenPreviewView->widthEnd, ofGetWidth(), chosenPreviewView->height, ofGetHeight(), 500, 0 );
+    chosenPreviewView->startCenterTween( chosenPreviewView->centerX, ofGetWidth()/2, chosenPreviewView->centerY, ofGetHeight()/2, 500, 0 );
     
     videoSaver.setup( frames[chosenCaptureIndex][0]->width, frames[chosenCaptureIndex][0]->height );
     videoSaver.startMovie();
@@ -229,6 +274,9 @@ void testApp::destroyPreview() {
 //        delete previewView;
 //        previewView = 0;
 //    }
+    
+    if ( chosenPreviewView )
+        chosenPreviewView = 0;
     
     if ( previewViews.size() > 0 ) {
         for ( int i=0; i<previewViews.size(); i++ ) {

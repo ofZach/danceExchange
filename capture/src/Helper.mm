@@ -144,11 +144,12 @@
 }
 
 - (void)setDoubleValue:(double)doubleValue {
+    NSLog( @"setDoubleValue: %f", doubleValue );
     [self setUploadProgress:doubleValue];
 }
 
 - (void)uploadRequestDidFinish:(ASIHTTPRequest *)request {
-//    NSLog( @"uploadRequestDidFinish: %@", [request responseString] );
+    NSLog( @"uploadRequestDidFinish: %@", [request responseString] );
     
     [self setIsUploading:NO];
     
@@ -175,7 +176,7 @@
 }
 
 - (void)uploadRequestDidFail:(ASIHTTPRequest *)request {
-    NSLog( @"uploadRequestDidFail" );
+    NSLog( @"uploadRequestDidFail: %@", [[request error] localizedDescription] );
     
     [self setIsUploading:NO];
     [self setUploadFailed:YES];

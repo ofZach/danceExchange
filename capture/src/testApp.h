@@ -7,6 +7,7 @@
 #include "TapView.h"
 #include "EmailView.h"
 #include "ofxQtVideoSaver.h"
+#include "ofxTween.h"
 
 class testApp : public ofBaseApp{
 
@@ -15,11 +16,15 @@ class testApp : public ofBaseApp{
         Helper *helper;
         PreviewView *previewView;
         vector<PreviewView*> previewViews;
+        PreviewView *chosenPreviewView;
         TapView *tapView;
         EmailView *emailView;
         ofxQtVideoSaver videoSaver;
     
         ofTrueTypeFont verdana;
+    
+        ofxTween whiteFlashTween;
+        ofxEasingQuad easingQuad;
     
         double lastMillis;
     

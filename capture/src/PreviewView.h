@@ -20,11 +20,15 @@ public:
     
     ofxTween sizeTween;
     ofxTween centerTween;
+    ofxTween fadeOutTween;
     ofxEasingQuad easingQuad;
+    
+    float alpha;
     
     void init( vector<ofImage*> &frames, double interval ); 
     void update();
     void setCenter( float cX, float cY );
+    void startFadeOut();
     void startSizeTween( float wStart, float wEnd, float hStart, float hEnd, int duration, int delay );
     void startCenterTween( float cxStart, float cxEnd, float cyStart, float cyEnd, int duration, int delay );
     void draw();

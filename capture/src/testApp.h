@@ -56,6 +56,7 @@ class testApp : public ofBaseApp{
 		
         void emailAddressEntered( string & emailAddress );
         void startCapturing(double & d);
+        void chosenPreviewFadedOut( int & theId );
         void startPreviewing();
     
         double gifStartTime;

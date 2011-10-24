@@ -93,6 +93,7 @@ void testApp::update(){
         whiteFlashTween.update();
     }
     
+    // this is where the upload finishes
     if ( isUploading && ![helper isUploading] ) {
         // the upload finished
         isUploading = false;
@@ -108,7 +109,8 @@ void testApp::update(){
     if ( isEmailing && ![helper isEmailing] ) {
         
         isEmailing = false;
-        destroyPreview();
+        chosenPreviewView->startFadeOut();
+//        destroyPreview();
     }
 }
 
@@ -123,17 +125,21 @@ void testApp::draw(){
     }
     
     if ( previewViews.size() > 0 ) {
-        if ( previewViews.size() == 1 ) {
-            previewViews[0]->draw();
-        }
-        else if ( previewViews.size() == 4 ) {
-            int previewWidth = ofGetWidth() / 2;
-            int previewHeight = ofGetHeight() / 2;
-            
-            previewViews[0]->draw();// 0, 0, previewWidth, previewHeight );
-            previewViews[1]->draw();// previewWidth, 0, previewWidth, previewHeight );
-            previewViews[2]->draw();// 0, previewHeight, previewWidth, previewHeight );
-            previewViews[3]->draw();// previewWidth, previewHeight, previewWidth, previewHeight );                                
+        
+        if ( !chosenPreviewView || ( chosenPreviewView && chosenPreviewView->alpha == 1.0 ) ) {
+        
+            if ( previewViews.size() == 1 ) {
+                previewViews[0]->draw();
+            }
+            else if ( previewViews.size() == 4 ) {
+                int previewWidth = ofGetWidth() / 2;
+                int previewHeight = ofGetHeight() / 2;
+                
+                previewViews[0]->draw();// 0, 0, previewWidth, previewHeight );
+                previewViews[1]->draw();// previewWidth, 0, previewWidth, previewHeight );
+                previewViews[2]->draw();// 0, previewHeight, previewWidth, previewHeight );
+                previewViews[3]->draw();// previewWidth, previewHeight, previewWidth, previewHeight );                                
+            }
         }
         
         if ( chosenPreviewView )
@@ -178,7 +184,8 @@ void testApp::emailAddressEntered( string & emailAddress ) {
     
     if ( emailAddress == "" ) {
         cout << "no email address was entered" << endl;
-        destroyPreview();
+        chosenPreviewView->startFadeOut();
+//        destroyPreview();
     }
     else {
         cout << "this email address was entered: " << emailAddress << endl;
@@ -265,8 +272,13 @@ void testApp::saveVideoFiles() {
     isUploading = true;
     
     chosenPreviewView = previewViews[ chosenCaptureIndex ];
+    ofAddListener( chosenPreviewView->fadeOutTween.end_E, this, &testApp::chosenPreviewFadedOut );
     chosenPreviewView->startSizeTween( chosenPreviewView->widthEnd, ofGetWidth(), chosenPreviewView->height, ofGetHeight(), 500, 0 );
-    chosenPreviewView->startCenterTween( chosenPreviewView->centerX, ofGetWidth()/2, chosenPreviewView->centerY, ofGetHeight()/2, 500, 0 );
+    chosenPreviewView->startCenterTween( chosenPreviewView->centerX, ofGetWidth()/2, chosenPreviewView->centerY, ofGetHeight()/2, 500, 0 ); 
+}
+
+void testApp::chosenPreviewFadedOut( int & theId ) {
+    destroyPreview();
 }
 
 void testApp::destroyPreview() {

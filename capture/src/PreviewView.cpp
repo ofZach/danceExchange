@@ -6,6 +6,7 @@ void PreviewView::init( vector<ofImage*> &frames, double interval ) {
     frameIndex = 0;
     intervalMillis = 0;
     this->interval = interval;
+    alpha = 1;
 }
 
 void PreviewView::update() {
@@ -20,6 +21,10 @@ void PreviewView::update() {
         centerTween.update();
         centerX = ofMap( centerTween.getTarget( 0 ), 0, 1, centerXStart, centerXEnd );
         centerY = ofMap( centerTween.getTarget( 0 ), 0, 1, centerYStart, centerYEnd );
+    }
+    
+    if ( fadeOutTween.isRunning() ) {
+        alpha = fadeOutTween.update();
     }
     
     double currentMillis = ofGetElapsedTimeMillis();
@@ -41,10 +46,16 @@ void PreviewView::setCenter( float cX, float cY ) {
 
 void PreviewView::draw() {
     ofImage *img = frames[frameIndex];
-    ofSetColor( 255, 255, 255 );
+    ofSetColor( 255, 255, 255, (int)(255*alpha) );
 //    img->draw( theX, theY, theWidth, theHeight );
 //    img->draw( centerX, centerY, width, height );
     img->draw( centerX - width/2.0, centerY - height/2.0, width, height );
+}
+
+void PreviewView::startFadeOut() {
+    
+    fadeOutTween.setParameters( easingQuad, ofxTween::easeInOut, 1, 0, 500, 0 );
+    
 }
 
 void PreviewView::startSizeTween( float wStart, float wEnd, float hStart, float hEnd, int duration, int delay ) {

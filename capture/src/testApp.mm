@@ -251,9 +251,6 @@ void testApp::saveVideoFiles() {
     if ( chosenCaptureIndex >= NUM_CAPTURES )
         chosenCaptureIndex = 0;
     
-    chosenPreviewView = previewViews[ chosenCaptureIndex ];
-    chosenPreviewView->startSizeTween( chosenPreviewView->widthEnd, ofGetWidth(), chosenPreviewView->height, ofGetHeight(), 500, 0 );
-    chosenPreviewView->startCenterTween( chosenPreviewView->centerX, ofGetWidth()/2, chosenPreviewView->centerY, ofGetHeight()/2, 500, 0 );
     
     videoSaver.setup( frames[chosenCaptureIndex][0]->width, frames[chosenCaptureIndex][0]->height );
     videoSaver.startMovie();
@@ -266,6 +263,10 @@ void testApp::saveVideoFiles() {
     [helper startVideoUploadRequest:[NSString stringWithCString:fileNameMinusExtension.c_str() encoding:NSUTF8StringEncoding] withNumFrames:BEATS_PER_CAPTURE*FRAMES_PER_BEAT];
     
     isUploading = true;
+    
+    chosenPreviewView = previewViews[ chosenCaptureIndex ];
+    chosenPreviewView->startSizeTween( chosenPreviewView->widthEnd, ofGetWidth(), chosenPreviewView->height, ofGetHeight(), 500, 0 );
+    chosenPreviewView->startCenterTween( chosenPreviewView->centerX, ofGetWidth()/2, chosenPreviewView->centerY, ofGetHeight()/2, 500, 0 );
 }
 
 void testApp::destroyPreview() {

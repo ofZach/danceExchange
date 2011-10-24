@@ -144,7 +144,7 @@
 }
 
 - (void)setDoubleValue:(double)doubleValue {
-    NSLog( @"setDoubleValue: %f", doubleValue );
+//    NSLog( @"setDoubleValue: %f", doubleValue );
     [self setUploadProgress:doubleValue];
 }
 

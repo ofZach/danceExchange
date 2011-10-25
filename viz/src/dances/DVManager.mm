@@ -36,6 +36,11 @@ void DVManager::init( Pointilist *pointilist ) {
     frameCount = 0;
     loadingVideo = 0;
     paused = false;
+	
+	pix.allocate(FRAME_WIDTH, FRAME_HEIGHT, OF_PIXELS_RGBA);
+	frame.allocate(FRAME_WIDTH, FRAME_HEIGHT, GL_RGBA8);
+	offscreen.allocate(FRAME_WIDTH, FRAME_HEIGHT,  GL_RGBA8, 4);
+	//offscreen
 }
 
 void DVManager::update( int deltaMillis ) {
@@ -104,10 +109,21 @@ void DVManager::addFramesToTextures( danceVideo * dv ) {
             
             //            GLvoid * pixels = (GLvoid *)(dp->smallVideoLoader->pixels + ( i * 100 * 76 * 3 ));
             unsigned char * pixels = dv->smallVideoLoader->pixels + ( i * 100 * 76 * TH_MOVIE_CHANNELS );
+			frame.loadData(pixels, 100,76, GL_RGBA);
+			
+			//offscreen.setFromPixels(pixels, FRAME_WIDTH, FRAME_HEIGHT, 100, 76);
+			offscreen.begin();
+			ofClear(0,0,0,255);
+			ofSetColor(255,255,255);
+			frame.draw(0,0);
+			ofLine(0,0,FRAME_WIDTH, FRAME_HEIGHT);
+			offscreen.end();
+			offscreen.readToPixels(pix);
+			
             glEnable( activeTexture.getTextureData().textureTarget );
             glBindTexture( activeTexture.getTextureData().textureTarget, activeTexture.getTextureData().textureID );
             //            glTexSubImage2D( activeTexture.getTextureData().textureTarget, 0, theX, theY, 100, 76, activeTexture.getTextureData().glType, activeTexture.getTextureData().pixelType, pixels );
-            glTexSubImage2D( activeTexture.getTextureData().textureTarget, 0, theX, theY, 100, 76, GL_RGBA, GL_UNSIGNED_BYTE, pixels );
+            glTexSubImage2D( activeTexture.getTextureData().textureTarget, 0, theX, theY, 100, 76, GL_RGBA, GL_UNSIGNED_BYTE, pix.getPixels() );
             glDisable( activeTexture.getTextureData().textureTarget );
             
             

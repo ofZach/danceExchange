@@ -10,6 +10,12 @@ public:
     
     Pointilist                  *pointilist;
     
+	ofFbo						offscreen;
+	ofTexture					frame;
+	ofPixels					pix;
+	
+	
+	
     vector<danceVideo*>         unloadedDanceVideos;
     vector<danceVideo*>         danceVideos;
     vector<ofTexture>           textures;

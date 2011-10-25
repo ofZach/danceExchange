@@ -52,6 +52,10 @@ public:
 //        xRotation = latLon.x;
 //        yRotation = latLon.y;
         
+        if ( abs( latLon.y - yRotation ) < 90 ) {
+            yRotation -= 360;
+        }
+        
         latLonTween.setParameters( GLOBE_LAT_LON, quadEasing, ofxTween::easeInOut, xRotation, latLon.x, duration, delay );
         latLonTween.addValue( yRotation, latLon.y );
         latLonTween.start();

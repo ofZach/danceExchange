@@ -2,8 +2,7 @@
 
 //--------------------------------------------------------------
 void testApp::setup() {
-    
-    
+       
     mode = STARFIELD_MODE;
     
     drawTextures = false;
@@ -22,6 +21,10 @@ void testApp::setup() {
 	
     globe.init( 200 );
     ofAddListener( globe.latLonTweenEnded, this, &testApp::globeLatLonTweenEnded );
+    
+    tradeGothic.loadFont( "TradeGothicLTStd-BdCn20.otf",  64 );
+    cityTextX = 0;
+    cityName = "";
     
 	ofEnableSmoothing();
     ofDisableArbTex();
@@ -96,8 +99,9 @@ void testApp::draw(){
     ofSetupScreen();
     glDisable( GL_DEPTH_TEST );
     
-	ofDrawBitmapString( "fps: "+ofToString(ofGetFrameRate(),2) + "\nnum particles: " + ofToString(dpManager.dpVector.size(), 2), 10, 15 );
-    ofDrawBitmapString( LM.cities[currentCityIndex], 10, 45 );
+	ofDrawBitmapString( "fps: "+ofToString(ofGetFrameRate(),2) + "\nnum particles: " + ofToString(dpManager.dpVector.size(), 2), 10, ofGetHeight() - 40 );
+    if ( cityTextTween.isRunning() ) cityTextX = cityTextTween.update();
+    tradeGothic.drawString( cityName, cityTextX, 80 );
     
     if ( drawTextures ) {
         for ( int i = 0; i < dvManager.textures.size(); i++ ) {
@@ -118,6 +122,9 @@ void testApp::globeLatLonTweenEnded( int & theId ) {
     // tell the DPManager to do something with particles for the corresponding city
     if ( mode == GLOBE_MODE ) {
         dpManager.animateParticlesForCity( LM.cities[ currentCityIndex ], globe.getWorldCoordForLatLon( LM.latLonForCity( currentCityIndex ) ) );
+        cityName = LM.cities[currentCityIndex];
+        cityTextRect = tradeGothic.getStringBoundingBox( cityName, 0, 0 );
+        cityTextTween.setParameters( easingQuad, ofxTween::easeInOut, -(cityTextRect.width+20), 0, 400, 0);
     }
     
 }
@@ -131,6 +138,8 @@ void testApp::switchMode( VizMode nextMode ) {
         case STARFIELD_MODE:
             globe.tweenGlobeToScale( 0, 500 );
             dpManager.transitionToStarfieldMode( 500, 500 );
+            cityTextRect = tradeGothic.getStringBoundingBox( cityName, 0, 0 );
+            cityTextTween.setParameters( easingQuad, ofxTween::easeInOut, cityTextX, -(cityTextRect.width+20), 400, 0 );
             break;
             
         case GLOBE_MODE:
@@ -155,7 +164,9 @@ void testApp::keyPressed(int key){
         // pick a random city for the globe to spin to if we are in globe mode
         if ( mode == GLOBE_MODE ) {
             currentCityIndex = ofRandom( 0, LM.cities.size() );
-            globe.setLatLon( LM.latLonForCity(currentCityIndex)  );
+            globe.setLatLon( LM.latLonForCity(currentCityIndex), 500 );
+            cityTextRect = tradeGothic.getStringBoundingBox( cityName, 0, 0 );
+            cityTextTween.setParameters( easingQuad, ofxTween::easeInOut, cityTextX, -(cityTextRect.width+20), 400, 0 );
         }
     }
     

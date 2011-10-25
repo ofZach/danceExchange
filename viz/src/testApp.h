@@ -20,6 +20,7 @@ class testApp : public ofBaseApp{
 public:
         
 		VizMode mode;
+        ofTrueTypeFont tradeGothic;
     
 		bool drawTextures;
         ofEasyCam cam;
@@ -36,7 +37,11 @@ public:
 		locationManager LM;
 		int currentCityIndex;
 	
-	
+        ofxTween cityTextTween;
+        float cityTextX;
+        string cityName;
+        ofRectangle cityTextRect;
+        ofxEasingQuad easingQuad;
         Globe globe;
         
         int lastMillis;

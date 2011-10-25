@@ -113,10 +113,14 @@ void DVManager::addFramesToTextures( danceVideo * dv ) {
 			
 			//offscreen.setFromPixels(pixels, FRAME_WIDTH, FRAME_HEIGHT, 100, 76);
 			offscreen.begin();
-			ofClear(0,0,0,255);
+			ofClear(0,0,0,0);
 			ofSetColor(255,255,255);
 			frame.draw(0,0);
-			ofLine(0,0,FRAME_WIDTH, FRAME_HEIGHT);
+            ofPushMatrix();
+            ofScale( 3, 3 );
+            ofSetColor( 255, 255, 255 );
+            ofDrawBitmapString( ofToString( danceVideos.size(), 3 ), 5, 12 );
+            ofPopMatrix();
 			offscreen.end();
 			offscreen.readToPixels(pix);
 			

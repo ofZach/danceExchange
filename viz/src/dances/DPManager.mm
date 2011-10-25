@@ -140,6 +140,35 @@ void DPManager::tweenParticlesToScale( float desiredScale, float duration, float
     
 }
 
+void DPManager::zoomParticle( DanceParticle * dp ) {
+    // first put the particle against the rear of the frustum
+    dp->pos.set( frustumHelp.getRandomPointOnFarPlane() );
+    // set its start pos and target pos
+    dp->startPos.set( dp->pos );
+    dp->targetPos.set( 0, 0, -300 );
+    // start the tween
+    dp->startZoomTween();
+    ofAddListener( dp->zoomFinished, this, &DPManager::particleZoomed );
+}
+
+void DPManager::particleZoomed( DanceParticle & dp ) {
+    cout << "the particle zoomed" << endl;
+    // set start pos and target pos
+    dp.startPos.set( dp.pos );
+    dp.targetPos.set( frustumHelp.getRandomPointOnFarPlane() );
+    dp.targetPos.y = 0;
+    dp.targetPos.x = 0;
+    // start the tween
+    dp.startZoomOutTween( 700 );
+    ofAddListener( dp.zoomOutFinished, this, &DPManager::particleZoomedOut );
+}
+
+void DPManager::particleZoomedOut( DanceParticle & dp ) {
+    cout << "the particle zoomed out" << endl;
+    dp.pos.set( frustumHelp.getRandomPointOnFarPlane() );
+    dp.alpha = 0.0;
+}
+
 void DPManager::createParticle( danceVideo * dv, bool shouldZoom ) {
     
     DanceParticle *dp = new DanceParticle( dv );
@@ -148,6 +177,10 @@ void DPManager::createParticle( danceVideo * dv, bool shouldZoom ) {
     
     dp->pos.set( frustumHelp.getRandomPointOnFarPlane() );
     dp->vel.set( 0, 0, -ofRandom( 10.0, 20.0 ) );
+    
+    if ( shouldZoom ) {
+        zoomParticle( dp );
+    }
     
 }
 

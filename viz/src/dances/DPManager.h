@@ -40,6 +40,9 @@ public:
     void transitionToStarfieldMode( int duration, int delay );
     void tweenParticlesToScale( float desiredScale, float duration, float delay = 0 );
     void createParticle( danceVideo *dv, bool shouldZoom );
+    void zoomParticle( DanceParticle *dp );
+    void particleZoomed( DanceParticle &dp );
+    void particleZoomedOut( DanceParticle &dp );
     void tweenEnded( int & theId );
     void modeChanged( int & theId );
     void animateParticlesForCity( string cityName, ofVec3f worldPos );

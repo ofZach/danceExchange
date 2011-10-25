@@ -20,6 +20,7 @@ void testApp::setup() {
     cam.cacheMatrices();
 	
     globe.init( 200 );
+    globe.pos.set( 0, 0, 0 );
     ofAddListener( globe.latLonTweenEnded, this, &testApp::globeLatLonTweenEnded );
     
     tradeGothic.loadFont( "TradeGothicLTStd-BdCn20.otf",  64 );
@@ -98,6 +99,10 @@ void testApp::draw(){
     
     ofSetupScreen();
     glDisable( GL_DEPTH_TEST );
+    
+//    ofSetColor( 255, 0, 0 );
+//    ofCircle( sfScreen.x, sfScreen.y, 16 );
+//    ofSetColor( 255, 255, 255 );
     
 	ofDrawBitmapString( "fps: "+ofToString(ofGetFrameRate(),2) + "\nnum particles: " + ofToString(dpManager.dpVector.size(), 2), 10, ofGetHeight() - 40 );
     if ( cityTextTween.isRunning() ) cityTextX = cityTextTween.update();

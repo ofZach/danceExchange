@@ -98,7 +98,7 @@ public:
         cityMat.rotate( latLon.x, 1, 0, 0 );
         cityMat.rotate( 180 + (-latLon.y), 0, 1, 0 );
         
-        return ofMatrix4x4::transform3x3( pt, cityMat * globeMat );
+        return ofMatrix4x4::transform3x3( pt, cityMat * globeMat ) + pos;
     }
     
     void draw() {
@@ -112,11 +112,12 @@ public:
         mat.scale( -scale, -scale, scale );
         mat.rotate( yRotation, 0, 1, 0 );
         mat.rotate( xRotation, 1, 0, 0 );
+        mat.translate( pos );
         
         glMultMatrixf( mat.getPtr() );
         
         earthTexture.bind();
-        ofxSphere( pos, radius );
+        ofxSphere( ofVec3f(0,0,0), radius );
         earthTexture.unbind();
         ofPopMatrix();
         

@@ -19,10 +19,13 @@ public:
     ofxEasingQuad       quadEasing;
     ofVec3f             vel;
     float               alpha;
+    float               r,g,b;
     
     DanceParticle( danceVideo *dv ) {
         this->DV = dv;
-        
+        r = ofRandom( 0.0, 1.0 );
+        g = ofRandom( 0.0, 1.0 );
+        b = ofRandom( 0.0, 1.0 );
     }
     
    

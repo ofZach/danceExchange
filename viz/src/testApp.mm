@@ -109,7 +109,6 @@ void testApp::draw(){
 
 void testApp::danceVideoLoaded( danceVideo & dv ) {
     
-    dpManager.frustumHelp.calcNearAndFarClipCoordinates( cam );
     dpManager.createParticle( &dv );
 }
 

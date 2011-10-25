@@ -21,8 +21,11 @@ void DPManager::modeChanged( int & theId ) {
 
 void DPManager::update( int deltaMillis ) { 
     
-    if ( globalScaleTween.isRunning() )
+    if ( globalScaleTween.isRunning() ) {
         globalScale = globalScaleTween.update();    
+        
+        cout << "globalScale: " << globalScale << endl;
+    }
     
     modeChangeTween.update();
     
@@ -51,13 +54,14 @@ void DPManager::updateGlobe( int deltaMillis ) {
         dp->updateGlobe( deltaMillis, false );
         pointilist->addPoint( dp->pos.x, dp->pos.y, dp->pos.z,
                              50.0 * dp->posTween.getTarget( 0 ),
-                             1.0, 1.0, 1.0, dp->alpha,
+                             dp->r, dp->g, dp->b, dp->alpha,
                              dp->DV->texIndex, 0, dp->DV->firstFrame + dp->DV->currentFrame
                              );
     }
 }
 
 void DPManager::updateStarfield( int deltaMillis ) {
+    
     
     for ( int i=0; i<dpVector.size(); i++ ) {
         DanceParticle *dp = dpVector[i];
@@ -68,10 +72,9 @@ void DPManager::updateStarfield( int deltaMillis ) {
             dp->pos.set( frustumHelp.getRandomPointOnFarPlane() );
             dp->alpha = 0;
         }
-        
         pointilist->addPoint( dp->pos.x, dp->pos.y, dp->pos.z, // 3D position
                              200.0 * globalScale, // size
-                             1.0, 1.0, 1.0, dp->alpha, // rgba
+                             dp->r, dp->g, dp->b, dp->alpha, // rgba
                              dp->DV->texIndex, 0, dp->DV->firstFrame + dp->DV->currentFrame // texture unit, rotation (not used in this), cell number
                              );
     }
@@ -128,7 +131,7 @@ void DPManager::transitionToStarfieldMode( int duration, int delay ) {
         dp->vel.set( 0, 0, -10 );
     }
     nextMode = STARFIELD_MODE;
-    modeChangeTween.setParameters( linearEasing, ofxTween::easeInOut, 0, 1, duration, delay );
+    modeChangeTween.setParameters( linearEasing, ofxTween::easeInOut, 0, 1, duration, 0 );
 }
 
 void DPManager::tweenParticlesToScale( float desiredScale, float duration, float delay ) {
@@ -144,7 +147,7 @@ void DPManager::createParticle( danceVideo * dv ) {
     dpMap[dp->DV->hash] = dp;
     
     dp->pos.set( frustumHelp.getRandomPointOnFarPlane() );
-    dp->vel.set( 0, 0, -10 );
+    dp->vel.set( 0, 0, -ofRandom( 10.0, 20.0 ) );
     
 }
 

@@ -194,6 +194,7 @@
 		937E44D31443E13300A4A12B /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = /System/Library/Frameworks/SystemConfiguration.framework; sourceTree = "<absolute>"; };
 		9385676A1455DFE0005BA542 /* DVManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVManager.h; sourceTree = "<group>"; };
 		9385676B1455DFFF005BA542 /* DVManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DVManager.mm; sourceTree = "<group>"; };
+		93E6B1BB1456FB1800C4C9DD /* VizModes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VizModes.h; sourceTree = "<group>"; };
 		BBAB23BE13894E4700AA2426 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = ../../../libs/glut/lib/osx/GLUT.framework; sourceTree = "<group>"; };
 		E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openFrameworksLib.xcodeproj; path = ../../../libs/openFrameworksCompiled/project/osx/openFrameworksLib.xcodeproj; sourceTree = SOURCE_ROOT; };
 		E45BE9710E8CC7DD009D7055 /* AGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGL.framework; path = /System/Library/Frameworks/AGL.framework; sourceTree = "<absolute>"; };
@@ -534,6 +535,7 @@
 				927756FB1450974D006F4A95 /* main.mm */,
 				927756E51450974D006F4A95 /* testApp.h */,
 				927756FC1450974D006F4A95 /* testApp.mm */,
+				93E6B1BB1456FB1800C4C9DD /* VizModes.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;

@@ -131,12 +131,12 @@ void testApp::switchMode( VizMode nextMode ) {
     switch ( mode ) {
         case STARFIELD_MODE:
             globe.tweenGlobeToScale( 0, 500 );
-            dpManager.transitionToStarfieldMode();
+            dpManager.transitionToStarfieldMode( 500, 500 );
             break;
             
         case GLOBE_MODE:
-            globe.tweenGlobeToScale( 1, 500 );
-            dpManager.transitionToGlobeMode();
+            globe.tweenGlobeToScale( 1, 500, 500 );
+            dpManager.transitionToGlobeMode( 500, 0 );
             break;
     }
     

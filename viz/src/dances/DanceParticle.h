@@ -32,6 +32,12 @@ public:
     
     void updateStarfield( int deltaMillis, bool paused ) {
         
+        if ( alpha < 1.0 ) {
+            alpha = fminf( 1.0, alpha + .01 );
+        }
+        pos += vel;
+		
+		DV->update(deltaMillis, paused);
     }
     
     void updateGlobe( int deltaMillis, bool paused ) {
@@ -39,16 +45,8 @@ public:
             posTween.update();
             pos.set( startPos.getInterpolated( targetPos, posTween.getTarget( 0 ) ) );
         }
-    }
-    
-    void update( int deltaMillis, bool paused ) {
-        
-        if ( alpha < 1.0 ) {
-            alpha = fminf( 1.0, alpha + .01 );
-        }
-        pos += vel;
 		
 		DV->update(deltaMillis, paused);
-	}
+    }
     
 };

@@ -12,11 +12,8 @@
 #include "Globe.h"
 #include "DPManager.h"
 #include "DVManager.h"
+#include "VizModes.h"
 
-enum VizMode {
-    STARFIELD_MODE,
-    GLOBE_MODE
-};
 
 class testApp : public ofBaseApp{
 

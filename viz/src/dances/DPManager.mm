@@ -7,17 +7,61 @@ void DPManager::init( Pointilist *pointilist ) {
     paused = false;
     
     ofAddListener( globalScaleTween.end_E, this, &DPManager::tweenEnded );
+    ofAddListener( modeChangeTween.end_E, this, &DPManager::modeChanged );
+    
+    mode = STARFIELD_MODE;
 }
 
-void DPManager::update( int deltaMillis ) {    
+void DPManager::modeChanged( int & theId ) {
+    mode = nextMode;
     
-    if ( globalScaleTween.isRunning() ) {
-        globalScale = globalScaleTween.update();
+    if ( mode == GLOBE_MODE ) cout << "dpmanager mode changed to globe mode" << endl;
+    if ( mode == STARFIELD_MODE ) cout << "dpmanager mode changed to starfield mode" << endl;
+}
+
+void DPManager::update( int deltaMillis ) { 
+    
+    if ( globalScaleTween.isRunning() )
+        globalScale = globalScaleTween.update();    
+    
+    modeChangeTween.update();
+    
+    switch( mode ) {
+            
+        case GLOBE_MODE:
+            updateGlobe( deltaMillis );
+            break;
+            
+        case STARFIELD_MODE:
+            updateStarfield( deltaMillis );
+            break;
+            
+        default:
+            
+            break;
     }
+}
+
+void DPManager::updateGlobe( int deltaMillis ) {
+    
+    for ( int i=0; i<cityParticles.size(); i++ ) {
+        DanceParticle *dp = cityParticles[i];
+        // for now, call the particles globe update because we know this particle is doing something
+        // in relation to the globe, but this should really get restructured somehow
+        dp->updateGlobe( deltaMillis, false );
+        pointilist->addPoint( dp->pos.x, dp->pos.y, dp->pos.z,
+                             50.0 * dp->posTween.getTarget( 0 ),
+                             1.0, 1.0, 1.0, dp->alpha,
+                             dp->DV->texIndex, 0, dp->DV->firstFrame + dp->DV->currentFrame
+                             );
+    }
+}
+
+void DPManager::updateStarfield( int deltaMillis ) {
     
     for ( int i=0; i<dpVector.size(); i++ ) {
         DanceParticle *dp = dpVector[i];
-        dp->update( deltaMillis, paused );
+        dp->updateStarfield( deltaMillis, paused );
         
         if ( !frustumHelp.isPointInFrustum( dp->pos ) ) {
             
@@ -25,31 +69,11 @@ void DPManager::update( int deltaMillis ) {
             dp->alpha = 0;
         }
         
-        // if the globe scale is greater than zero
-        // it means that non-globe particles should render
-        // this should be replaced by the DPManager intelligently knowing which mode its in
-        if ( globalScale > 0 ) {
-            int frame = dp->DV->firstFrame + dp->DV->currentFrame;
-            pointilist->addPoint( dp->pos.x, dp->pos.y, dp->pos.z, // 3D position
-                                200.0 * globalScale, // size
-                                1.0, 1.0, 1.0, dp->alpha, // rgba
-                                dp->DV->texIndex, 0, dp->DV->firstFrame + dp->DV->currentFrame // texture unit, rotation (not used in this), cell number
-                                );
-            
-        }
-    }
-    
-    // if there are particles in the city particles vector, draw them
-    for ( int i=0; i<cityParticles.size(); i++ ) {
-        DanceParticle *dp = cityParticles[i];
-        // for now, call the particles globe update because we know this particle is doing something
-        // in relation to the globe, but this should really get restructured somehow
-        dp->updateGlobe( deltaMillis, false );
-        pointilist->addPoint( dp->pos.x, dp->pos.y, dp->pos.z,
-                            50.0 * dp->posTween.getTarget( 0 ),
-                            1.0, 1.0, 1.0, dp->alpha,
-                            dp->DV->texIndex, 0, dp->DV->firstFrame + dp->DV->currentFrame
-                            );
+        pointilist->addPoint( dp->pos.x, dp->pos.y, dp->pos.z, // 3D position
+                             200.0 * globalScale, // size
+                             1.0, 1.0, 1.0, dp->alpha, // rgba
+                             dp->DV->texIndex, 0, dp->DV->firstFrame + dp->DV->currentFrame // texture unit, rotation (not used in this), cell number
+                             );
     }
 }
 
@@ -82,24 +106,29 @@ void DPManager::animateParticlesForCity( string cityName, ofVec3f worldPos ) {
         dp->targetPos.set( position );
         dp->vel.set( 0, 0, 0 );
         dp->startPosTween( i * 70 );
+        dp->alpha = 1.0;
     }
     
     cout << "there are " << cityParticles.size() << " dances for " << cityName << endl;
     
 }
 
-void DPManager::transitionToGlobeMode() {
-    tweenParticlesToScale( 0, 500 );
+void DPManager::transitionToGlobeMode( int duration, int delay ) {
+    tweenParticlesToScale( 0, duration, delay );
+    nextMode = GLOBE_MODE;
+    modeChangeTween.setParameters( linearEasing, ofxTween::easeInOut, 0, 1, duration, delay );
 }
 
-void DPManager::transitionToStarfieldMode() {
-    tweenParticlesToScale( 1, 500 );
+void DPManager::transitionToStarfieldMode( int duration, int delay ) {
+    tweenParticlesToScale( 1, duration, delay );
     // clear city particles
     cityParticles.clear();
     for ( vector<DanceParticle*>::iterator it = dpVector.begin(); it != dpVector.end(); it++ ) {
         DanceParticle *dp = *it;
         dp->vel.set( 0, 0, -10 );
     }
+    nextMode = STARFIELD_MODE;
+    modeChangeTween.setParameters( linearEasing, ofxTween::easeInOut, 0, 1, duration, delay );
 }
 
 void DPManager::tweenParticlesToScale( float desiredScale, float duration, float delay ) {

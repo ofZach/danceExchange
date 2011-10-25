@@ -5,6 +5,7 @@
 #include "Pointilist.h"
 #include "FrustumHelp.h"
 #include "ofxTween.h"
+#include "VizModes.h"
 
 enum DPManagerTween {
     DPMANAGER_GLOBAL_SCALE
@@ -12,6 +13,8 @@ enum DPManagerTween {
 
 class DPManager {
 public:
+    
+    VizMode                                 mode, nextMode;
     
     FrustumHelp                             frustumHelp;
     vector<DanceParticle*>                  dpVector;
@@ -23,17 +26,22 @@ public:
     Pointilist                              *pointilist;
     float                                   globalScale;
     ofxTween                                globalScaleTween;
+    ofxTween                                modeChangeTween;
     ofxEasingQuad                           quadEasing;
+    ofxEasingLinear                         linearEasing;
     
     
     void init( Pointilist *pointilist );
     void update( int deltaMillis );
+    void updateGlobe( int deltaMillis );
+    void updateStarfield( int deltaMillis );
     void draw();
-    void transitionToGlobeMode();
-    void transitionToStarfieldMode();
+    void transitionToGlobeMode( int duration, int delay );
+    void transitionToStarfieldMode( int duration, int delay );
     void tweenParticlesToScale( float desiredScale, float duration, float delay = 0 );
     void createParticle( danceVideo *dv );
     void tweenEnded( int & theId );
+    void modeChanged( int & theId );
     void animateParticlesForCity( string cityName, ofVec3f worldPos );
     void allocateTexture(ofTexture &texture, int w, int h, int internalGlDataType, bool bUseARBExtention) {
         

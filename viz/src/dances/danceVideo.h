@@ -17,6 +17,7 @@ public:
     string              url; // some url... i forget!
     string              creationTime; // the time it was created
     int                 numFrames; // number of frames in the loop
+    bool                isNew; // tells whether this was in the first batch or freshly new
     
     
     bool                smallVideoLoaded;
@@ -40,6 +41,7 @@ public:
         this->url             = info.url;
         this->creationTime    = info.creationTime;
         this->numFrames       = info.numFrames;
+        this->isNew           = info.isNew;
         
         
         smallVideoLoaded = false;

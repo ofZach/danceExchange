@@ -11,4 +11,5 @@ struct DanceInfo {
     string url;
     string creationTime;
     int numFrames;
+    bool isNew;
 };

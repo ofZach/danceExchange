@@ -109,7 +109,7 @@ void testApp::draw(){
 
 void testApp::danceVideoLoaded( danceVideo & dv ) {
     
-    dpManager.createParticle( &dv );
+    dpManager.createParticle( &dv, dv.isNew );
 }
 
 void testApp::globeLatLonTweenEnded( int & theId ) {

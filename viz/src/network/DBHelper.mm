@@ -64,7 +64,7 @@
     NSError *error;
     NSArray *dances = [[CJSONDeserializer deserializer] deserialize:[request responseData] error:&error];
     
-    [self processDanceInfos:dances];
+    [self processDanceInfos:dances thatAreNew:YES];
     
     [self performSelector:@selector(requestDancesSince) withObject:self afterDelay:requestInterval];
 }
@@ -96,7 +96,7 @@
     NSError *error;
     NSArray *dances = [[CJSONDeserializer deserializer] deserialize:[request responseData] error:&error];
     
-    [self processDanceInfos:dances];  
+    [self processDanceInfos:dances thatAreNew:NO];  
     
     [self setIsRequestingRecentDanceInfos:NO];
 }
@@ -156,7 +156,7 @@
     // TODO -- handle download errors
 }
 
-- (void)processDanceInfos:(NSArray *)dances {
+- (void)processDanceInfos:(NSArray *)dances thatAreNew:(BOOL)areNew {
     
 //    NSLog( @"processDanceInfos" );
     
@@ -177,6 +177,7 @@
         di.url = [[dance valueForKey:@"url"] cStringUsingEncoding:[NSString defaultCStringEncoding]];
         di.creationTime = [[dance valueForKey:@"creation_time"] cStringUsingEncoding:[NSString defaultCStringEncoding]];
         di.numFrames = [[dance valueForKey:@"num_frames"] intValue];
+        di.isNew = areNew;
         
         if ( di.id > [self newestId] )
             [self setNewestId:di.id];

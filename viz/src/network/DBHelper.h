@@ -37,7 +37,7 @@ using namespace std;
 - (void)videoRequestDidFinish:(ASIHTTPRequest*)request;
 - (void)videoRequestDidFail:(ASIHTTPRequest*)request;
 
-- (void)processDanceInfos:(NSArray *)dances;
+- (void)processDanceInfos:(NSArray *)dances thatAreNew:(BOOL)areNew;
 - (void)clearDanceInfos;
 
 @end

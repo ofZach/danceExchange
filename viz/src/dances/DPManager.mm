@@ -140,7 +140,7 @@ void DPManager::tweenParticlesToScale( float desiredScale, float duration, float
     
 }
 
-void DPManager::createParticle( danceVideo * dv ) {
+void DPManager::createParticle( danceVideo * dv, bool shouldZoom ) {
     
     DanceParticle *dp = new DanceParticle( dv );
     dpVector.push_back( dp );

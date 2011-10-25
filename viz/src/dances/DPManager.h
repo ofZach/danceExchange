@@ -39,7 +39,7 @@ public:
     void transitionToGlobeMode( int duration, int delay );
     void transitionToStarfieldMode( int duration, int delay );
     void tweenParticlesToScale( float desiredScale, float duration, float delay = 0 );
-    void createParticle( danceVideo *dv );
+    void createParticle( danceVideo *dv, bool shouldZoom );
     void tweenEnded( int & theId );
     void modeChanged( int & theId );
     void animateParticlesForCity( string cityName, ofVec3f worldPos );

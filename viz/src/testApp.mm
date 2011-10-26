@@ -144,6 +144,21 @@ void testApp::globeLatLonTweenEnded( int & theId ) {
     
 }
 
+void testApp::globeToRandomCity( int delay ) {
+    if ( dpManager.dpVector.size() == 0 )
+        return;
+    
+    int numDancesInCity = 0;
+    while ( numDancesInCity == 0 ) {
+        currentCityIndex = ofRandom( 0, LM.cities.size() );
+        numDancesInCity = dpManager.getNumDancesInCity( LM.cities[ currentCityIndex ] );    
+    }
+    
+    globe.setLatLon( LM.latLonForCity(currentCityIndex), 500, delay );
+    cityTextRect = tradeGothic.getStringBoundingBox( cityName, 0, 0 );
+    cityTextTween.setParameters( easingQuad, ofxTween::easeInOut, cityTextX, -(cityTextRect.width+20), 400, delay );
+}
+
 void testApp::switchMode( VizMode nextMode ) {
     if ( mode == nextMode )
         return;
@@ -160,6 +175,7 @@ void testApp::switchMode( VizMode nextMode ) {
         case GLOBE_MODE:
             globe.tweenGlobeToScale( 1, 500, 500 );
             dpManager.transitionToGlobeMode( 500, 0 );
+            globeToRandomCity( 1000 );
             break;
     }
     
@@ -178,18 +194,7 @@ void testApp::keyPressed(int key){
     if ( key == 'c' ) {
         // pick a random city for the globe to spin to if we are in globe mode
         if ( mode == GLOBE_MODE ) {
-            if ( dpManager.dpVector.size() == 0 )
-                return;
-            
-            int numDancesInCity = 0;
-            while ( numDancesInCity == 0 ) {
-                currentCityIndex = ofRandom( 0, LM.cities.size() );
-                numDancesInCity = dpManager.getNumDancesInCity( LM.cities[ currentCityIndex ] );    
-            }
-            
-            globe.setLatLon( LM.latLonForCity(currentCityIndex), 500 );
-            cityTextRect = tradeGothic.getStringBoundingBox( cityName, 0, 0 );
-            cityTextTween.setParameters( easingQuad, ofxTween::easeInOut, cityTextX, -(cityTextRect.width+20), 400, 0 );
+            globeToRandomCity(0);
         }
     }
     

@@ -51,6 +51,7 @@ public:
 
 		void draw();
         void updateCity();
+        void globeToRandomCity( int delay );
         void globeLatLonTweenEnded( int & theId );
         void danceVideoLoaded( danceVideo & dv );
         void switchMode( VizMode nextMode );

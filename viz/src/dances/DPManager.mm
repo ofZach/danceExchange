@@ -1,5 +1,6 @@
 #include "DPManager.h"
 
+const float STARFIELD_PARTICLE_SIZE = 200.0f;
 const float GLOBE_PARTICLE_SIZE = 150.0f;
 
 void DPManager::init( Pointilist *pointilist ) {
@@ -64,18 +65,21 @@ void DPManager::updateGlobe( int deltaMillis ) {
 
 void DPManager::updateStarfield( int deltaMillis ) {
     
-    
     for ( int i=0; i<dpVector.size(); i++ ) {
         DanceParticle *dp = dpVector[i];
         dp->updateStarfield( deltaMillis, paused );
         
-        if ( !frustumHelp.isPointInFrustum( dp->pos ) ) {
+        ofVec3f testPoint( dp->pos );
+        testPoint.x = testPoint.x > 0 ? testPoint.x - STARFIELD_PARTICLE_SIZE * 1.3333 : testPoint.x + STARFIELD_PARTICLE_SIZE * 1.3333;
+        testPoint.y = testPoint.y > 0 ? testPoint.y - STARFIELD_PARTICLE_SIZE : testPoint.y + STARFIELD_PARTICLE_SIZE;
+        
+        if ( !frustumHelp.isPointInFrustum( testPoint ) ) {
             
             dp->pos.set( frustumHelp.getRandomPointOnFarPlane() );
             dp->alpha = 0;
         }
         pointilist->addPoint( dp->pos.x, dp->pos.y, dp->pos.z, // 3D position
-                             200.0 * globalScale, // size
+                             STARFIELD_PARTICLE_SIZE * globalScale, // size
                              dp->r, dp->g, dp->b, dp->alpha, // rgba
                              dp->DV->texIndex, 0, dp->DV->firstFrame + dp->DV->currentFrame // texture unit, rotation (not used in this), cell number
                              );
@@ -196,6 +200,10 @@ void DPManager::particleZoomedOut( DanceParticle & dp ) {
 }
 
 void DPManager::createParticle( danceVideo * dv, bool shouldZoom ) {
+    
+    if ( shouldZoom ) {
+        cout << "gonna zoom a particle with id: " << dv->id << " and hash: " << dv->hash << endl;
+    }
     
     DanceParticle *dp = new DanceParticle( dv );
     dpVector.push_back( dp );

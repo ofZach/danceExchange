@@ -85,6 +85,17 @@ void DPManager::draw() {
     pointilist->draw();
 }
 
+
+int DPManager::getNumDancesInCity( string cityName ) {
+    int num = 0;
+    for ( vector<DanceParticle*>::iterator it = dpVector.begin(); it != dpVector.end(); it++ ) {
+        DanceParticle* dp = *it;
+        if ( dp->DV->city == cityName )
+            num++;
+    }
+    return num;
+}
+
 void DPManager::animateParticlesForCity( string cityName, ofVec3f worldPos ) {
     
     // abruptly clear any that are there for now

@@ -87,7 +87,11 @@ void testApp::draw(){
     
     cam.begin();
     
+//    cam.enableOrtho();
+//    ofPushMatrix();
+//    ofTranslate( ofGetWidth()/2, -ofGetHeight()/2 );
     globe.draw();
+//    ofPopMatrix();
     
     ofVec3f sf = globe.getWorldCoordForLatLon( LM.cityLatLonHash[ "San Francisco" ] );
     ofVec3f sfScreen = cam.worldToScreen( sf );
@@ -174,7 +178,15 @@ void testApp::keyPressed(int key){
     if ( key == 'c' ) {
         // pick a random city for the globe to spin to if we are in globe mode
         if ( mode == GLOBE_MODE ) {
-            currentCityIndex = ofRandom( 0, LM.cities.size() );
+            if ( dpManager.dpVector.size() == 0 )
+                return;
+            
+            int numDancesInCity = 0;
+            while ( numDancesInCity == 0 ) {
+                currentCityIndex = ofRandom( 0, LM.cities.size() );
+                numDancesInCity = dpManager.getNumDancesInCity( LM.cities[ currentCityIndex ] );
+            }
+            
             globe.setLatLon( LM.latLonForCity(currentCityIndex), 500 );
             cityTextRect = tradeGothic.getStringBoundingBox( cityName, 0, 0 );
             cityTextTween.setParameters( easingQuad, ofxTween::easeInOut, cityTextX, -(cityTextRect.width+20), 400, 0 );

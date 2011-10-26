@@ -45,6 +45,7 @@ public:
     void particleZoomedOut( DanceParticle &dp );
     void tweenEnded( int & theId );
     void modeChanged( int & theId );
+    int getNumDancesInCity( string cityName );
     void animateParticlesForCity( string cityName, ofVec3f worldPos );
     void allocateTexture(ofTexture &texture, int w, int h, int internalGlDataType, bool bUseARBExtention) {
         

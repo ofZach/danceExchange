@@ -15,6 +15,7 @@ public:
     float                   radius;
     float                   xRotation;  // latitude
     float                   yRotation;  // longitude
+    float                   longitudeOffset;
     
     ofVec3f                 pos;
     ofTexture               earthTexture;
@@ -34,6 +35,8 @@ public:
         
         this->scale         = 0;
         
+        longitudeOffset     = -45;
+        
         ofImage earthTemp;
         earthTemp.setUseTexture( false );
         earthTemp.loadImage( "earthlights.jpg" );
@@ -41,7 +44,8 @@ public:
         earthTexture.allocate( earthTemp.width, earthTemp.height, GL_RGB, false );
         earthTexture.loadData( earthTemp.getPixels(), earthTemp.width, earthTemp.height, GL_RGB );
         
-        ofSetSphereResolution( 32 );
+//        ofSetSphereResolution( 64 );
+        ofSetSphereResolution( 32, 32 );
         
         ofAddListener( scaleTween.end_E, this, &Globe::tweenEnded );
         ofAddListener( latLonTween.end_E, this, &Globe::tweenEnded );
@@ -51,6 +55,8 @@ public:
     void setLatLon( ofVec2f latLon, float duration = 500, float delay = 0 ) {
 //        xRotation = latLon.x;
 //        yRotation = latLon.y;
+        
+        latLon.y -= longitudeOffset;
         
         if ( abs( latLon.y - yRotation ) < 90 ) {
             yRotation -= 360;

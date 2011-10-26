@@ -28,7 +28,7 @@ class ofSphereParameters{
 public:	
 	
 	ofSphereParameters() { 
-		radius = -1.0f; numRings = 16; numSegments = 16; // set defaults, apart from radius
+		radius = -1.0f; numRings = 32; numSegments = 32; // set defaults, apart from radius
 	}
 	
 	bool equals( float _radius, int _numRings, int _numSegments ){

@@ -19,8 +19,8 @@ void testApp::setup() {
     
     cam.cacheMatrices();
 	
-    globe.init( 200 );
-    globe.pos.set( 0, 0, 0 );
+    globe.init( 300 );
+    globe.pos.set( 300, 0, 0 );
     ofAddListener( globe.latLonTweenEnded, this, &testApp::globeLatLonTweenEnded );
     
     tradeGothic.loadFont( "TradeGothicLTStd-BdCn20.otf",  64 );
@@ -32,6 +32,7 @@ void testApp::setup() {
     ofSetVerticalSync( true );
     ofSetFrameRate( 60.0 );
 	ofBackground(0, 0, 0);
+//    ofBackground( 255, 255, 255 );
 	
     pointilist.init( 1000, true );
     
@@ -91,6 +92,9 @@ void testApp::draw(){
     ofVec3f sf = globe.getWorldCoordForLatLon( LM.cityLatLonHash[ "San Francisco" ] );
     ofVec3f sfScreen = cam.worldToScreen( sf );
     
+    ofVec3f city = globe.getWorldCoordForLatLon( LM.cityLatLonHash[ LM.cities[currentCityIndex]] );
+    ofVec3f cityScreen = cam.worldToScreen( city );
+    
     glPushMatrix();
     dpManager.draw();
     glPopMatrix();
@@ -102,7 +106,9 @@ void testApp::draw(){
     
 //    ofSetColor( 255, 0, 0 );
 //    ofCircle( sfScreen.x, sfScreen.y, 16 );
-//    ofSetColor( 255, 255, 255 );
+//    ofSetColor( 0, 255, 0 );
+//    ofCircle( cityScreen.x, cityScreen.y, 16 );
+    ofSetColor( 255, 255, 255 );
     
 	ofDrawBitmapString( "fps: "+ofToString(ofGetFrameRate(),2) + "\nnum particles: " + ofToString(dpManager.dpVector.size(), 2), 10, ofGetHeight() - 40 );
     if ( cityTextTween.isRunning() ) cityTextX = cityTextTween.update();

@@ -59,7 +59,8 @@ public:
     
     void loadSmallVideo() {
         smallVideoLoader = new threadMovieLoader( info.numFrames, 100, 76 );
-        string filename = "videos/" + info.hash + "_s.mov";
+//        string filename = "videos/" + info.hash + "_s.mov";
+        string filename = "videos/" + ofToString( id ) + "_s.mov";
         smallVideoLoadStartMillis = ofGetElapsedTimeMillis();
         smallVideoLoader->start( filename );
     }

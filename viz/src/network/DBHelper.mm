@@ -112,7 +112,9 @@
     NSLog( @"requestVideoFile" );
     NSString *subDir = [NSString stringWithCString:di.url.c_str()];
     NSString *hash = [NSString stringWithCString:di.hash.c_str()];
+    NSNumber *dbId = [NSNumber numberWithInt:di.id];
     NSString *filename = [NSString stringWithFormat:@"%@_s.mov", hash];
+    NSString *idFilename = [NSString stringWithFormat:@"%@_s.mov", dbId];
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://aaron-meyers.com/smirnoff/gifs/%@%@", subDir, filename]];
     NSLog( @"URL: %@", [url path] );
     
@@ -124,7 +126,7 @@
     // make a dictionary with some information about this request
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
     [dictionary setValue:hash forKey:@"hash"];
-    [dictionary setValue:filename forKey:@"filename"];
+    [dictionary setValue:idFilename forKey:@"filename"];
     [request setUserInfo:dictionary];
     [request startAsynchronous];
 }
@@ -179,11 +181,15 @@
         di.numFrames = [[dance valueForKey:@"num_frames"] intValue];
         di.isNew = areNew;
         
+        if ( areNew ) {
+            NSLog( @"new dance info with id: %i and hash: %@", di.id, [dance valueForKey:@"hash"] );
+        }
+        
         if ( di.id > [self newestId] )
             [self setNewestId:di.id];
         
         // see if file exists yet
-        NSString *filePath = [NSString stringWithFormat:@"../data/videos/%@_s.mov", [dance valueForKey:@"hash"]];
+        NSString *filePath = [NSString stringWithFormat:@"../data/videos/%@_s.mov", [dance valueForKey:@"id"]];
         if ( [[NSURL URLWithString:filePath relativeToURL:[[NSBundle mainBundle] bundleURL]] checkResourceIsReachableAndReturnError:&error] ) {
 //            NSLog( @"video already downloaded for %@", filePath );
             danceInfos.push_back( di );

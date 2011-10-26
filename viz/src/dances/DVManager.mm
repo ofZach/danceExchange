@@ -49,11 +49,6 @@ void DVManager::update( int deltaMillis ) {
     if ( loadingVideo )
         loadingVideo->update( deltaMillis, paused );
     
-//    // update the loaded videos
-//    for ( vector<danceVideo*>::iterator it = danceVideos.begin(); it != danceVideos.end(); it++ ) {
-//        (*it)->update( deltaMillis, paused );
-//    }
-    
     // if there is a loading video, see if it has finished loading yet
     if ( loadingVideo && loadingVideo->smallVideoLoaded ) {
         // this is where we'll integrate it into the texture stuff

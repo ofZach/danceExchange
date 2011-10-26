@@ -112,6 +112,11 @@ public:
         if ( scale == 0 )
             return;
         
+        
+        glDepthMask( GL_FALSE );
+        glEnable( GL_CULL_FACE );
+        glCullFace( GL_FRONT );
+        
         ofPushMatrix();
         
         ofMatrix4x4 mat;
@@ -126,6 +131,9 @@ public:
         ofxSphere( ofVec3f(0,0,0), radius );
         earthTexture.unbind();
         ofPopMatrix();
+        
+        glDisable( GL_CULL_FACE );
+        glDepthMask( GL_TRUE );
         
     }
     

@@ -184,7 +184,7 @@ void testApp::keyPressed(int key){
             int numDancesInCity = 0;
             while ( numDancesInCity == 0 ) {
                 currentCityIndex = ofRandom( 0, LM.cities.size() );
-                numDancesInCity = dpManager.getNumDancesInCity( LM.cities[ currentCityIndex ] );
+                numDancesInCity = dpManager.getNumDancesInCity( LM.cities[ currentCityIndex ] );    
             }
             
             globe.setLatLon( LM.latLonForCity(currentCityIndex), 500 );

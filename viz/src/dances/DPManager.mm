@@ -1,5 +1,7 @@
 #include "DPManager.h"
 
+const float GLOBE_PARTICLE_SIZE = 150.0f;
+
 void DPManager::init( Pointilist *pointilist ) {
     
     this->pointilist = pointilist;
@@ -53,7 +55,7 @@ void DPManager::updateGlobe( int deltaMillis ) {
         // in relation to the globe, but this should really get restructured somehow
         dp->updateGlobe( deltaMillis, false );
         pointilist->addPoint( dp->pos.x, dp->pos.y, dp->pos.z,
-                             50.0 * dp->posTween.getTarget( 0 ),
+                             GLOBE_PARTICLE_SIZE * dp->posTween.getTarget( 0 ),
                              dp->r, dp->g, dp->b, dp->alpha,
                              dp->DV->texIndex, 0, dp->DV->firstFrame + dp->DV->currentFrame
                              );
@@ -108,13 +110,26 @@ void DPManager::animateParticlesForCity( string cityName, ofVec3f worldPos ) {
             cityParticles.push_back( dp );
     }
     
+    // for now, putting particles in columns and rows
+    // in screen space
+    int numRows = 4;
+    float gridCellWidth = GLOBE_PARTICLE_SIZE * 1.333;
+    float gridCellHeight = GLOBE_PARTICLE_SIZE;
+    float startX = -ofGetWidth()/2 + gridCellWidth/2.0;
+    float startY = -ofGetHeight()/2 + gridCellHeight/2.0 + 100;
+    
     // now go through the city particles and assign them positions
     for ( int i=0; i<cityParticles.size(); i++ ) {
         DanceParticle* dp = cityParticles[i];
         
+        int colNum = i / numRows;
+        int rowNum = i % numRows;
+        
         float randomAngle = ofRandom( 0, TWO_PI );
-        float xyScale = 200.0;
-        ofVec3f position( cosf( randomAngle ) * xyScale, sinf( randomAngle ) * xyScale, worldPos.z );
+        float xyScale = 50.0;
+//        ofVec3f position( cosf( randomAngle ) * xyScale, sinf( randomAngle ) * xyScale, 0 );
+//        position += worldPos;
+        ofVec3f position( colNum * gridCellWidth + startX, rowNum * gridCellHeight + startY, 0 );
         dp->pos.set( worldPos );
         dp->startPos.set( worldPos );
         dp->targetPos.set( position );

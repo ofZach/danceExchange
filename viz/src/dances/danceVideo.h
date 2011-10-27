@@ -24,6 +24,11 @@ public:
     threadMovieLoader*  smallVideoLoader;
     int                 smallVideoLoadStartMillis;
     
+    bool                largeVideoLoaded;
+    bool                largeVideoDownloaded; // we won't assume that all the large videos have even been downloaded
+    threadMovieLoader*  largeVideoLoader;
+    int                 largeVideoLoadStartMillis;
+    
     int                 texIndex;
     int                 firstFrame;
     int                 currentFrame;
@@ -46,11 +51,20 @@ public:
         
         smallVideoLoaded = false;
         smallVideoLoader = 0;
+        
+        largeVideoLoaded = false;
+        largeVideoDownloaded = false;
+        largeVideoLoader = 0;
+        
         texIndex = -1;
         firstFrame = -1;
         currentFrame = 0;
         frameDelay = 100;
         milliCounter = 0;
+    }
+    
+    bool needsLargeVideo() {
+        return !largeVideoLoaded && !largeVideoLoader;
     }
     
     bool needsSmallVideo() {
@@ -65,7 +79,12 @@ public:
         smallVideoLoader->start( filename );
     }
     
-  
+    void loadLargeVideo() {
+        largeVideoLoader = new threadMovieLoader( info.numFrames, 640, 480 );
+        string filename = "videos/" + ofToString( id ) + ".mov";
+        largeVideoLoadStartMillis = ofGetElapsedTimeMillis();
+        largeVideoLoader->start( filename );
+    }
     
     void update( int deltaMillis, bool paused ) {
         
@@ -73,6 +92,12 @@ public:
             int now = ofGetElapsedTimeMillis();
             int diff = now - smallVideoLoadStartMillis;
 			smallVideoLoaded = true;
+        }
+        else if ( largeVideoLoader && !largeVideoLoaded && largeVideoLoader->state == TH_STATE_JUST_LOADED ) {
+            int now = ofGetElapsedTimeMillis();
+            int diff = now - largeVideoLoadStartMillis;
+            largeVideoLoaded = true;
+            cout << "large video loaded in " << ( diff / 1000.0 ) << " seconds" << endl;
         }
         else {
             milliCounter += deltaMillis;

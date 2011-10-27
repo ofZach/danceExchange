@@ -33,6 +33,10 @@ using namespace std;
 - (void)recentDanceRequestDidFinish:(ASIHTTPRequest*)request;
 - (void)recentDanceRequestDidFail:(ASIHTTPRequest*)request;
 
+- (void)requestLargeVideoFile:(DanceInfo)di;
+- (void)largeVideoRequestDidFinish:(ASIHTTPRequest*)request;
+- (void)largeVideoRequestDidFail:(ASIHTTPRequest*)request;
+
 - (void)requestVideoFile:(DanceInfo)di;
 - (void)videoRequestDidFinish:(ASIHTTPRequest*)request;
 - (void)videoRequestDidFail:(ASIHTTPRequest*)request;

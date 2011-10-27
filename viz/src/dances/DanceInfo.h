@@ -12,4 +12,5 @@ struct DanceInfo {
     string creationTime;
     int numFrames;
     bool isNew;
+    bool largeVideoDownloaded;
 };

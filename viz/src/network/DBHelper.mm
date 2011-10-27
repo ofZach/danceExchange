@@ -158,6 +158,49 @@
     // TODO -- handle download errors
 }
 
+- (void)requestLargeVideoFile:(DanceInfo)di {
+    NSString *subDir = [NSString stringWithCString:di.url.c_str()];
+    NSString *hash = [NSString stringWithCString:di.hash.c_str()];
+    NSNumber *dbId = [NSNumber numberWithInt:di.id];
+    NSString *filename = [NSString stringWithFormat:@"%@.mov", hash];
+    NSString *idFilename = [NSString stringWithFormat:@"%@.mov", dbId];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://aaron-meyers.com/smirnoff/gifs/%@%@", subDir, filename]];
+    NSLog( @"URL: %@", [url path] );
+    
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    [request setDelegate:self];
+    [request setDidFinishSelector:@selector(largeVideoRequestDidFinish:)];
+    [request setDidFailSelector:@selector(largeVideoRequestDidFail:)];
+    
+    // make a dictionary with some information about this request
+    NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+    [dictionary setValue:hash forKey:@"hash"];
+    [dictionary setValue:idFilename forKey:@"filename"];
+    [request setUserInfo:dictionary];
+    [request startAsynchronous];
+}
+
+- (void)largeVideoRequestDidFinish:(ASIHTTPRequest *)request {
+    NSData *videoFile = [request responseData];
+    
+    NSString *savePath = [NSString stringWithFormat:@"../data/videos/%@", [[request userInfo] valueForKey:@"filename"]];
+    BOOL success = [videoFile writeToURL:[NSURL URLWithString:savePath relativeToURL:[[NSBundle mainBundle] bundleURL]] atomically:NO];
+    if ( success )
+        NSLog( @"%@ written successfully", [[request userInfo] valueForKey:@"filename"] );
+    else
+        NSLog( @"failed to write %@", [[request userInfo] valueForKey:@"filename"] );
+    
+    // find the dance info file, add it to the danceInfos vector, remove it from the other vector
+//    if ( danceInfosWithoutVideos.back().hash == [[[request userInfo] valueForKey:@"hash"] cStringUsingEncoding:[NSString defaultCStringEncoding]] ) {
+//        danceInfos.push_back( danceInfosWithoutVideos.back() );
+//        danceInfosWithoutVideos.pop_back();
+//    }
+}
+
+- (void)largeVideoRequestDidFail:(ASIHTTPRequest *)request {
+    
+}
+
 - (void)processDanceInfos:(NSArray *)dances thatAreNew:(BOOL)areNew {
     
 //    NSLog( @"processDanceInfos" );
@@ -187,6 +230,13 @@
         
         if ( di.id > [self newestId] )
             [self setNewestId:di.id];
+        
+        // see if the large file exists
+        NSString *largeFilePath = [NSString stringWithFormat:@"../data/videos/%@.mov", [dance valueForKey:@"id"]];
+        if ( [[NSURL URLWithString:largeFilePath relativeToURL:[[NSBundle mainBundle] bundleURL]] checkResourceIsReachableAndReturnError:&error] )
+            di.largeVideoDownloaded = true;
+        else
+            di.largeVideoDownloaded = false;
         
         // see if file exists yet
         NSString *filePath = [NSString stringWithFormat:@"../data/videos/%@_s.mov", [dance valueForKey:@"id"]];

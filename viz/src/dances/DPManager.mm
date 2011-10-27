@@ -189,7 +189,7 @@ void DPManager::particleZoomed( DanceParticle & dp ) {
     dp.targetPos.y = 0;
     dp.targetPos.x = 0;
     // start the tween
-    dp.startZoomOutTween( 700 );
+    dp.startZoomOutTween( 2000 );
     ofAddListener( dp.zoomOutFinished, this, &DPManager::particleZoomedOut );
 }
 

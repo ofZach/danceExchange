@@ -29,7 +29,7 @@ public:
     void init( Pointilist * pointilist );
     void update( int deltaMillis );
     void createDanceVideo( DanceInfo & danceInfo );
-    
+    void loadLargeVideo( string hash );
     void addFramesToTextures( danceVideo * dv );
     void allocateTexture(ofTexture &texture, int w, int h, int internalGlDataType, bool bUseARBExtention) {
         

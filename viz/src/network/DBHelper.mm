@@ -2,7 +2,7 @@
 
 @implementation DBHelper
 
-@synthesize danceInfos;
+@synthesize danceInfos, danceHashesWithLargeVideos;
 @synthesize isRequestingRecentDanceInfos;
 @synthesize requestInterval;
 @synthesize newestId;
@@ -191,10 +191,9 @@
         NSLog( @"failed to write %@", [[request userInfo] valueForKey:@"filename"] );
     
     // find the dance info file, add it to the danceInfos vector, remove it from the other vector
-//    if ( danceInfosWithoutVideos.back().hash == [[[request userInfo] valueForKey:@"hash"] cStringUsingEncoding:[NSString defaultCStringEncoding]] ) {
-//        danceInfos.push_back( danceInfosWithoutVideos.back() );
-//        danceInfosWithoutVideos.pop_back();
-//    }
+//    danceInfosWithLargeVideos.push_back( )
+    string hash = [[[request userInfo] valueForKey:@"hash"] cStringUsingEncoding:[NSString defaultCStringEncoding]];
+    danceHashesWithLargeVideos.push_back( hash );
 }
 
 - (void)largeVideoRequestDidFail:(ASIHTTPRequest *)request {
@@ -260,6 +259,10 @@
 
 - (void)clearDanceInfos {
     danceInfos.clear();
+}
+
+- (void)clearLargeVideoHashes {
+    danceHashesWithLargeVideos.clear();
 }
 
 @end

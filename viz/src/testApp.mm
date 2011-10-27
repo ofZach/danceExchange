@@ -216,6 +216,7 @@ void testApp::keyPressed(int key){
     else if ( key == 'z' ) {
         DanceParticle *dp = dpManager.dpVector.at( (int)ofRandom( 0.0, dpManager.dpVector.size()-1.0 ) );
         dpManager.zoomParticle( dp );
+        NM.requestLargeVideo( dp->DV );
     }
     if ( key == ' ' ) {
         drawTextures = !drawTextures;

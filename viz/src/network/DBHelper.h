@@ -13,12 +13,14 @@ using namespace std;
     
     vector<DanceInfo> danceInfosWithoutVideos;
     vector<DanceInfo> danceInfos;
+    vector<string> danceHashesWithLargeVideos;
     bool isRequestingRecentDanceInfos;
     NSTimeInterval requestInterval;
     int newestId;
 }
 
 @property (assign, nonatomic) vector<DanceInfo> danceInfos;
+@property (assign, nonatomic) vector<string> danceHashesWithLargeVideos;
 @property (assign, nonatomic) bool isRequestingRecentDanceInfos;
 @property (assign, nonatomic) NSTimeInterval requestInterval;
 @property (assign, nonatomic) int newestId;
@@ -43,5 +45,6 @@ using namespace std;
 
 - (void)processDanceInfos:(NSArray *)dances thatAreNew:(BOOL)areNew;
 - (void)clearDanceInfos;
+- (void)clearLargeVideoHashes;
 
 @end

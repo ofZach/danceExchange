@@ -74,6 +74,10 @@ void DVManager::update( int deltaMillis ) {
     
 }
 
+void DVManager::loadLargeVideo( string hash ) {
+    
+}
+
 void DVManager::addFramesToTextures( danceVideo * dv ) {
     // figure out which texture we are drawing into right now
     int texIndex = frameCount / FRAMES_PER_TEX;

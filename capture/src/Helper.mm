@@ -5,9 +5,9 @@
 @synthesize uploadProgress, isUploading, isEmailing, uploadFailed, lastGifUrl;
 @synthesize sup, lastHash;
 @synthesize app;
+@synthesize appUpdateUrl, isRequestingHandshake;
 
-- (id)init
-{
+- (id)init {
     self = [super init];
     if (self) {
         frames = [[NSMutableArray alloc] init];
@@ -16,6 +16,7 @@
         [self setUploadProgress:0];
         [self setUploadFailed:NO];
         [self setLastGifUrl:@""];
+        [self setAppUpdateUrl:""];
         
         NSError *error = nil;
         NSURL * bundle = [[NSBundle mainBundle] bundleURL];
@@ -63,6 +64,43 @@
     }
     
     return self;
+}
+
+- (void)requestHandshake:(int)version {
+    NSURL *url = [NSURL URLWithString:@"http://aaron-meyers.com/smirnoff/handshake.php"];
+    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setPostValue:@"capture" forKey:@"app"];
+    [request setPostValue:[NSNumber numberWithInt:version] forKey:@"version"];
+    [request setDelegate:self];
+    [request setDidFinishSelector:@selector(handshakeRequestDidFinish:)];
+    [request setDidFailSelector:@selector(handshakeRequestDidFail:)];
+    [request setTimeOutSeconds:120];
+    [request startAsynchronous];
+    
+    [self setIsRequestingHandshake:YES];
+}
+
+- (void)handshakeRequestDidFinish:(ASIHTTPRequest *)request {
+    NSLog( @"handshake request did finish: %@", [request responseString] );
+    
+    NSError *error;
+    NSArray *response = [[CJSONDeserializer deserializer] deserialize:[request responseData] error:&error];
+    BOOL ok = [[response valueForKey:@"ok"] isEqualToNumber:[NSNumber numberWithInt:1]];
+    
+    if ( ok ) {
+        NSLog( @"up to date" );
+    }
+    else {
+        NSLog( @"not up to date" );
+        NSString *url = [response valueForKey:@"url"];
+        [self setAppUpdateUrl:[url cStringUsingEncoding:[NSString defaultCStringEncoding]]];
+    }
+    
+    [self setIsRequestingHandshake:NO];
+}
+
+- (void)handshakeRequestDidFail:(ASIHTTPRequest *)request {
+    
 }
 
 - (void)gifDecode:(NSString*)path {

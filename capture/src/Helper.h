@@ -17,6 +17,8 @@ class testApp;
     NSString *lastGifUrl;
     string sup;
     string lastHash;
+    bool isRequestingHandshake;
+    string appUpdateUrl;
     
     testApp *app;
 }
@@ -30,6 +32,13 @@ class testApp;
 @property (assign, nonatomic) bool isEmailing;
 @property (assign, nonatomic) bool uploadFailed;
 @property (assign, nonatomic) NSString *lastGifUrl;
+@property (assign, nonatomic) string appUpdateUrl;
+@property (assign, nonatomic) bool isRequestingHandshake;
+
+
+- (void)requestHandshake:(int)version;
+- (void)handshakeRequestDidFinish:(ASIHTTPRequest*)request;
+- (void)handshakeRequestDidFail:(ASIHTTPRequest*)request;
 
 - (void)startGifRequest:(double)frameDelay;
 - (void)startVideoUploadRequest:(NSString *)fileNameMinusExtension withNumFrames:(int)num;

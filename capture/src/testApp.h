@@ -13,6 +13,8 @@ class testApp : public ofBaseApp{
 
 	public:
     
+        bool isRequestingHandshake;
+    
         Helper *helper;
         PreviewView *previewView;
         vector<PreviewView*> previewViews;

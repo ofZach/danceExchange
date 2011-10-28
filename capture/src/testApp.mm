@@ -6,6 +6,8 @@ static int LOCKED_BPM = 110;
 static int NUM_CAPTURES = 4;
 static int WHITE_FLASH = 200;
 
+#define VERSION_NUMBER 0
+
 void testApp::setup(){
     ofSetVerticalSync( TRUE );
     ofSetFrameRate( 60 );
@@ -48,6 +50,9 @@ void testApp::setup(){
     [helper gifDecode:pathString];
     
     cout << "the path: " << thePath << std::endl;
+    
+    [helper requestHandshake:VERSION_NUMBER];
+    isRequestingHandshake = true;
 }
 
 void testApp::update(){
@@ -55,6 +60,15 @@ void testApp::update(){
     int currentMillis = ofGetElapsedTimeMillis();
     int deltaMillis = currentMillis - lastMillis;
     lastMillis = currentMillis;
+    
+    if ( isRequestingHandshake && ![helper isRequestingHandshake] ) {
+        isRequestingHandshake = false;
+        string updateUrl = [helper appUpdateUrl];
+        if ( updateUrl != "" ) {
+            ofLaunchBrowser( updateUrl );
+            ofExit();
+        }
+    }
     
     grabber.grabFrame();
     

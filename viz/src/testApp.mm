@@ -1,5 +1,7 @@
 #include "testApp.h"
 
+#define VERSION_NUMBER 1
+
 //--------------------------------------------------------------
 void testApp::setup() {
        
@@ -48,6 +50,7 @@ void testApp::setup() {
     NM.dvManager = &dvManager;
 	NM.dpManager = &dpManager;
 	NM.setup();
+    NM.requestHandshake( VERSION_NUMBER );
 	
 	LM.setup();
 	currentCityIndex = 8;

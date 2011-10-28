@@ -15,6 +15,8 @@ using namespace std;
     vector<DanceInfo> danceInfos;
     vector<string> danceHashesWithLargeVideos;
     bool isRequestingRecentDanceInfos;
+    bool isRequestingHandshake;
+    string appUpdateUrl;
     NSTimeInterval requestInterval;
     int newestId;
 }
@@ -22,10 +24,16 @@ using namespace std;
 @property (assign, nonatomic) vector<DanceInfo> danceInfos;
 @property (assign, nonatomic) vector<string> danceHashesWithLargeVideos;
 @property (assign, nonatomic) bool isRequestingRecentDanceInfos;
+@property (assign, nonatomic) bool isRequestingHandshake;
 @property (assign, nonatomic) NSTimeInterval requestInterval;
 @property (assign, nonatomic) int newestId;
+@property (assign, nonatomic) string appUpdateUrl;
 
 - (bool)isProcessingDanceInfosWithoutVideos;
+
+- (void)requestHandshake:(int)version;
+- (void)handshakeRequestDidFinish:(ASIHTTPRequest*)request;
+- (void)handshakeRequestDidFail:(ASIHTTPRequest*)request;
 
 - (void)requestDancesSince;
 - (void)dancesSinceRequestDidFinish:(ASIHTTPRequest*)request;

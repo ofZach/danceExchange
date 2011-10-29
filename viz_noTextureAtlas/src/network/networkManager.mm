@@ -18,16 +18,26 @@ void networkManager::setup(){
     isRequestingRecentDances = true;
 }
 
+void networkManager::requestLargeVideo( danceVideo *dv ) {
+    [dbHelper requestLargeVideoFile:dv->info];
+}
+
 void networkManager::update(){
 	vector<DanceInfo> danceInfos = dbHelper.danceInfos;
     if ( danceInfos.size() > 0 ) {
         for ( int i=0; i<danceInfos.size(); i++ ) {
-//            dpManager->createParticle( danceInfos[i] );
             dvManager->createDanceVideo( danceInfos[i] );
         }
         [dbHelper clearDanceInfos];
-		//        cout << "local dance info count: " << danceInfos.size() << endl;
-		//        cout << "db helper dance info count: " << dbHelper.danceInfos.size() << endl;
+    }
+    
+    vector<string> largeVideos = dbHelper.danceHashesWithLargeVideos;
+    if ( largeVideos.size() > 0 ) {
+        for ( int i=0; i<largeVideos.size(); i++ ) {
+            cout << "loaded a large video with hash " << largeVideos[i] << endl;
+            dvManager->loadLargeVideo( largeVideos[i] );
+        }
+        [dbHelper clearLargeVideoHashes];
     }
     
     if ( isRequestingRecentDances && ![dbHelper isRequestingRecentDanceInfos] && ![dbHelper isProcessingDanceInfosWithoutVideos] ) {

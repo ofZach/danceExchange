@@ -15,9 +15,10 @@ class networkManager {
 	
 		void setup();
 		void update();
+        void requestLargeVideo( danceVideo *dv );
 	
 		DBHelper *dbHelper;
-		//DPManager * dpManager;
+		DPManager * dpManager;
         DVManager * dvManager;
     
 		bool isRequestingRecentDances;

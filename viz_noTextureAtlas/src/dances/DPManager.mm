@@ -3,9 +3,8 @@
 const float STARFIELD_PARTICLE_SIZE = 200.0f;
 const float GLOBE_PARTICLE_SIZE = 150.0f;
 
-void DPManager::init( Pointilist *pointilist ) {
+void DPManager::init(  ) {
     
-    this->pointilist = pointilist;
     globalScale = 1.0;
     paused = false;
     
@@ -55,11 +54,11 @@ void DPManager::updateGlobe( int deltaMillis ) {
         // for now, call the particles globe update because we know this particle is doing something
         // in relation to the globe, but this should really get restructured somehow
         dp->updateGlobe( deltaMillis, false );
-        pointilist->addPoint( dp->pos.x, dp->pos.y, dp->pos.z,
-                             GLOBE_PARTICLE_SIZE * dp->posTween.getTarget( 0 ),
-                             dp->r, dp->g, dp->b, dp->alpha,
-                             dp->DV->texIndex, 0, dp->DV->firstFrame + dp->DV->currentFrame
-                             );
+        //pointilist->addPoint( dp->pos.x, dp->pos.y, dp->pos.z,
+//                             GLOBE_PARTICLE_SIZE * dp->posTween.getTarget( 0 ),
+//                             dp->r, dp->g, dp->b, dp->alpha,
+//                             dp->DV->texIndex, 0, dp->DV->firstFrame + dp->DV->currentFrame
+//                             );
     }
 }
 
@@ -78,17 +77,57 @@ void DPManager::updateStarfield( int deltaMillis ) {
             dp->pos.set( frustumHelp.getRandomPointOnFarPlane() );
             dp->alpha = 0;
         }
-        pointilist->addPoint( dp->pos.x, dp->pos.y, dp->pos.z, // 3D position
-                             STARFIELD_PARTICLE_SIZE * globalScale, // size
-                             dp->r, dp->g, dp->b, dp->alpha, // rgba
-                             dp->DV->texIndex, 0, dp->DV->firstFrame + dp->DV->currentFrame // texture unit, rotation (not used in this), cell number
-                             );
+        //pointilist->addPoint( dp->pos.x, dp->pos.y, dp->pos.z, // 3D position
+//                             STARFIELD_PARTICLE_SIZE * globalScale, // size
+//                             dp->r, dp->g, dp->b, dp->alpha, // rgba
+//                             dp->DV->texIndex, 0, dp->DV->firstFrame + dp->DV->currentFrame // texture unit, rotation (not used in this), cell number
+//                             );
     }
 }
 
 void DPManager::draw() {
     // maybe the test app should call this?
-    pointilist->draw();
+    
+	
+	
+	glEnable(GL_DEPTH_TEST);
+	
+	ofSetRectMode(OF_RECTMODE_CENTER);
+	if (mode == STARFIELD_MODE){
+	
+		for ( int i=0; i<dpVector.size(); i++ ) {
+			DanceParticle *dp = dpVector[i];
+					
+			glPushMatrix();
+			glTranslatef(dp->pos.x, dp->pos.y, dp->pos.z);
+			// not sure about the global scale. 
+			//glScalef(STARFIELD_PARTICLE_SIZE * globalScale, STARFIELD_PARTICLE_SIZE * globalScale, STARFIELD_PARTICLE_SIZE * globalScale);
+			//glColor4f(dp->r, dp->g, dp->b, dp->alpha);
+			glColor4f(1,1,1, dp->alpha);  // no tint. 
+			dp->DV->draw(ofPoint(0,0), STARFIELD_PARTICLE_SIZE * globalScale * 1.3333 ,STARFIELD_PARTICLE_SIZE * globalScale);
+			glPopMatrix();
+		   /* pointilist->addPoint( dp->pos.x, dp->pos.y, dp->pos.z, // 3D position
+								 STARFIELD_PARTICLE_SIZE * globalScale, // size
+								 dp->r, dp->g, dp->b, dp->alpha, // rgba
+								 dp->DV->texIndex, 0, dp->DV->firstFrame + dp->DV->currentFrame // texture unit, rotation (not used in this), cell number
+								 );*/
+		}
+	} else {
+		cout << "in city " << endl;
+		for ( int i=0; i<cityParticles.size(); i++ ) {
+			printf("drawing %i \n", i);
+			DanceParticle *dp = cityParticles[i];
+			
+			glPushMatrix();
+			glTranslatef(dp->pos.x, dp->pos.y, dp->pos.z);
+			glColor4f(1,1,1, dp->alpha);  // no tint. 
+			dp->DV->draw(ofPoint(0,0), GLOBE_PARTICLE_SIZE * dp->posTween.getTarget( 0 ) * 1.3333 ,GLOBE_PARTICLE_SIZE * dp->posTween.getTarget( 0 ));
+			glPopMatrix();
+		}
+		
+	}
+	
+	ofSetRectMode(OF_RECTMODE_CORNER);
 }
 
 
@@ -189,7 +228,7 @@ void DPManager::particleZoomed( DanceParticle & dp ) {
     dp.targetPos.y = 0;
     dp.targetPos.x = 0;
     // start the tween
-    dp.startZoomOutTween( 700 );
+    dp.startZoomOutTween( 2000 );
     ofAddListener( dp.zoomOutFinished, this, &DPManager::particleZoomedOut );
 }
 

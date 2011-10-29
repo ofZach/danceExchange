@@ -77,6 +77,7 @@ public:
                 alpha = fminf( 1.0, alpha + .01 );
             }
             pos += vel;
+			
         }
 		
 		DV->update(deltaMillis, paused);

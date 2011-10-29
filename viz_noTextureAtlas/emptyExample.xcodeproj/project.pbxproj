@@ -7,10 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		927756FD1450974D006F4A95 /* DPManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 927756EA1450974D006F4A95 /* DPManager.mm */; };
 		927756FE1450974D006F4A95 /* of3dPrimitives.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 927756EE1450974D006F4A95 /* of3dPrimitives.cpp */; };
 		927756FF1450974D006F4A95 /* DBHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 927756F21450974D006F4A95 /* DBHelper.mm */; };
-		927757001450974D006F4A95 /* Pointilist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 927756F41450974D006F4A95 /* Pointilist.cpp */; };
-		927757011450974D006F4A95 /* RadixSort.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 927756F61450974D006F4A95 /* RadixSort.cpp */; };
 		927757021450974D006F4A95 /* threadMovieLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 927756F91450974D006F4A95 /* threadMovieLoader.cpp */; };
 		927757031450974D006F4A95 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 927756FB1450974D006F4A95 /* main.mm */; };
 		927757041450974D006F4A95 /* testApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = 927756FC1450974D006F4A95 /* testApp.mm */; };
@@ -100,16 +99,15 @@
 /* Begin PBXFileReference section */
 		927756E51450974D006F4A95 /* testApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testApp.h; sourceTree = "<group>"; };
 		927756E71450974D006F4A95 /* DanceInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DanceInfo.h; sourceTree = "<group>"; };
+		927756E81450974D006F4A95 /* DanceParticle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DanceParticle.h; sourceTree = "<group>"; };
+		927756E91450974D006F4A95 /* DPManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DPManager.h; sourceTree = "<group>"; };
+		927756EA1450974D006F4A95 /* DPManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DPManager.mm; sourceTree = "<group>"; };
 		927756EC1450974D006F4A95 /* FrustumHelp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FrustumHelp.h; sourceTree = "<group>"; };
 		927756ED1450974D006F4A95 /* Globe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Globe.h; sourceTree = "<group>"; };
 		927756EE1450974D006F4A95 /* of3dPrimitives.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = of3dPrimitives.cpp; sourceTree = "<group>"; };
 		927756EF1450974D006F4A95 /* of3dPrimitives.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = of3dPrimitives.h; sourceTree = "<group>"; };
 		927756F11450974D006F4A95 /* DBHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DBHelper.h; sourceTree = "<group>"; };
 		927756F21450974D006F4A95 /* DBHelper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DBHelper.mm; sourceTree = "<group>"; };
-		927756F41450974D006F4A95 /* Pointilist.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Pointilist.cpp; sourceTree = "<group>"; };
-		927756F51450974D006F4A95 /* Pointilist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pointilist.h; sourceTree = "<group>"; };
-		927756F61450974D006F4A95 /* RadixSort.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RadixSort.cpp; sourceTree = "<group>"; };
-		927756F71450974D006F4A95 /* RadixSort.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RadixSort.h; sourceTree = "<group>"; };
 		927756F91450974D006F4A95 /* threadMovieLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = threadMovieLoader.cpp; sourceTree = "<group>"; };
 		927756FA1450974D006F4A95 /* threadMovieLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = threadMovieLoader.h; sourceTree = "<group>"; };
 		927756FB1450974D006F4A95 /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
@@ -242,6 +240,9 @@
 			isa = PBXGroup;
 			children = (
 				927756E71450974D006F4A95 /* DanceInfo.h */,
+				927756E81450974D006F4A95 /* DanceParticle.h */,
+				927756E91450974D006F4A95 /* DPManager.h */,
+				927756EA1450974D006F4A95 /* DPManager.mm */,
 				92CFB33B1453207F008A440D /* danceVideo.h */,
 				92CFB33C1453207F008A440D /* danceVideo.cpp */,
 				9385676A1455DFE0005BA542 /* DVManager.h */,
@@ -270,17 +271,6 @@
 				9277573C1450A193006F4A95 /* networkManager.mm */,
 			);
 			path = network;
-			sourceTree = "<group>";
-		};
-		927756F31450974D006F4A95 /* pointilist */ = {
-			isa = PBXGroup;
-			children = (
-				927756F41450974D006F4A95 /* Pointilist.cpp */,
-				927756F51450974D006F4A95 /* Pointilist.h */,
-				927756F61450974D006F4A95 /* RadixSort.cpp */,
-				927756F71450974D006F4A95 /* RadixSort.h */,
-			);
-			path = pointilist;
 			sourceTree = "<group>";
 		};
 		927756F81450974D006F4A95 /* utils */ = {
@@ -523,7 +513,6 @@
 				927756E61450974D006F4A95 /* dances */,
 				927756EB1450974D006F4A95 /* graphics */,
 				927756F01450974D006F4A95 /* network */,
-				927756F31450974D006F4A95 /* pointilist */,
 				927756F81450974D006F4A95 /* utils */,
 				927756FB1450974D006F4A95 /* main.mm */,
 				927756E51450974D006F4A95 /* testApp.h */,
@@ -656,10 +645,9 @@
 				932011E0144F6B0D00DF18A8 /* ofxEasingQuint.cpp in Sources */,
 				932011E1144F6B0D00DF18A8 /* ofxEasingSine.cpp in Sources */,
 				932011E2144F6B0D00DF18A8 /* ofxTween.cpp in Sources */,
+				927756FD1450974D006F4A95 /* DPManager.mm in Sources */,
 				927756FE1450974D006F4A95 /* of3dPrimitives.cpp in Sources */,
 				927756FF1450974D006F4A95 /* DBHelper.mm in Sources */,
-				927757001450974D006F4A95 /* Pointilist.cpp in Sources */,
-				927757011450974D006F4A95 /* RadixSort.cpp in Sources */,
 				927757021450974D006F4A95 /* threadMovieLoader.cpp in Sources */,
 				927757031450974D006F4A95 /* main.mm in Sources */,
 				927757041450974D006F4A95 /* testApp.mm in Sources */,

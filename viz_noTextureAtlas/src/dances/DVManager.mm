@@ -17,7 +17,7 @@ void DVManager::createDanceVideo( DanceInfo & danceInfo ) {
 }
 
 void DVManager::init(  ) {
-
+    
     frameCount = 0;
     loadingVideo = 0;
     paused = false;
@@ -56,11 +56,15 @@ void DVManager::update( int deltaMillis ) {
         // now start it loading
         loadingVideo->loadSmallVideo();
     }
-	
-	
+
+
 	for (int i = 0; i < danceVideos.size(); i++){
 		danceVideos[i]->update(	deltaMillis, false);
 	}
+    
+}
+
+void DVManager::loadLargeVideo( string hash ) {
     
 }
 
@@ -99,7 +103,7 @@ void DVManager::addFramesToTextures( danceVideo * dv ) {
 			glDisable(GL_DEPTH_TEST);
 			//offscreen.setFromPixels(pixels, FRAME_WIDTH, FRAME_HEIGHT, 100, 76);
 			offscreen.begin();
-			ofClear(0,0,0,255);
+			ofClear(0,0,0,0);
 			ofSetColor(255,255,255);
 			frame.draw(0,0);
             ofSetColor( 255, 255, 255 );
@@ -112,7 +116,7 @@ void DVManager::addFramesToTextures( danceVideo * dv ) {
 			newTex.allocate(100,76, GL_RGBA);
 			newTex.loadData(pix.getPixels(), 100,76, GL_RGBA);
 			dv->textures.push_back(newTex);
-			
+            
             frameCount++;
         }
     }

@@ -21,7 +21,7 @@ threadMovieLoader::threadMovieLoader( int totalFrames, int movieWidth, int movie
 	imgLoaded = false;
 	
 	state = TH_STATE_UNLOADED;
-
+    
 	pixels = new unsigned char[movieHeight*movieWidth*TH_MOVIE_CHANNELS*totalFrames];
 	
 	for (int i = 0; i < movieHeight*movieWidth*TH_MOVIE_CHANNELS*totalFrames; i++){
@@ -32,11 +32,11 @@ threadMovieLoader::threadMovieLoader( int totalFrames, int movieWidth, int movie
 	tempImg.setUseTexture(false);
 	tempImg.loadImage("mask0.png");
 	tempImg.setImageType(OF_IMAGE_COLOR_ALPHA);
-//    OF_IMAGE
+    //    OF_IMAGE
 	if (tempImg.width != movieWidth || tempImg.height != movieHeight){
 		tempImg.resize(movieWidth, movieHeight);
 	}
-									
+    
 	unsigned char * pixelsFromMaskImg = tempImg.getPixels();
 	maskPixels = new unsigned char [movieWidth*movieHeight*TH_MOVIE_CHANNELS];
 	for (int i = 0; i < movieWidth*movieHeight*TH_MOVIE_CHANNELS; i++){
@@ -59,36 +59,36 @@ void threadMovieLoader::loadMovieAsImageSequence() {
 	
 	/*
 	 
-	
-	this code **needs** ffmpeg and 
-	a folder called "temp" in the data directory
-	ie, 
-	
+     
+     this code **needs** ffmpeg and 
+     a folder called "temp" in the data directory
+     ie, 
+     
 	 
-	-- bin
-	----- *.app
-	----- data
-	--------- ffmpeg  (linux-y exe)
-	--------- temp    (folder) 
-	
+     -- bin
+     ----- *.app
+     ----- data
+     --------- ffmpeg  (linux-y exe)
+     --------- temp    (folder) 
+     
 	 
-	how I got ffmpeg, some steps to recreate as needed:
+     how I got ffmpeg, some steps to recreate as needed:
 	 
-	download ffmpegx
-	show package contents
-	copy "ffmpeg" from resources
-	sudo chown root:wheel ffmpeg
-	sudo chmod 755  ffmpeg
+     download ffmpegx
+     show package contents
+     copy "ffmpeg" from resources
+     sudo chown root:wheel ffmpeg
+     sudo chmod 755  ffmpeg
 	 
-	sorry for the hack !! 
-	it's better (less leaky) then quicktime and it's fairly simple 
-	*/
+     sorry for the hack !! 
+     it's better (less leaky) then quicktime and it's fairly simple 
+     */
 	
-	
-	string command = "rm " + ofToDataPath("temp") + "/*.png";
+	string tempPath = ( movieWidth == 640 ? "bigTemp" : "temp" );
+	string command = "rm " + ofToDataPath(tempPath) + "/*.png";
 	system(command.c_str());
-
-	command =  "../../../data/./ffmpeg -v quiet -i " + ofToDataPath(filename) + " " + ofToDataPath("temp") + "/%d.png >/dev/null 2>&1";
+    
+	command =  "../../../data/./ffmpeg -v quiet -i " + ofToDataPath(filename) + " " + ofToDataPath(tempPath) + "/%d.png >/dev/null 2>&1";
 	system(command.c_str());
 	
 	nFrames = 0;
@@ -96,7 +96,7 @@ void threadMovieLoader::loadMovieAsImageSequence() {
 	
     for (int i = 0; i < totalFrames; i++ ) {
 		temp.setUseTexture(false); // important !! threaded !! 
-		if (!temp.loadImage("temp/" + ofToString(i+1) + ".png")){
+		if (!temp.loadImage(tempPath+"/" + ofToString(i+1) + ".png")){
 			break;
 		} else {
             temp.setImageType( OF_IMAGE_COLOR_ALPHA );
@@ -134,9 +134,9 @@ void threadMovieLoader::loadMovieAsImageSequence() {
 		state = TH_STATE_UNLOADED;
 		imgLoaded = false;
 	}
-
+    
 	stop();
-
+    
 }
 
 //--------------------------------------------------------------
@@ -151,7 +151,7 @@ void threadMovieLoader::unloadMovie() {
 
 //--------------------------------------------------------------
 bool threadMovieLoader::start(string & _filename) {
-
+    
 	if (!isThreadRunning() && (_filename != "")) {
 		state = TH_STATE_LOADING;
 		filename = _filename;
@@ -171,9 +171,8 @@ void threadMovieLoader::stop() {
 //--------------------------------------------------------------
 void threadMovieLoader::threadedFunction() {
 	while (isThreadRunning() != 0) {
-			loadMovieAsImageSequence();
+        loadMovieAsImageSequence();
 	}
 }
 
 //--------------------------------------------------------------
-

@@ -24,10 +24,10 @@ public:
     ofEvent<danceVideo>        danceVideoLoadedEvent;
     
     void init(  );
-	
+    
     void update( int deltaMillis );
     void createDanceVideo( DanceInfo & danceInfo );
-    
+    void loadLargeVideo( string hash );
     void addFramesToTextures( danceVideo * dv );
 
 };

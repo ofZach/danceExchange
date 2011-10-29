@@ -2,7 +2,6 @@
 
 #include "ofMain.h"
 #include "DanceParticle.h"
-#include "Pointilist.h"
 #include "FrustumHelp.h"
 #include "ofxTween.h"
 #include "VizModes.h"
@@ -23,7 +22,6 @@ public:
     
     vector<DanceParticle*>                  cityParticles;
     
-    Pointilist                              *pointilist;
     float                                   globalScale;
     ofxTween                                globalScaleTween;
     ofxTween                                modeChangeTween;
@@ -31,7 +29,7 @@ public:
     ofxEasingLinear                         linearEasing;
     
     
-    void init( Pointilist *pointilist );
+    void init(  );
     void update( int deltaMillis );
     void updateGlobe( int deltaMillis );
     void updateStarfield( int deltaMillis );

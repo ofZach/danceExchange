@@ -18,6 +18,7 @@ class testApp : public ofBaseApp{
         Helper *helper;
         PreviewView *previewView;
         vector<PreviewView*> previewViews;
+        vector<PreviewView*> oldPreviews;
         PreviewView *chosenPreviewView;
         TapView *tapView;
         EmailView *emailView;

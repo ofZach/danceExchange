@@ -52,6 +52,12 @@ void PreviewView::draw() {
     img->draw( centerX - width/2.0, centerY - height/2.0, width, height );
 }
 
+void PreviewView::draw( float x, float y, float w, float h ) {
+    ofImage *img = frames[frameIndex];
+    ofSetColor( 255, 255, 255 );
+    img->draw( x, y, w, h );
+}
+
 void PreviewView::startFadeOut() {
     
     fadeOutTween.setParameters( easingQuad, ofxTween::easeInOut, 1, 0, 500, 0 );
@@ -75,4 +81,13 @@ void PreviewView::startCenterTween( float cxStart, float cxEnd, float cyStart, f
     centerYEnd      = cyEnd;
     
     centerTween.setParameters( easingQuad, ofxTween::easeInOut, 0, 1, duration, 0 );
+}
+
+PreviewView::~PreviewView() {
+    // destructor
+    cout << "~PreviewView()" << endl;
+    for ( int i=0; i<frames.size(); i++ ) {
+        ofImage *img = frames[i];
+        delete img;
+    }
 }

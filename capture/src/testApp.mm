@@ -5,6 +5,7 @@ static int BEATS_PER_CAPTURE = 4;
 static int LOCKED_BPM = 110;
 static int NUM_CAPTURES = 4;
 static int WHITE_FLASH = 200;
+static int NUM_OLD_PREVIEWS = 5;
 
 #define VERSION_NUMBER 1
 
@@ -85,9 +86,10 @@ void testApp::update(){
             previewViews[i]->update();
         }
     }
-//    if ( previewView ) {
-//        previewView->update();
-//    }
+    
+    for ( int i=0; i<oldPreviews.size(); i++ ) {
+        oldPreviews[i]->update();
+    }
     
     if ( isCapturing ) {
         captureMillis += deltaMillis;
@@ -186,6 +188,11 @@ void testApp::draw(){
         ofSetColor( 255, 255, 255, 100);
         ofRect(0, 0, ofGetWidth() * [helper uploadProgress], ofGetHeight() );
     }
+    
+    for ( int i=0; i<oldPreviews.size(); i++ ) {
+        oldPreviews[i]->draw( 0, i * 100, 100, 76 );
+    }
+    
 }
 
 void testApp::emailAddressEntered( string & emailAddress ) {
@@ -298,21 +305,35 @@ void testApp::chosenPreviewFadedOut( int & theId ) {
 
 void testApp::destroyPreview() {
     
-//    if ( previewView ) {
-//        delete previewView;
-//        previewView = 0;
-//    }
+    bool saveChosenPreview = false;
+    // if we're saving old previews, do it
+    if ( NUM_OLD_PREVIEWS > 0  && chosenPreviewView ) {
+        // if we're at the limit, erase an old preview
+        if ( oldPreviews.size() == NUM_OLD_PREVIEWS ) {
+            PreviewView *pv = *(oldPreviews.begin() );
+            oldPreviews.erase( oldPreviews.begin() );
+            delete pv;
+        }
+        
+        oldPreviews.push_back( chosenPreviewView );
+        saveChosenPreview = true;
+    }
     
-    if ( chosenPreviewView )
-        chosenPreviewView = 0;
     
     if ( previewViews.size() > 0 ) {
         for ( int i=0; i<previewViews.size(); i++ ) {
             PreviewView *pv = previewViews[i];
-            delete pv;
+            if ( saveChosenPreview && pv == chosenPreviewView ) {
+                
+            }
+            else
+                delete pv;
         }
         previewViews.clear();
     }
+    
+    if ( chosenPreviewView )
+        chosenPreviewView = 0;
     
     if ( emailView ) {
         ofRemoveListener( emailView->emailAddressEnteredEvent, this, &testApp::emailAddressEntered );
@@ -324,7 +345,7 @@ void testApp::destroyPreview() {
     for ( int i = 0; i < NUM_CAPTURES; i++ ) {
         for ( int j = 0; j < frames[i].size(); j++ ) {
             ofImage *img = frames[i][j];
-            delete img;
+//            delete img;
         }
         frames[i].clear();
     }

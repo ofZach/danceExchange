@@ -6,7 +6,7 @@ static int LOCKED_BPM = 110;
 static int NUM_CAPTURES = 4;
 static int WHITE_FLASH = 200;
 
-#define VERSION_NUMBER 0
+#define VERSION_NUMBER 1
 
 void testApp::setup(){
     ofSetVerticalSync( TRUE );
@@ -53,6 +53,8 @@ void testApp::setup(){
     
     [helper requestHandshake:VERSION_NUMBER];
     isRequestingHandshake = true;
+    
+    ofSetFullscreen( true );
 }
 
 void testApp::update(){
@@ -132,7 +134,10 @@ void testApp::draw(){
     ofBackground( 0, 0, 0 );
     
     ofSetColor( 255, 255, 255 );
-    grabber.draw( 0, 0, ofGetWidth(), ofGetHeight() );
+    
+    float aspectWidth = ((float)ofGetHeight()) * ( 4.0 / 3.0 );
+    float xOffset = ( ofGetWidth() - aspectWidth ) / 2.0;
+    grabber.draw( xOffset, 0, aspectWidth, ofGetHeight() );
     
     if ( tapView ) {
         tapView->draw();
@@ -172,17 +177,6 @@ void testApp::draw(){
         ofSetColor( 255, 255, 255, (int)(255.0 * whiteFlashTween.getTarget( 0 )) );
         ofRect( 0, 0, ofGetWidth(), ofGetHeight() );
     }
-    
-//    if ( previewView ) {
-//        previewView->draw();
-//        if ( uploadMessage != "" ) {
-//            ofRectangle stringRect = verdana.getStringBoundingBox( uploadMessage, 0, 0 );
-//            float stringX = ofGetWidth() / 2.0 - stringRect.width / 2.0;
-//            float stringY = ofGetHeight() / 2.0 - 100;// - stringRect.height / 2.0;
-//            ofSetColor( 255, 255, 255, 200 );
-//            verdana.drawString( uploadMessage, stringX, stringY );
-//        }
-//    }
     
     if ( emailView ) {
         emailView->draw();
@@ -235,20 +229,23 @@ void testApp::startPreviewing() {
     }
     else if ( previewViews.size() == 4 ) {
         
-        int previewWidth = ofGetWidth() / 2;
+        float aspectWidth = ((float)ofGetHeight()) * ( 4.0 / 3.0 );
+        float xOffset = ( ofGetWidth() - aspectWidth ) / 2.0;
+        
+        int previewWidth = aspectWidth / 2;
         int previewHeight = ofGetHeight() / 2;
         
         previewViews[0]->startSizeTween( 0, previewWidth, 0, previewHeight, 400, 0 );
-        previewViews[0]->setCenter( previewWidth/2.0, previewHeight/2.0 );
+        previewViews[0]->setCenter( previewWidth/2.0 + xOffset, previewHeight/2.0 );
         
         previewViews[1]->startSizeTween( 0, previewWidth, 0, previewHeight, 400, 100 );
-        previewViews[1]->setCenter( previewWidth + previewWidth/2.0, previewHeight/2.0 );
+        previewViews[1]->setCenter( previewWidth + previewWidth/2.0 + xOffset, previewHeight/2.0 );
         
         previewViews[2]->startSizeTween( 0, previewWidth, 0, previewHeight, 400, 200 );
-        previewViews[2]->setCenter( previewWidth/2.0, previewHeight + previewHeight/2.0 );
+        previewViews[2]->setCenter( previewWidth/2.0 + xOffset, previewHeight + previewHeight/2.0 );
         
         previewViews[3]->startSizeTween( 0, previewWidth, 0, previewHeight, 400, 300 );
-        previewViews[3]->setCenter( previewWidth + previewWidth/2.0, previewHeight + previewHeight/2.0 );
+        previewViews[3]->setCenter( previewWidth + previewWidth/2.0 + xOffset, previewHeight + previewHeight/2.0 );
         
     }
 //    previewView = new PreviewView();
@@ -287,8 +284,12 @@ void testApp::saveVideoFiles() {
     
     chosenPreviewView = previewViews[ chosenCaptureIndex ];
     ofAddListener( chosenPreviewView->fadeOutTween.end_E, this, &testApp::chosenPreviewFadedOut );
-    chosenPreviewView->startSizeTween( chosenPreviewView->widthEnd, ofGetWidth(), chosenPreviewView->height, ofGetHeight(), 500, 0 );
-    chosenPreviewView->startCenterTween( chosenPreviewView->centerX, ofGetWidth()/2, chosenPreviewView->centerY, ofGetHeight()/2, 500, 0 ); 
+    
+    float aspectWidth = ((float)ofGetHeight()) * ( 4.0 / 3.0 );
+    float xOffset = ( ofGetWidth() - aspectWidth ) / 2.0;
+    
+    chosenPreviewView->startSizeTween( chosenPreviewView->widthEnd, aspectWidth, chosenPreviewView->height, ofGetHeight(), 500, 0 );
+    chosenPreviewView->startCenterTween( chosenPreviewView->centerX, aspectWidth/2 + xOffset, chosenPreviewView->centerY, ofGetHeight()/2, 500, 0 ); 
 }
 
 void testApp::chosenPreviewFadedOut( int & theId ) {
@@ -333,7 +334,12 @@ void testApp::destroyPreview() {
 }
 
 void testApp::keyPressed(int key){
+    
     if ( emailView ) return;
+    
+    if ( key == 'f' ) {
+        ofToggleFullscreen();
+    }
     
     // if the preview view is active, we handle things here differently
     if ( previewViews.size() > 0 && !isUploading ) {

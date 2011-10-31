@@ -38,13 +38,19 @@ void TapView::update() {
             countdownMillis -= average;
             countdownTicks++;
             
-            if ( countdownTicks == MAX_TAPS + 1 )
+            if ( countdownTicks == MAX_TAPS + 1 ) {
                 ofNotifyEvent( startCaptureEvent, average, this );
+                isCountingDown = false;
+            }
         }
     }
 }
 
 void TapView::draw() {
+    
+    if ( countdownTicks == MAX_TAPS + 1 )
+        return;
+    
     for ( int i=0; i<MAX_TAPS; i++ ) {
         if ( numTaps == MAX_TAPS ) {
             if ( i < countdownTicks )
@@ -60,10 +66,14 @@ void TapView::draw() {
         }
         
         
-        float theY = ofGetHeight() / 2.0;
-        float theX = ofMap( i, 0, MAX_TAPS-1, 150, ofGetWidth()-150 );
+        float aspectWidth = ((float)ofGetHeight()) * ( 4.0 / 3.0 );
+        float xOffset = ( ofGetWidth() - aspectWidth ) / 2.0;
         
-        circle.draw( theX - circle.width / 2.0, theY - circle.height / 2.0 );
+        
+        float theY = ofGetHeight() / 2.0;
+        float theX = ofMap( i, 0, MAX_TAPS-1, 150, aspectWidth-150 );
+        
+        circle.draw( theX - circle.width / 2.0 + xOffset, theY - circle.height / 2.0 );
         
     }
 }

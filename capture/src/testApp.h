@@ -32,7 +32,7 @@ class testApp : public ofBaseApp{
     
         int camWidth, camHeight;
         ofVideoGrabber grabber;
-    
+        
         bool isCapturing;
         double captureInterval;
         double captureMillis;

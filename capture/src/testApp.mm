@@ -184,15 +184,41 @@ void testApp::draw(){
         emailView->draw();
     }
     
+    drawOldPreviews();
+    
     if ( isUploading ) {
         ofSetColor( 255, 255, 255, 100);
         ofRect(0, 0, ofGetWidth() * [helper uploadProgress], ofGetHeight() );
     }
     
-    for ( int i=0; i<oldPreviews.size(); i++ ) {
-        oldPreviews[i]->draw( 0, i * 100, 100, 76 );
-    }
+}
+
+void testApp::drawOldPreviews() {
     
+    if ( oldPreviews.size() == 0 ) return;
+    
+    float aspectWidth = ((float)ofGetHeight()) * ( 4.0 / 3.0 );
+    float laneWidth = ( ofGetWidth() - aspectWidth ) / 2.0;
+    float xOffset = laneWidth > 100 ? (laneWidth - 100.0) / 2.0 : 10;
+    float rightLaneOffset = laneWidth + aspectWidth + xOffset;
+    
+    // left lane
+    int count = 0;
+    float yPos = 0;
+    do {
+        yPos = count * 100 + xOffset;
+        oldPreviews[count % oldPreviews.size()]->draw( xOffset, yPos, 100, 76 );
+        count++;
+    } while ( yPos < ofGetHeight() );
+    
+    // right lane
+    count = 0;
+    yPos = 0;
+    do {
+        yPos = count * 100 + xOffset;
+        oldPreviews[ (count+oldPreviews.size()/2) % oldPreviews.size()]->draw( rightLaneOffset, yPos, 100, 76 );
+        count++;
+    } while ( yPos < ofGetHeight() );
 }
 
 void testApp::emailAddressEntered( string & emailAddress ) {

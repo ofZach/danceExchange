@@ -52,6 +52,7 @@ class testApp : public ofBaseApp{
 		void setup();
 		void update();
 		void draw();
+        void drawOldPreviews();
         void saveVideoFiles();
 		void keyPressed  (int key);
 		void windowResized(int w, int h);

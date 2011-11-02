@@ -84,10 +84,12 @@ void threadMovieLoader::loadMovieAsImageSequence() {
      it's better (less leaky) then quicktime and it's fairly simple 
      */
 	
-	string tempPath = ( movieWidth == 640 ? "bigTemp" : "temp" );
+	string tempPath = ( movieWidth == 640 ? "big" : "" ) + fileId;
 	string command = "rm " + ofToDataPath(tempPath) + "/*.png";
-	system(command.c_str());
+//	system(command.c_str());
     
+	//command = "../../../qt_export " + ofToDataPath(filename) + " --exporter=grex " + ofToDataPath(tempPath) + "/image.png &";
+	//cout << command << endl;
 	command =  "../../../data/./ffmpeg -v quiet -i " + ofToDataPath(filename) + " " + ofToDataPath(tempPath) + "/%d.png >/dev/null 2>&1";
 	system(command.c_str());
 	
@@ -135,6 +137,9 @@ void threadMovieLoader::loadMovieAsImageSequence() {
 		imgLoaded = false;
 	}
     
+	string removeCommand = "rm -r " + ofToDataPath(tempPath);
+	system(removeCommand.c_str());
+    
 	stop();
     
 }
@@ -150,11 +155,17 @@ void threadMovieLoader::unloadMovie() {
 
 
 //--------------------------------------------------------------
-bool threadMovieLoader::start(string & _filename) {
+bool threadMovieLoader::start(string & _filename, string & _fileId ) {
     
 	if (!isThreadRunning() && (_filename != "")) {
 		state = TH_STATE_LOADING;
 		filename = _filename;
+        fileId = _fileId;
+        
+        string tempPath = ( movieWidth == 640 ? "big" : "" ) + fileId;
+        string command = "mkdir " + ofToDataPath( tempPath );
+        system(command.c_str());
+        
 		imgLoaded = false;
 		startThread(true, false);  // blocking, verbose
 		return true;

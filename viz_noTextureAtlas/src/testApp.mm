@@ -1,5 +1,7 @@
 #include "testApp.h"
 
+#define VERSION_NUMBER 1
+
 //--------------------------------------------------------------
 void testApp::setup() {
        
@@ -40,7 +42,7 @@ void testApp::setup() {
     dvManager.init(  );
     ofAddListener( dvManager.danceVideoLoadedEvent, this, &testApp::danceVideoLoaded );
     
-	
+	BM.DVM = &dvManager;
 	
     // setup the networking
     NM.dvManager = &dvManager;
@@ -51,12 +53,15 @@ void testApp::setup() {
 	currentCityIndex = 8;
 	globe.setLatLon( LM.latLonForCity(currentCityIndex)  );
 	
+	//bg.loadImage("images/bg.png");
+	NM.requestHandshake( VERSION_NUMBER );
 	
-	bg.loadImage("images/bg.png");
-
 	
+	BM.setup();
 }
 
+
+int lastMode = -1;
 void testApp::update(){
     // update the networking. 
     NM.update();
@@ -74,6 +79,18 @@ void testApp::update(){
     dpManager.update( deltaMillis );
     
     globe.update( deltaMillis );
+	
+	int whichLast =lastMode;
+	if (whichLast != BRAND_MODE && mode == BRAND_MODE){
+	BM.start();	
+	}
+	lastMode = mode;
+	
+	if (mode == BRAND_MODE){
+		BM.update();
+	}
+	
+	
 }
 
 void testApp::draw(){  
@@ -81,7 +98,7 @@ void testApp::draw(){
 	ofEnableAlphaBlending();
 	ofSetColor(255,255,255, 130);
 	glDisable(GL_DEPTH_TEST);
-	bg.draw(0,0);
+	//bg.draw(0,0);
 	
     glEnable( GL_DEPTH_TEST );
     ofEnableAlphaBlending();  
@@ -130,6 +147,11 @@ void testApp::draw(){
             tex.draw( i * 200, ofGetHeight() - 200, 200, 200 );
         }
     }
+	
+	if (mode == BRAND_MODE){
+		BM.draw();
+
+	}
 }
 
 void testApp::danceVideoLoaded( danceVideo & dv ) {
@@ -183,6 +205,16 @@ void testApp::switchMode( VizMode nextMode ) {
             dpManager.transitionToGlobeMode( 500, 0 );
             globeToRandomCity( 1000 );
             break;
+			
+		case BRAND_MODE:
+			
+			dpManager.transitionToGlobeMode( 500, 0 );
+			globe.tweenGlobeToScale( 0, 500 );
+			cityTextRect = tradeGothic.getStringBoundingBox( cityName, 0, 0 );
+            cityTextTween.setParameters( easingQuad, ofxTween::easeInOut, cityTextX, -(cityTextRect.width+20), 400, 0 );
+			// do something with dpManager ?
+			
+			break;
     }
     
 }
@@ -191,10 +223,11 @@ void testApp::keyPressed(int key){
     
     if ( key == '1' ) {
         switchMode( STARFIELD_MODE );
-    }
-    else if ( key == '2' ) {
+    } else if ( key == '2' ) {
         switchMode( GLOBE_MODE );
-    }
+    } else if (key == '3'){
+		switchMode( BRAND_MODE );
+	}
     
   
     if ( key == 'c' ) {

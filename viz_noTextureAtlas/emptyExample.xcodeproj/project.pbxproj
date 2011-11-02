@@ -14,6 +14,11 @@
 		927757031450974D006F4A95 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 927756FB1450974D006F4A95 /* main.mm */; };
 		927757041450974D006F4A95 /* testApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = 927756FC1450974D006F4A95 /* testApp.mm */; };
 		9277573D1450A193006F4A95 /* networkManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9277573C1450A193006F4A95 /* networkManager.mm */; };
+		92A7C996145F810C0027DEE5 /* brandMode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92A7C995145F810C0027DEE5 /* brandMode.cpp */; };
+		92A7C9A2145F82150027DEE5 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92A7C99B145F82150027DEE5 /* tinyxml.cpp */; };
+		92A7C9A3145F82150027DEE5 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92A7C99D145F82150027DEE5 /* tinyxmlerror.cpp */; };
+		92A7C9A4145F82150027DEE5 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92A7C99E145F82150027DEE5 /* tinyxmlparser.cpp */; };
+		92A7C9A5145F82150027DEE5 /* ofxXmlSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92A7C9A0145F82150027DEE5 /* ofxXmlSettings.cpp */; };
 		92CFB33D1453207F008A440D /* danceVideo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92CFB33C1453207F008A440D /* danceVideo.cpp */; };
 		92F9D3B91450CA7C00E33783 /* locationManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 92F9D3B81450CA7C00E33783 /* locationManager.mm */; };
 		932011D6144F6B0D00DF18A8 /* ofxEasing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 932011A2144F6B0D00DF18A8 /* ofxEasing.cpp */; };
@@ -114,6 +119,14 @@
 		927756FC1450974D006F4A95 /* testApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = testApp.mm; sourceTree = "<group>"; };
 		9277573B1450A193006F4A95 /* networkManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = networkManager.h; sourceTree = "<group>"; };
 		9277573C1450A193006F4A95 /* networkManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = networkManager.mm; sourceTree = "<group>"; };
+		92A7C994145F810C0027DEE5 /* brandMode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = brandMode.h; sourceTree = "<group>"; };
+		92A7C995145F810C0027DEE5 /* brandMode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = brandMode.cpp; sourceTree = "<group>"; };
+		92A7C99B145F82150027DEE5 /* tinyxml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tinyxml.cpp; path = ../../../addons/ofxXmlSettings/libs/tinyxml.cpp; sourceTree = SOURCE_ROOT; };
+		92A7C99C145F82150027DEE5 /* tinyxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tinyxml.h; path = ../../../addons/ofxXmlSettings/libs/tinyxml.h; sourceTree = SOURCE_ROOT; };
+		92A7C99D145F82150027DEE5 /* tinyxmlerror.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tinyxmlerror.cpp; path = ../../../addons/ofxXmlSettings/libs/tinyxmlerror.cpp; sourceTree = SOURCE_ROOT; };
+		92A7C99E145F82150027DEE5 /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tinyxmlparser.cpp; path = ../../../addons/ofxXmlSettings/libs/tinyxmlparser.cpp; sourceTree = SOURCE_ROOT; };
+		92A7C9A0145F82150027DEE5 /* ofxXmlSettings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxXmlSettings.cpp; path = ../../../addons/ofxXmlSettings/src/ofxXmlSettings.cpp; sourceTree = SOURCE_ROOT; };
+		92A7C9A1145F82150027DEE5 /* ofxXmlSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxXmlSettings.h; path = ../../../addons/ofxXmlSettings/src/ofxXmlSettings.h; sourceTree = SOURCE_ROOT; };
 		92CFB33B1453207F008A440D /* danceVideo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = danceVideo.h; sourceTree = "<group>"; };
 		92CFB33C1453207F008A440D /* danceVideo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = danceVideo.cpp; sourceTree = "<group>"; };
 		92F9D3B71450CA7C00E33783 /* locationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = locationManager.h; sourceTree = "<group>"; };
@@ -282,6 +295,38 @@
 			path = utils;
 			sourceTree = "<group>";
 		};
+		92A7C998145F82150027DEE5 /* ofxXmlSettings */ = {
+			isa = PBXGroup;
+			children = (
+				92A7C99A145F82150027DEE5 /* libs */,
+				92A7C99F145F82150027DEE5 /* src */,
+			);
+			name = ofxXmlSettings;
+			path = ../../../addons/ofxXmlSettings;
+			sourceTree = SOURCE_ROOT;
+		};
+		92A7C99A145F82150027DEE5 /* libs */ = {
+			isa = PBXGroup;
+			children = (
+				92A7C99B145F82150027DEE5 /* tinyxml.cpp */,
+				92A7C99C145F82150027DEE5 /* tinyxml.h */,
+				92A7C99D145F82150027DEE5 /* tinyxmlerror.cpp */,
+				92A7C99E145F82150027DEE5 /* tinyxmlparser.cpp */,
+			);
+			name = libs;
+			path = ../../../addons/ofxXmlSettings/libs;
+			sourceTree = SOURCE_ROOT;
+		};
+		92A7C99F145F82150027DEE5 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				92A7C9A0145F82150027DEE5 /* ofxXmlSettings.cpp */,
+				92A7C9A1145F82150027DEE5 /* ofxXmlSettings.h */,
+			);
+			name = src;
+			path = ../../../addons/ofxXmlSettings/src;
+			sourceTree = SOURCE_ROOT;
+		};
 		92F9D3B41450CA6B00E33783 /* location */ = {
 			isa = PBXGroup;
 			children = (
@@ -440,6 +485,7 @@
 		BB4B014C10F69532006C3DED /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				92A7C998145F82150027DEE5 /* ofxXmlSettings */,
 				93201143144F6B0D00DF18A8 /* ofxTween */,
 			);
 			name = addons;
@@ -509,6 +555,8 @@
 		E4B69E1C0A3A1BDC003C02F2 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				92A7C994145F810C0027DEE5 /* brandMode.h */,
+				92A7C995145F810C0027DEE5 /* brandMode.cpp */,
 				92F9D3B41450CA6B00E33783 /* location */,
 				927756E61450974D006F4A95 /* dances */,
 				927756EB1450974D006F4A95 /* graphics */,
@@ -655,6 +703,11 @@
 				92F9D3B91450CA7C00E33783 /* locationManager.mm in Sources */,
 				92CFB33D1453207F008A440D /* danceVideo.cpp in Sources */,
 				9385676C1455DFFF005BA542 /* DVManager.mm in Sources */,
+				92A7C996145F810C0027DEE5 /* brandMode.cpp in Sources */,
+				92A7C9A2145F82150027DEE5 /* tinyxml.cpp in Sources */,
+				92A7C9A3145F82150027DEE5 /* tinyxmlerror.cpp in Sources */,
+				92A7C9A4145F82150027DEE5 /* tinyxmlparser.cpp in Sources */,
+				92A7C9A5145F82150027DEE5 /* ofxXmlSettings.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -682,7 +735,9 @@
 				GCC_ENABLE_SUPPLEMENTAL_SSE3_INSTRUCTIONS = YES;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_UNROLL_LOOPS = YES;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = NO;
 				GCC_WARN_ALLOW_INCOMPLETE_PROTOCOL = NO;

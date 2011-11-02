@@ -12,6 +12,8 @@
 #include "DPManager.h"
 #include "DVManager.h"
 #include "VizModes.h"
+#include "brandMode.h"
+
 
 
 class testApp : public ofBaseApp{
@@ -59,6 +61,8 @@ public:
         void mousePressed(int x, int y, int button);
 	
 		ofImage bg;
+	
+		brandMode BM;
 	
 		
 };

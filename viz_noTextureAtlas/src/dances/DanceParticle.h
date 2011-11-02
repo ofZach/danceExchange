@@ -80,7 +80,7 @@ public:
 			
         }
 		
-		DV->update(deltaMillis, paused);
+		//DV->update(deltaMillis, paused);
     }
     
     void updateGlobe( int deltaMillis, bool paused ) {

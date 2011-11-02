@@ -8,6 +8,7 @@ const int FRAMES_PER_ROW = TEX_WIDTH / FRAME_WIDTH;
 const int FRAMES_PER_COL = TEX_HEIGHT / FRAME_HEIGHT;
 const int FRAMES_PER_TEX = FRAMES_PER_COL * FRAMES_PER_ROW;
 const int NUM_TEXTURES = 5;
+const int SIMULTANEOUS_LOADS = 1;
 
 void DVManager::createDanceVideo( DanceInfo & danceInfo ) {
     
@@ -30,37 +31,65 @@ void DVManager::init(  ) {
 
 void DVManager::update( int deltaMillis ) {
     
-    // update the loading video
-    if ( loadingVideo )
-        loadingVideo->update( deltaMillis, paused );
+    // update loading videos (plural!)
+    for ( int i=0; i<loadingVideos.size(); i++ ) {
+        loadingVideos[i]->update( deltaMillis, paused );
+    }
+	
+	
+	for ( int i=0; i<danceVideos.size(); i++ ) {
+        danceVideos[i]->update( deltaMillis, paused );
+    }
+	
     
-    // if there is a loading video, see if it has finished loading yet
-    if ( loadingVideo && loadingVideo->smallVideoLoaded ) {
-        // this is where we'll integrate it into the texture stuff
-        addFramesToTextures( loadingVideo );
-        // now put it in the main dance video vector
-        danceVideos.push_back( loadingVideo );
-        // dispatch an event
-        ofNotifyEvent( danceVideoLoadedEvent, *loadingVideo, this );
-        // and set loading video to zero
-        loadingVideo = 0;
+    // if there are any loading videos, see if they have finished loading and remove them
+    for ( vector<danceVideo*>::iterator it = loadingVideos.begin(); it != loadingVideos.end(); ) {
+        danceVideo *dv = *it;
+        if ( dv->smallVideoLoaded ) {
+            addFramesToTextures( dv );
+            danceVideos.push_back( dv );
+            ofNotifyEvent( danceVideoLoadedEvent, *dv, this );
+            loadingVideos.erase( it );
+        }
+        else {
+            it++;
+        }
     }
     
-    // if there is no currently loading video and there are unloaded videos present
-    // start the next one in line loading
-    if ( !loadingVideo && unloadedDanceVideos.size() > 0 ) {
-        // set loading video to the first dv in the unloaded videos vector
-        loadingVideo = *(unloadedDanceVideos.begin());
-        // now erase it from the vector
+    // if there are less than the maximum simultaneous, then start a new one
+    while ( loadingVideos.size() < SIMULTANEOUS_LOADS && unloadedDanceVideos.size() > 0 ) {
+        danceVideo *dv = *( unloadedDanceVideos.begin() );
         unloadedDanceVideos.erase( unloadedDanceVideos.begin() );
-        // now start it loading
-        loadingVideo->loadSmallVideo();
+        loadingVideos.push_back( dv );
+        dv->loadSmallVideo();
     }
 
-
-	for (int i = 0; i < danceVideos.size(); i++){
-		danceVideos[i]->update(	deltaMillis, false);
-	}
+//    // update the loading video
+//    if ( loadingVideo )
+//        loadingVideo->update( deltaMillis, paused );
+//    
+//    // if there is a loading video, see if it has finished loading yet
+//    if ( loadingVideo && loadingVideo->smallVideoLoaded ) {
+//        // this is where we'll integrate it into the texture stuff
+//        addFramesToTextures( loadingVideo );
+//        // now put it in the main dance video vector
+//        danceVideos.push_back( loadingVideo );
+//        // dispatch an event
+//        ofNotifyEvent( danceVideoLoadedEvent, *loadingVideo, this );
+//        // and set loading video to zero
+//        loadingVideo = 0;
+//    }
+//    
+//    // if there is no currently loading video and there are unloaded videos present
+//    // start the next one in line loading
+//    if ( !loadingVideo && unloadedDanceVideos.size() > 0 ) {
+//        // set loading video to the first dv in the unloaded videos vector
+//        loadingVideo = *(unloadedDanceVideos.begin());
+//        // now erase it from the vector
+//        unloadedDanceVideos.erase( unloadedDanceVideos.begin() );
+//        // now start it loading
+//        loadingVideo->loadSmallVideo();
+//    }
     
 }
 
@@ -108,7 +137,7 @@ void DVManager::addFramesToTextures( danceVideo * dv ) {
 			frame.draw(0,0);
             ofSetColor( 255, 255, 255 );
 			//ofLine(0,0,100,76);
-            ofDrawBitmapString( ofToString( i ), 5, 12 );
+           // ofDrawBitmapString( ofToString( i ), 5, 12 );
 			offscreen.end();
 			offscreen.readToPixels(pix);
 			

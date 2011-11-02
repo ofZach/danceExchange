@@ -75,17 +75,19 @@ public:
     
     void loadSmallVideo() {
         smallVideoLoader = new threadMovieLoader( info.numFrames, 100, 76 );
-//        string filename = "videos/" + info.hash + "_s.mov";
-        string filename = "videos/" + ofToString( id ) + "_s.mov";
+        //        string filename = "videos/" + info.hash + "_s.mov";
+        string fileId = ofToString( id );
+        string filename = "videos/" + fileId + "_s.mov";
         smallVideoLoadStartMillis = ofGetElapsedTimeMillis();
-        smallVideoLoader->start( filename );
+        smallVideoLoader->start( filename, fileId );
     }
     
     void loadLargeVideo() {
         largeVideoLoader = new threadMovieLoader( info.numFrames, 640, 480 );
-        string filename = "videos/" + ofToString( id ) + ".mov";
+        string fileId = ofToString( id );
+        string filename = "videos/" + fileId + ".mov";
         largeVideoLoadStartMillis = ofGetElapsedTimeMillis();
-        largeVideoLoader->start( filename );
+        largeVideoLoader->start( filename, fileId );
     }
     void draw(ofPoint pt, float w, float h){
 	

@@ -14,12 +14,18 @@
 void networkManager::setup(){
 	dbHelper = [[DBHelper alloc] init];
     [dbHelper setRequestInterval:5.0];
-    [dbHelper requestRecentDances:300];
-    isRequestingRecentDances = true;
+//    [dbHelper requestRecentDances:300];
+    isRequestingRecentDances = false;
+    isRequestingHandshake = false;
 }
 
 void networkManager::requestLargeVideo( danceVideo *dv ) {
     [dbHelper requestLargeVideoFile:dv->info];
+}
+
+void networkManager::requestHandshake( int version ) {
+    [dbHelper requestHandshake:version];
+    isRequestingHandshake = true;
 }
 
 void networkManager::update(){
@@ -38,6 +44,22 @@ void networkManager::update(){
             dvManager->loadLargeVideo( largeVideos[i] );
         }
         [dbHelper clearLargeVideoHashes];
+    }
+    
+    if ( isRequestingHandshake && ![dbHelper isRequestingHandshake] ) {
+        isRequestingHandshake = false;
+        
+//        cout << "handshake request finished..." << endl;
+        string updateUrl = [dbHelper appUpdateUrl];
+        if ( updateUrl == "" ) {
+//            cout << "seems like everything was up to date" << endl;
+            [dbHelper requestRecentDances:300];
+        }
+        else {
+//            cout << "we need an update from this url: " << updateUrl << endl;
+            ofLaunchBrowser( updateUrl );
+            ofExit();
+        }
     }
     
     if ( isRequestingRecentDances && ![dbHelper isRequestingRecentDanceInfos] && ![dbHelper isProcessingDanceInfosWithoutVideos] ) {

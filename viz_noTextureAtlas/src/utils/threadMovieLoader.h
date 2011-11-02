@@ -32,7 +32,7 @@ class threadMovieLoader : public ofThread {
 		threadMovieLoader( int totalFrames, int movieWidth, int movieHeight );
 		~threadMovieLoader();
 		
-		bool    start(string & _filename);
+		bool    start(string & _filename, string & _fileId );
 		void    stop();
 		void    threadedFunction();
 		void    loadMovieAsImageSequence();
@@ -53,6 +53,7 @@ class threadMovieLoader : public ofThread {
 	protected:
 	
 		string			filename;
+        string          fileId;
 		int				numTextures;
 		int				textureIndex;
 		bool            imgLoaded;

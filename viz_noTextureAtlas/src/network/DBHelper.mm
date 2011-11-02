@@ -3,15 +3,18 @@
 @implementation DBHelper
 
 @synthesize danceInfos, danceHashesWithLargeVideos;
-@synthesize isRequestingRecentDanceInfos;
+@synthesize isRequestingRecentDanceInfos, isRequestingHandshake;
 @synthesize requestInterval;
 @synthesize newestId;
+@synthesize appUpdateUrl;
 
 - (id)init
 {
     self = [super init];
     if (self) {        
+        
         [self setNewestId:0];
+        [self setAppUpdateUrl:""];
         // check to see that the videos directory exists...
         NSURL *videoPath = [NSURL URLWithString:@"../data/videos/" relativeToURL:[[NSBundle mainBundle] bundleURL]];
         NSURL *tempPath = [NSURL URLWithString:@"../data/temp/" relativeToURL:[[NSBundle mainBundle] bundleURL]];
@@ -42,6 +45,43 @@
 
 - (bool)isProcessingDanceInfosWithoutVideos {
     return danceInfosWithoutVideos.size() > 0;
+}
+
+- (void)requestHandshake:(int)version {
+    NSURL *url = [NSURL URLWithString:@"http://aaron-meyers.com/smirnoff/handshake.php"];
+    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setPostValue:@"viz" forKey:@"app"];
+    [request setPostValue:[NSNumber numberWithInt:version] forKey:@"version"];
+    [request setDelegate:self];
+    [request setDidFinishSelector:@selector(handshakeRequestDidFinish:)];
+    [request setDidFailSelector:@selector(handshakeRequestDidFail:)];
+    [request setTimeOutSeconds:120];
+    [request startAsynchronous];
+    
+    [self setIsRequestingHandshake:YES];
+}
+
+- (void)handshakeRequestDidFinish:(ASIHTTPRequest *)request {
+    NSLog( @"handshake request did finish: %@", [request responseString] );
+    
+    NSError *error;
+    NSArray *response = [[CJSONDeserializer deserializer] deserialize:[request responseData] error:&error];
+    BOOL ok = [[response valueForKey:@"ok"] isEqualToNumber:[NSNumber numberWithInt:1]];
+    
+    if ( ok ) {
+        NSLog( @"up to date" );
+    }
+    else {
+        NSLog( @"not up to date" );
+        NSString *url = [response valueForKey:@"url"];
+        [self setAppUpdateUrl:[url cStringUsingEncoding:[NSString defaultCStringEncoding]]];
+    }
+    
+    [self setIsRequestingHandshake:NO];
+}
+
+- (void)handshakeRequestDidFail:(ASIHTTPRequest *)request {
+    
 }
 
 - (void)requestDancesSince {

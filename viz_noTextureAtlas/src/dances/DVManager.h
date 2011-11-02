@@ -16,6 +16,7 @@ public:
 	
     vector<danceVideo*>         unloadedDanceVideos;
     vector<danceVideo*>         danceVideos;
+    vector<danceVideo*>         loadingVideos;
     vector<ofTexture>           textures;
     danceVideo                  *loadingVideo;
     int                         frameCount;

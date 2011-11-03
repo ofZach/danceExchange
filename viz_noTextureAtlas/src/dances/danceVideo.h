@@ -21,10 +21,11 @@ public:
     
     
     //bool                smallVideoLoaded;
-//    threadMovieLoader*  smallVideoLoader;
-//    int                 smallVideoLoadStartMillis;
-//    
-    /*bool                largeVideoLoaded;
+	//threadMovieLoader*  smallVideoLoader;
+	//int                 smallVideoLoadStartMillis;
+	//    
+    
+	/*bool                largeVideoLoaded;
     bool                largeVideoDownloaded; // we won't assume that all the large videos have even been downloaded
     threadMovieLoader*  largeVideoLoader;
     int                 largeVideoLoadStartMillis;

@@ -87,9 +87,17 @@ void threadMovieLoader::loadMovieAsImageSequence() {
      it's better (less leaky) then quicktime and it's fairly simple 
      */
 	
+	
+	
+	
 	string tempPath = ( movieWidth == 640 ? "big" : "" ) + fileId;
-	string command = "rm " + ofToDataPath(tempPath) + "/*.png";
-   
+	
+	//string tempPath = ( movieWidth == 640 ? "big" : "" ) + fileId;
+	string command = "mkdir " + ofToDataPath( tempPath );
+	system(command.c_str());
+	
+	
+	
 #ifdef USING_QT_EXPORT
 	command = "../../../data/qt_export " + ofToDataPath(filename) + " --exporter=grex " + ofToDataPath(tempPath) + "/.png >/dev/null 2>&1";
 	system(command.c_str());
@@ -104,11 +112,8 @@ void threadMovieLoader::loadMovieAsImageSequence() {
     for (int i = 0; i < totalFrames; i++ ) {
 		temp.setUseTexture(false); // important !! threaded !!
 		
-        printf("hi \n");
-        
-		continue;
-		//string nameT = ofToString(i+1);
-		string nameT  = "";
+		string nameT = ofToString(i+1);
+		//string nameT  = "";
 #ifdef USING_QT_EXPORT		// QT export adds a 0 pad to file names. 
 		if (nameT.size() == 1) nameT = "0" + nameT;
 #endif 
@@ -143,6 +148,11 @@ void threadMovieLoader::loadMovieAsImageSequence() {
 	}
 	
 	
+	
+    
+	string removeCommand = "rm -r " + ofToDataPath(tempPath);
+	system(removeCommand.c_str());
+    
 	if (nFrames > 0){
 		state = TH_STATE_JUST_LOADED;
 		imgLoaded = true;
@@ -150,10 +160,7 @@ void threadMovieLoader::loadMovieAsImageSequence() {
 		state = TH_STATE_UNLOADED;
 		imgLoaded = false;
 	}
-    
-	string removeCommand = "rm -r " + ofToDataPath(tempPath);
-	system(removeCommand.c_str());
-    
+	
 	stop();
     
 }
@@ -176,10 +183,7 @@ bool threadMovieLoader::start(string & _filename, string & _fileId ) {
 		filename = _filename;
         fileId = _fileId;
         
-        string tempPath = ( movieWidth == 640 ? "big" : "" ) + fileId;
-        string command = "mkdir " + ofToDataPath( tempPath );
-        system(command.c_str());
-        
+       
 		imgLoaded = false;
 		startThread(true, false);  // blocking, verbose
 		return true;

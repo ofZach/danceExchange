@@ -3,7 +3,9 @@
 
 
 void DVManager::createDanceVideo( DanceInfo danceInfo ) {
-    cout << "create! " << endl;
+    
+	printf("creating %i \n", danceInfo.id);
+	
     //danceVideo *dv = new danceVideo( danceInfo );
     unloadedDanceVideos.push_back( danceInfo );
 }
@@ -91,9 +93,12 @@ void DVManager::update( int deltaMillis ) {
 		
 		string fileId = ofToString( toLoad.id );
 		string filename = "videos/" + fileId + "_s.mov";
+		
+		
 		for (int i = 0; i < SIMULTANEOUS_LOADS; i++){
 			if (loaders[i]->state == TH_STATE_UNLOADED){
 				if (loaders[i]->start(filename, fileId)){		// in case we don't "start" let's not erase. 
+					printf("loading %s %s \n", filename.c_str(), fileId.c_str());
 					loadersInfo[i] = toLoad;
 					bLoadingOne = true;
 					unloadedDanceVideos.erase( unloadedDanceVideos.begin() );

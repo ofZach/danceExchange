@@ -9,6 +9,9 @@
 
 #include "threadMovieLoader.h"
 
+#define USING_QT_EXPORT
+
+
 
 //--------------------------------------------------------------
 threadMovieLoader::threadMovieLoader( int totalFrames, int movieWidth, int movieHeight ) {
@@ -86,19 +89,28 @@ void threadMovieLoader::loadMovieAsImageSequence() {
 	
 	string tempPath = ( movieWidth == 640 ? "big" : "" ) + fileId;
 	string command = "rm " + ofToDataPath(tempPath) + "/*.png";
-//	system(command.c_str());
-    
-	//command = "../../../qt_export " + ofToDataPath(filename) + " --exporter=grex " + ofToDataPath(tempPath) + "/image.png &";
-	//cout << command << endl;
+   
+#ifdef USING_QT_EXPORT
+	command = "../../../data/qt_export " + ofToDataPath(filename) + " --exporter=grex " + ofToDataPath(tempPath) + "/.png >/dev/null 2>&1";
+	system(command.c_str());
+#else
 	command =  "../../../data/./ffmpeg -v quiet -i " + ofToDataPath(filename) + " " + ofToDataPath(tempPath) + "/%d.png >/dev/null 2>&1";
 	system(command.c_str());
+#endif
 	
 	nFrames = 0;
 	
 	
     for (int i = 0; i < totalFrames; i++ ) {
-		temp.setUseTexture(false); // important !! threaded !! 
-		if (!temp.loadImage(tempPath+"/" + ofToString(i+1) + ".png")){
+		temp.setUseTexture(false); // important !! threaded !!
+		
+		
+		string nameT = ofToString(i+1);
+		
+#ifdef USING_QT_EXPORT		// QT export adds a 0 pad to file names. 
+		if (nameT.size() == 1) nameT = "0" + nameT;
+#endif 
+		if (!temp.loadImage(tempPath+"/" + nameT + ".png")){
 			break;
 		} else {
             temp.setImageType( OF_IMAGE_COLOR_ALPHA );

@@ -104,9 +104,11 @@ void threadMovieLoader::loadMovieAsImageSequence() {
     for (int i = 0; i < totalFrames; i++ ) {
 		temp.setUseTexture(false); // important !! threaded !!
 		
-		
-		string nameT = ofToString(i+1);
-		
+        printf("hi \n");
+        
+		continue;
+		//string nameT = ofToString(i+1);
+		string nameT  = "";
 #ifdef USING_QT_EXPORT		// QT export adds a 0 pad to file names. 
 		if (nameT.size() == 1) nameT = "0" + nameT;
 #endif 

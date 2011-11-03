@@ -59,6 +59,8 @@ threadMovieLoader::~threadMovieLoader() {
 //--------------------------------------------------------------
 void threadMovieLoader::loadMovieAsImageSequence() {
 	
+	ofSleepMillis(10);
+	
 	
 	/*
 	 
@@ -87,8 +89,15 @@ void threadMovieLoader::loadMovieAsImageSequence() {
      it's better (less leaky) then quicktime and it's fairly simple 
      */
 	
+	//string tempPath = ( movieWidth == 640 ? "big" : "" ) + fileId;
+	
+	
 	string tempPath = ( movieWidth == 640 ? "big" : "" ) + fileId;
-	string command = "rm " + ofToDataPath(tempPath) + "/*.png";
+	
+	string command = "mkdir " + ofToDataPath( tempPath );
+	system(command.c_str());
+	
+	//command = "rm " + ofToDataPath(tempPath) + "/*.png";
    
 #ifdef USING_QT_EXPORT
 	command = "../../../data/qt_export " + ofToDataPath(filename) + " --exporter=grex " + ofToDataPath(tempPath) + "/.png >/dev/null 2>&1";
@@ -102,8 +111,10 @@ void threadMovieLoader::loadMovieAsImageSequence() {
 	
 	
     for (int i = 0; i < totalFrames; i++ ) {
-		temp.setUseTexture(false); // important !! threaded !!
 		
+		//ofSleepMillis(10);
+		
+		temp.setUseTexture(false); // important !! threaded !!
 		
 		string nameT = ofToString(i+1);
 		
@@ -149,7 +160,7 @@ void threadMovieLoader::loadMovieAsImageSequence() {
 		imgLoaded = false;
 	}
     
-	string removeCommand = "rm -r " + ofToDataPath(tempPath);
+	string removeCommand = "rm -r " + ofToDataPath(tempPath) + ">/dev/null 2>&1";
 	system(removeCommand.c_str());
     
 	stop();
@@ -174,9 +185,6 @@ bool threadMovieLoader::start(string & _filename, string & _fileId ) {
 		filename = _filename;
         fileId = _fileId;
         
-        string tempPath = ( movieWidth == 640 ? "big" : "" ) + fileId;
-        string command = "mkdir " + ofToDataPath( tempPath );
-        system(command.c_str());
         
 		imgLoaded = false;
 		startThread(true, false);  // blocking, verbose

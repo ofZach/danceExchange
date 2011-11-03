@@ -1,7 +1,7 @@
 #include "testApp.h"
 
 static int FRAMES_PER_BEAT = 6;
-static int BEATS_PER_CAPTURE = 4;
+static int BEATS_PER_CAPTURE = 1;
 static int LOCKED_BPM = 110;
 static int NUM_CAPTURES = 4;
 static int WHITE_FLASH = 200;
@@ -23,7 +23,8 @@ void testApp::setup(){
     tapView = new TapView();
     ofAddListener(tapView->startCaptureEvent, this, &testApp::startCapturing);
     
-    tradeGothic.loadFont( "TradeGothicLTStd-BdCn20.otf", 80 );
+    tradeGothic.loadFont( "TradeGothicLTStd-BdCn20.otf", 200 );
+    tradeGothicSmall.loadFont( "TradeGothicLTStd-BdCn20.otf", 50 );
     
     camWidth = 640;
     camHeight = 480;
@@ -158,10 +159,24 @@ void testApp::draw(){
                 int previewWidth = ofGetWidth() / 2;
                 int previewHeight = ofGetHeight() / 2;
                 
+                // draw all the previews
+                
                 for ( int i=0; i<previewViews.size(); i++ ) {
                     previewViews[i]->draw();
                     drawNumberForPreviewView( i+1, previewViews[i] );
                 }
+                
+                // draw instructions for the operator
+                string instructions = "PRESS 1, 2, 3 OR 4 TO CHOOSE";
+                ofRectangle instructionsRect = tradeGothicSmall.getStringBoundingBox( instructions, 0, 0 );
+                float scaleFactor = aspectWidth / (float)instructionsRect.width;
+//                cout << "rect x: " << instructionsRect.x << " and height: " << instructionsRect.height << endl;
+                ofSetColor( 255, 255, 255 );
+                ofPushMatrix();
+                ofTranslate( xOffset - instructionsRect.x * scaleFactor, -instructionsRect.y * scaleFactor );
+                ofScale( scaleFactor, scaleFactor );
+                tradeGothicSmall.drawString( instructions, 0, 0 );
+                ofPopMatrix();
             }
         }
         
@@ -196,9 +211,45 @@ void testApp::draw(){
 }
 
 void testApp::drawNumberForPreviewView( int num, PreviewView *pv ) {
-    ofPushMatrix();
     float scaleAmt = pv->width / pv->widthEnd;
-    ofTranslate( pv->centerX - pv->width / 2.0 + 10, pv->centerY - pv->height / 2.0 + tradeGothic.getSize() + 10 );
+    float xOffset, yOffset;
+    if ( num == 1 ) {
+        xOffset = 1.0;
+        yOffset = 1.0;
+    }
+    else if ( num == 2 ) {
+        xOffset = -1.0;
+        yOffset = 1.0;
+    }
+    else if ( num == 3 ) {
+        xOffset = 1.0;
+        yOffset = -1.0;
+    }
+    else if ( num == 4 ) {
+        xOffset = -1.0;
+        yOffset = -1.0;
+    }
+    
+    float xSafe = 20.0;
+    float ySafe = 20.0;
+//    ofRectangle numRect = tradeGothic.getStringBoundingBox( ofToString( (num==1?3:num) ), 0, 0 );
+    ofRectangle numRect = tradeGothic.getStringBoundingBox( ofToString( 4 ), 0, 0 );
+    
+    float xTranslate = pv->centerX + ( pv->width / ( 2.0 * xOffset ) ) - ( xOffset > 0 ? numRect.width + numRect.x + xSafe : -xSafe );
+    float yTranslate = pv->centerY + ( pv->height / ( 2.0 * yOffset ) ) - ( yOffset > 0 ? numRect.height + numRect.y + ySafe : -(ySafe - numRect.y) );
+    
+    // first draw black shadow knockout
+    ofSetColor( 0, 0, 0 );
+    ofPushMatrix();
+    ofTranslate( xTranslate + 5, yTranslate + 5 );
+    ofScale( scaleAmt, scaleAmt );
+    tradeGothic.drawString( ofToString( num ), 0, 0 );
+    ofPopMatrix();
+    
+    // then draw the white text
+    ofSetColor( 255, 255, 255 );
+    ofPushMatrix();
+    ofTranslate( xTranslate, yTranslate );
     ofScale( scaleAmt, scaleAmt );
     tradeGothic.drawString( ofToString( num ), 0, 0 );
     ofPopMatrix();

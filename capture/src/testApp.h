@@ -16,6 +16,7 @@ class testApp : public ofBaseApp{
         bool isRequestingHandshake;
     
         ofTrueTypeFont tradeGothic;
+        ofTrueTypeFont tradeGothicSmall;
     
         Helper *helper;
         PreviewView *previewView;

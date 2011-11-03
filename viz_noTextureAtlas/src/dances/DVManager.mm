@@ -1,103 +1,118 @@
 #include "DVManager.h"
 
-const int FRAME_WIDTH = 100;
-const int FRAME_HEIGHT = 76;
-const int TEX_WIDTH = 40 * FRAME_WIDTH;//2048;
-const int TEX_HEIGHT = 53 * FRAME_HEIGHT;//2048;
-const int FRAMES_PER_ROW = TEX_WIDTH / FRAME_WIDTH;
-const int FRAMES_PER_COL = TEX_HEIGHT / FRAME_HEIGHT;
-const int FRAMES_PER_TEX = FRAMES_PER_COL * FRAMES_PER_ROW;
-const int NUM_TEXTURES = 5;
-const int SIMULTANEOUS_LOADS = 1;
 
-void DVManager::createDanceVideo( DanceInfo & danceInfo ) {
-    
-    danceVideo *dv = new danceVideo( danceInfo );
-    unloadedDanceVideos.push_back( dv );
-    
+
+void DVManager::createDanceVideo( DanceInfo danceInfo ) {
+    cout << "create! " << endl;
+    //danceVideo *dv = new danceVideo( danceInfo );
+    unloadedDanceVideos.push_back( danceInfo );
 }
 
 void DVManager::init(  ) {
     
     frameCount = 0;
-    loadingVideo = 0;
     paused = false;
 	
 	pix.allocate(FRAME_WIDTH, FRAME_HEIGHT, OF_PIXELS_RGBA);
 	frame.allocate(FRAME_WIDTH, FRAME_HEIGHT, GL_RGBA8);
 	offscreen.allocate(FRAME_WIDTH, FRAME_HEIGHT,  GL_RGBA8, 4);
+	
+	
+	for (int i = 0; i < SIMULTANEOUS_LOADS; i++){
+		 loaders[i] = new threadMovieLoader( 24, FRAME_WIDTH, FRAME_HEIGHT );
+	}
+		
 	//offscreen
 }
 
 void DVManager::update( int deltaMillis ) {
     
-    // update loading videos (plural!)
-    for ( int i=0; i<loadingVideos.size(); i++ ) {
-        loadingVideos[i]->update( deltaMillis, paused );
-    }
+	/*for (int i = 0; i < SIMULTANEOUS_LOADS; i++){
+		printf("threadedLoaders %i :", i);
+		switch (loaders[i]->state){
+			case TH_STATE_LOADING:
+				printf(" -- loading \n");
+				break;
+			case TH_STATE_JUST_LOADED:
+				printf(" -- just loading \n");
+				break;
+			case TH_STATE_LOADED: 
+				printf(" -- loaded \n");
+				break;
+			case TH_STATE_UNLOADED:
+				printf(" -- unloaded \n");
+				break;
+		}
+	}*/
 	
+	int howManyAvailableForLoading = 0;
+	for (int i = 0; i < SIMULTANEOUS_LOADS; i++){
+		if (loaders[i]->state == TH_STATE_UNLOADED){
+			howManyAvailableForLoading++;
+		}
+	}
+		 
+	//cout << howManyAvailableForLoading << endl;
 	
 	for ( int i=0; i<danceVideos.size(); i++ ) {
         danceVideos[i]->update( deltaMillis, paused );
     }
 	
-    
-    // if there are any loading videos, see if they have finished loading and remove them
-    for ( vector<danceVideo*>::iterator it = loadingVideos.begin(); it != loadingVideos.end(); ) {
-        danceVideo *dv = *it;
-        if ( dv->smallVideoLoaded ) {
-            addFramesToTextures( dv );
-            danceVideos.push_back( dv );
-            ofNotifyEvent( danceVideoLoadedEvent, *dv, this );
-            loadingVideos.erase( it );
-        }
-        else {
-            it++;
-        }
-    }
-    
-    // if there are less than the maximum simultaneous, then start a new one
-    while ( loadingVideos.size() < SIMULTANEOUS_LOADS && unloadedDanceVideos.size() > 0 ) {
-        danceVideo *dv = *( unloadedDanceVideos.begin() );
-        unloadedDanceVideos.erase( unloadedDanceVideos.begin() );
-        loadingVideos.push_back( dv );
-        dv->loadSmallVideo();
-    }
-
-//    // update the loading video
-//    if ( loadingVideo )
-//        loadingVideo->update( deltaMillis, paused );
-//    
-//    // if there is a loading video, see if it has finished loading yet
-//    if ( loadingVideo && loadingVideo->smallVideoLoaded ) {
-//        // this is where we'll integrate it into the texture stuff
-//        addFramesToTextures( loadingVideo );
-//        // now put it in the main dance video vector
-//        danceVideos.push_back( loadingVideo );
-//        // dispatch an event
-//        ofNotifyEvent( danceVideoLoadedEvent, *loadingVideo, this );
-//        // and set loading video to zero
-//        loadingVideo = 0;
-//    }
-//    
-//    // if there is no currently loading video and there are unloaded videos present
-//    // start the next one in line loading
-//    if ( !loadingVideo && unloadedDanceVideos.size() > 0 ) {
-//        // set loading video to the first dv in the unloaded videos vector
-//        loadingVideo = *(unloadedDanceVideos.begin());
-//        // now erase it from the vector
-//        unloadedDanceVideos.erase( unloadedDanceVideos.begin() );
-//        // now start it loading
-//        loadingVideo->loadSmallVideo();
-//    }
-    
+	
+	
+    for (int i = 0; i < SIMULTANEOUS_LOADS; i++){
+		if (loaders[i]->state == TH_STATE_LOADED || 
+			loaders[i]->state == TH_STATE_JUST_LOADED ){
+			
+			// cool !! let's do this. 
+			danceVideo * dv;
+			dv = new danceVideo(loadersInfo[i]);
+			//dv.info = loadersInfo[i];
+			
+			addFramesToTextures(dv, loaders[i]);
+			loaders[i]->unloadMovie();
+			danceVideos.push_back(dv);
+			ofNotifyEvent( danceVideoLoadedEvent, *dv, this );
+            
+		}
+	}
+	
+	
+	//cout << unloadedDanceVideos.size() << " --- unloadedDanceVideos " << endl;
+	// this was originally a while loop, but I think it's ok to do this once per frame. 
+	if ( howManyAvailableForLoading > 0 && unloadedDanceVideos.size() > 0 ) {
+        
+		
+		DanceInfo toLoad = unloadedDanceVideos[0];
+		
+		//may number of frames be different?  please do something here if so. 
+		
+		bool bLoadingOne = false;
+		
+		string fileId = ofToString( toLoad.id );
+		string filename = "videos/" + fileId + "_s.mov";
+		for (int i = 0; i < SIMULTANEOUS_LOADS; i++){
+			if (loaders[i]->state == TH_STATE_UNLOADED){
+				if (loaders[i]->start(filename, fileId)){		// in case we don't "start" let's not erase. 
+					loadersInfo[i] = toLoad;
+					bLoadingOne = true;
+					unloadedDanceVideos.erase( unloadedDanceVideos.begin() );
+					break;
+				}
+			}
+		}
+		
+	}
+	
+	
+	
 }
 
 void DVManager::loadLargeVideo( string hash ) {
     
 }
 
-void DVManager::addFramesToTextures( danceVideo * dv ) {
+void DVManager::addFramesToTextures( danceVideo * dv, threadMovieLoader * TL) {
     // figure out which texture we are drawing into right now
     int texIndex = frameCount / FRAMES_PER_TEX;
     // figure out which frame on that texture we are starting at
@@ -126,7 +141,7 @@ void DVManager::addFramesToTextures( danceVideo * dv ) {
             int theY = row * FRAME_HEIGHT;
             
             //            GLvoid * pixels = (GLvoid *)(dp->smallVideoLoader->pixels + ( i * 100 * 76 * 3 ));
-            unsigned char * pixels = dv->smallVideoLoader->pixels + ( i * 100 * 76 * TH_MOVIE_CHANNELS );
+            unsigned char * pixels = TL->pixels + ( i * 100 * 76 * TH_MOVIE_CHANNELS );
 			frame.loadData(pixels, 100,76, GL_RGBA);
 			
 			glDisable(GL_DEPTH_TEST);

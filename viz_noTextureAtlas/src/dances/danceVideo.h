@@ -20,15 +20,16 @@ public:
     bool                isNew; // tells whether this was in the first batch or freshly new
     
     
-    bool                smallVideoLoaded;
-    threadMovieLoader*  smallVideoLoader;
-    int                 smallVideoLoadStartMillis;
-    
-    bool                largeVideoLoaded;
+    //bool                smallVideoLoaded;
+//    threadMovieLoader*  smallVideoLoader;
+//    int                 smallVideoLoadStartMillis;
+//    
+    /*bool                largeVideoLoaded;
     bool                largeVideoDownloaded; // we won't assume that all the large videos have even been downloaded
     threadMovieLoader*  largeVideoLoader;
     int                 largeVideoLoadStartMillis;
-    
+    */
+	
     int                 texIndex;
     int                 firstFrame;
     int                 currentFrame;
@@ -51,12 +52,12 @@ public:
         this->isNew           = info.isNew;
         
         
-        smallVideoLoaded = false;
-        smallVideoLoader = 0;
-        
-        largeVideoLoaded = false;
-        largeVideoDownloaded = false;
-        largeVideoLoader = 0;
+        //smallVideoLoaded = false;
+//        smallVideoLoader = 0;
+//        
+//        largeVideoLoaded = false;
+//        largeVideoDownloaded = false;
+//        largeVideoLoader = 0;
         
         texIndex = -1;
         firstFrame = -1;
@@ -65,30 +66,31 @@ public:
         milliCounter = 0;
     }
     
-    bool needsLargeVideo() {
-        return !largeVideoLoaded && !largeVideoLoader;
-    }
-    
-    bool needsSmallVideo() {
-        return !smallVideoLoaded && !smallVideoLoader;
-    }
-    
-    void loadSmallVideo() {
-        smallVideoLoader = new threadMovieLoader( info.numFrames, 100, 76 );
-        //        string filename = "videos/" + info.hash + "_s.mov";
-        string fileId = ofToString( id );
-        string filename = "videos/" + fileId + "_s.mov";
-        smallVideoLoadStartMillis = ofGetElapsedTimeMillis();
-        smallVideoLoader->start( filename, fileId );
-    }
-    
-    void loadLargeVideo() {
-        largeVideoLoader = new threadMovieLoader( info.numFrames, 640, 480 );
-        string fileId = ofToString( id );
-        string filename = "videos/" + fileId + ".mov";
-        largeVideoLoadStartMillis = ofGetElapsedTimeMillis();
-        largeVideoLoader->start( filename, fileId );
-    }
+    //bool needsLargeVideo() {
+//        return !largeVideoLoaded && !largeVideoLoader;
+//    }
+//    
+//    bool needsSmallVideo() {
+//        return !smallVideoLoaded && !smallVideoLoader;
+//    }
+//    
+//    void loadSmallVideo() {
+//        smallVideoLoader = new threadMovieLoader( info.numFrames, 100, 76 );
+//        //        string filename = "videos/" + info.hash + "_s.mov";
+//        string fileId = ofToString( id );
+//        string filename = "videos/" + fileId + "_s.mov";
+//        smallVideoLoadStartMillis = ofGetElapsedTimeMillis();
+//        smallVideoLoader->start( filename, fileId );
+//    }
+//    
+//    void loadLargeVideo() {
+//        largeVideoLoader = new threadMovieLoader( info.numFrames, 640, 480 );
+//        string fileId = ofToString( id );
+//        string filename = "videos/" + fileId + ".mov";
+//        largeVideoLoadStartMillis = ofGetElapsedTimeMillis();
+//        largeVideoLoader->start( filename, fileId );
+//    }
+	
     void draw(ofPoint pt, float w, float h){
 	
 		if (currentFrame <= textures.size()-1){
@@ -101,25 +103,27 @@ public:
 
     void update( int deltaMillis, bool paused ) {
         
-        if ( !smallVideoLoaded && smallVideoLoader && smallVideoLoader->state == TH_STATE_JUST_LOADED ) {
-            int now = ofGetElapsedTimeMillis();
-            int diff = now - smallVideoLoadStartMillis;
-			smallVideoLoaded = true;
-        }
-        else if ( largeVideoLoader && !largeVideoLoaded && largeVideoLoader->state == TH_STATE_JUST_LOADED ) {
-            int now = ofGetElapsedTimeMillis();
-            int diff = now - largeVideoLoadStartMillis;
-            largeVideoLoaded = true;
-            cout << "large video loaded in " << ( diff / 1000.0 ) << " seconds" << endl;
-        }
-        else {
-            milliCounter += deltaMillis;
-            if ( milliCounter >= frameDelay ) {
-                milliCounter -= frameDelay;
-                if ( ++currentFrame == numFrames )
-                    currentFrame = 0;
-            }
-        }
+       // if ( !smallVideoLoaded && smallVideoLoader && smallVideoLoader->state == TH_STATE_JUST_LOADED ) {
+//            int now = ofGetElapsedTimeMillis();
+//            int diff = now - smallVideoLoadStartMillis;
+//			smallVideoLoaded = true;
+//        }
+//        else if ( largeVideoLoader && !largeVideoLoaded && largeVideoLoader->state == TH_STATE_JUST_LOADED ) {
+//            int now = ofGetElapsedTimeMillis();
+//            int diff = now - largeVideoLoadStartMillis;
+//            largeVideoLoaded = true;
+//            cout << "large video loaded in " << ( diff / 1000.0 ) << " seconds" << endl;
+//        }
+//        else {
+//            
+//        }
+		
+		milliCounter += deltaMillis;
+		if ( milliCounter >= frameDelay ) {
+			milliCounter -= frameDelay;
+			if ( ++currentFrame == numFrames )
+				currentFrame = 0;
+		}
         
 	}
     

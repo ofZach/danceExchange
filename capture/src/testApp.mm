@@ -23,6 +23,8 @@ void testApp::setup(){
     tapView = new TapView();
     ofAddListener(tapView->startCaptureEvent, this, &testApp::startCapturing);
     
+    tradeGothic.loadFont( "TradeGothicLTStd-BdCn20.otf", 80 );
+    
     camWidth = 640;
     camHeight = 480;
     
@@ -156,10 +158,10 @@ void testApp::draw(){
                 int previewWidth = ofGetWidth() / 2;
                 int previewHeight = ofGetHeight() / 2;
                 
-                previewViews[0]->draw();// 0, 0, previewWidth, previewHeight );
-                previewViews[1]->draw();// previewWidth, 0, previewWidth, previewHeight );
-                previewViews[2]->draw();// 0, previewHeight, previewWidth, previewHeight );
-                previewViews[3]->draw();// previewWidth, previewHeight, previewWidth, previewHeight );                                
+                for ( int i=0; i<previewViews.size(); i++ ) {
+                    previewViews[i]->draw();
+                    drawNumberForPreviewView( i+1, previewViews[i] );
+                }
             }
         }
         
@@ -191,6 +193,15 @@ void testApp::draw(){
         ofRect(0, 0, ofGetWidth() * [helper uploadProgress], ofGetHeight() );
     }
     
+}
+
+void testApp::drawNumberForPreviewView( int num, PreviewView *pv ) {
+    ofPushMatrix();
+    float scaleAmt = pv->width / pv->widthEnd;
+    ofTranslate( pv->centerX - pv->width / 2.0 + 10, pv->centerY - pv->height / 2.0 + tradeGothic.getSize() + 10 );
+    ofScale( scaleAmt, scaleAmt );
+    tradeGothic.drawString( ofToString( num ), 0, 0 );
+    ofPopMatrix();
 }
 
 void testApp::drawOldPreviews() {

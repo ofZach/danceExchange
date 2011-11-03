@@ -15,6 +15,8 @@ class testApp : public ofBaseApp{
     
         bool isRequestingHandshake;
     
+        ofTrueTypeFont tradeGothic;
+    
         Helper *helper;
         PreviewView *previewView;
         vector<PreviewView*> previewViews;
@@ -52,6 +54,7 @@ class testApp : public ofBaseApp{
 		void setup();
 		void update();
 		void draw();
+        void drawNumberForPreviewView( int num, PreviewView *pv );
         void drawOldPreviews();
         void saveVideoFiles();
 		void keyPressed  (int key);

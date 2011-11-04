@@ -43,7 +43,7 @@ class testApp;
 - (void)handshakeRequestDidFail:(ASIHTTPRequest*)request;
 
 - (void)startGifRequest:(double)frameDelay;
-- (void)startVideoUploadRequest:(NSString *)fileNameMinusExtension withNumFrames:(int)num;
+- (void)startVideoUploadRequest:(NSString *)fileNameMinusExtension withNumFrames:(int)num fromCity:(NSString*)city;
 - (void)uploadRequestDidFinish:(ASIHTTPRequest*)request;
 - (void)uploadRequestDidFail:(ASIHTTPRequest*)request;
 

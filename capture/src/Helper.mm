@@ -69,7 +69,16 @@
 }
 
 - (void)requestHandshake:(int)version {
-    NSURL *url = [NSURL URLWithString:@"http://aaron-meyers.com/smirnoff/handshake.php"];
+    
+    NSLog( @"requestHandshake" );
+    
+    NSURL *url;
+    
+    if ( [self heroku] )
+        url = [NSURL URLWithString:@"http://dance-exchange.herokuapp.com/handshake"];
+    else
+        url = [NSURL URLWithString:@"http://aaron-meyers.com/smirnoff/handshake.php"];
+    
     ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
     [request setPostValue:@"capture" forKey:@"app"];
     [request setPostValue:[NSNumber numberWithInt:version] forKey:@"version"];
@@ -102,7 +111,7 @@
 }
 
 - (void)handshakeRequestDidFail:(ASIHTTPRequest *)request {
-    
+    NSLog( @"handshake request did fail: %@", [[request error] localizedDescription] );
 }
 
 - (void)gifDecode:(NSString*)path {
@@ -120,7 +129,7 @@
     
 }
 
-- (void)startVideoUploadRequest:(NSString *)fileNameMinusExtension withNumFrames:(int)num {
+- (void)startVideoUploadRequest:(NSString *)fileNameMinusExtension withNumFrames:(int)num fromCity:(NSString*)city {
     
     NSArray *pieces = [fileNameMinusExtension componentsSeparatedByString:@"/"];
     NSString *justFileName = [pieces lastObject];
@@ -136,10 +145,15 @@
     [self setIsUploading:YES];
     [self setUploadProgress:0];
     
-    NSURL *url = [NSURL URLWithString:@"http://aaron-meyers.com/smirnoff/snap.php"];
+    NSURL *url;
+    if ( [self heroku] )
+        url = [NSURL URLWithString:@"http://dance-exchange.herokuapp.com/dances/new"];
+    else
+        url = [NSURL URLWithString:@"http://aaron-meyers.com/smirnoff/snap.php"];
     ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
     
     [request setPostValue:@"blah" forKey:@"blah"];
+    [request setPostValue:city forKey:@"city"];
     [request setPostValue:[NSNumber numberWithInt:num] forKey:@"num_frames"];
     [request setDelegate:self];
     [request setDidFailSelector:@selector(uploadRequestDidFail:)];
@@ -150,8 +164,14 @@
     NSData *regularData = [NSData dataWithContentsOfURL:regUrl];
     NSData *smallData = [NSData dataWithContentsOfURL:smallUrl];
     
-    [request addData:regularData withFileName:@"regular" andContentType:@"video/mov" forKey:@"regular"];
-    [request addData:smallData withFileName:@"small" andContentType:@"video/mov" forKey:@"small"];
+    if ( [self heroku] ) {
+        [request addData:regularData withFileName:@"regular.mov" andContentType:@"video/mov" forKey:@"regular"];
+        [request addData:smallData withFileName:@"small.mov" andContentType:@"video/mov" forKey:@"small"];
+    }
+    else {
+        [request addData:regularData withFileName:@"regular" andContentType:@"video/mov" forKey:@"regular"];
+        [request addData:smallData withFileName:@"small" andContentType:@"video/mov" forKey:@"small"];
+    }
     
     [request startAsynchronous];
 }
@@ -200,21 +220,18 @@
     NSDictionary *dictionary = [[CJSONDeserializer deserializer] deserializeAsDictionary:[request responseData] error:&error];
     NSString *imageLocation = [dictionary valueForKey:@"image_location"];
     NSDictionary *animInfo = [dictionary valueForKey:@"data"];
-    NSString *hash = [animInfo valueForKey:@"hash"];
+    NSString *hash = [self heroku] ? [dictionary valueForKey:@"url_hash"] : [animInfo valueForKey:@"hash"];
     //    [self setLastHash:[animInfo valueForKey:@"hash"]];
 //    lastGifUrl = [NSString stringWithFormat:@"%@%@%@.gif", baseUrl, imageLocation, hash];
-    lastGifUrl = [NSString stringWithFormat:@"%@%@", baseUrl, hash];
+    NSString *permalink = [dictionary valueForKey:@"permalink"] ? [dictionary valueForKey:@"permalink"] : @"http://tempurl/blah";
+    lastGifUrl = [self heroku] ? permalink : [NSString stringWithFormat:@"%@%@", baseUrl, hash];
     
 //    std::string hi = "";
     sup = [[self lastGifUrl] cStringUsingEncoding:[NSString defaultCStringEncoding]];
-    lastHash = [[animInfo valueForKey:@"hash"] cStringUsingEncoding:[NSString defaultCStringEncoding]];
+    lastHash = [hash cStringUsingEncoding:[NSString defaultCStringEncoding]];
     
     [frames removeAllObjects];
     
-    
-//    self.app->uploadFinished();
-//    self.app->isUploading = false;
-//    uploadMessage = [[helper lastGifUrl] cStringUsingEncoding:[NSString defaultCStringEncoding]];
 }
 
 - (void)uploadRequestDidFail:(ASIHTTPRequest *)request {

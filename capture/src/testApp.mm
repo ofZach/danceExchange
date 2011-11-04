@@ -16,6 +16,7 @@ void testApp::setup(){
     
     helper = [[Helper alloc] init];
     [helper setApp:this];
+    [helper setHeroku:YES];
     
     previewView = 0;
     emailView = 0;
@@ -537,7 +538,7 @@ void testApp::saveVideoFiles() {
     }
     videoSaver.finishMovie();
     string fileNameMinusExtension = videoSaver.finalFileSavingSetting();
-    [helper startVideoUploadRequest:[NSString stringWithCString:fileNameMinusExtension.c_str() encoding:NSUTF8StringEncoding] withNumFrames:BEATS_PER_CAPTURE*FRAMES_PER_BEAT];
+    [helper startVideoUploadRequest:[NSString stringWithCString:fileNameMinusExtension.c_str() encoding:NSUTF8StringEncoding] withNumFrames:BEATS_PER_CAPTURE*FRAMES_PER_BEAT fromCity:[NSString stringWithCString:CS.getCity().c_str() encoding:NSUTF8StringEncoding]];
     
     isUploading = true;
     

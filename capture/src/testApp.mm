@@ -60,6 +60,8 @@ void testApp::setup(){
     isRequestingHandshake = true;
     
     ofSetFullscreen( true );
+	
+
 }
 
 void testApp::update(){

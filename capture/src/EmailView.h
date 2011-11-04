@@ -2,6 +2,10 @@
 
 #include "ofMain.h"
 
+#include "typer.h"
+
+
+
 class EmailView {
 public:
     
@@ -19,4 +23,5 @@ public:
     void draw();
     void keyPressed( ofKeyEventArgs & args );
     
+	typer utf8_helper;
 };

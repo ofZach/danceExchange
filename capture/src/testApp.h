@@ -9,6 +9,7 @@
 #include "ofxQtVideoSaver.h"
 #include "ofxTween.h"
 
+
 class testApp : public ofBaseApp{
 
 	public:
@@ -51,6 +52,10 @@ class testApp : public ofBaseApp{
         int currentCaptureIndex;
         int chosenCaptureIndex;
         bool showFrames;
+	
+	
+	
+		
     
 		void setup();
 		void update();

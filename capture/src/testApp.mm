@@ -25,6 +25,7 @@ void testApp::setup(){
     
     tradeGothic.loadFont( "TradeGothicLTStd-BdCn20.otf", 200 );
     tradeGothicSmall.loadFont( "TradeGothicLTStd-BdCn20.otf", 50 );
+//    tradeGothicSmall.setLetterSpacing(.8);
     
     camWidth = 640;
     camHeight = 480;
@@ -146,6 +147,9 @@ void testApp::draw(){
     
     if ( tapView ) {
         tapView->draw();
+        if ( !tapView->isCountingDown ) {
+            drawInstructions( "TAP SPACE BAR TO THE BEAT OR C TO JUST START" );
+        }
     }
     
     if ( previewViews.size() > 0 ) {
@@ -167,16 +171,8 @@ void testApp::draw(){
                 }
                 
                 // draw instructions for the operator
-                string instructions = "PRESS 1, 2, 3 OR 4 TO CHOOSE";
-                ofRectangle instructionsRect = tradeGothicSmall.getStringBoundingBox( instructions, 0, 0 );
-                float scaleFactor = aspectWidth / (float)instructionsRect.width;
-//                cout << "rect x: " << instructionsRect.x << " and height: " << instructionsRect.height << endl;
-                ofSetColor( 255, 255, 255 );
-                ofPushMatrix();
-                ofTranslate( xOffset - instructionsRect.x * scaleFactor, -instructionsRect.y * scaleFactor );
-                ofScale( scaleFactor, scaleFactor );
-                tradeGothicSmall.drawString( instructions, 0, 0 );
-                ofPopMatrix();
+                drawInstructions( "PRESS 1, 2, 3 OR 4 TO CHOOSE OR X TO CANCEL" );
+                
             }
         }
         
@@ -281,6 +277,31 @@ void testApp::drawOldPreviews() {
         oldPreviews[ (count+oldPreviews.size()/2) % oldPreviews.size()]->draw( rightLaneOffset, yPos, 100, 76 );
         count++;
     } while ( yPos < ofGetHeight() );
+}
+
+void testApp::drawInstructions( string instructions ) {
+    
+    float aspectWidth = ((float)ofGetHeight()) * ( 4.0 / 3.0 );
+    float xOffset = ( ofGetWidth() - aspectWidth ) / 2.0;
+    
+    ofRectangle instructionsRect = tradeGothicSmall.getStringBoundingBox( instructions, 0, 0 );
+    float scaleFactor = (aspectWidth * .75) / (float)instructionsRect.width;
+    instructionsRect.x *= scaleFactor;  instructionsRect.y *= scaleFactor;
+    instructionsRect.width *= scaleFactor;  instructionsRect.height *= scaleFactor;
+    
+    ofSetColor( 0, 0, 0 );
+    ofPushMatrix();
+    ofTranslate( ( ofGetWidth() - xOffset - instructionsRect.width ) - instructionsRect.x, ofGetHeight() - instructionsRect.height - instructionsRect.y );
+    ofScale( scaleFactor, scaleFactor );
+    tradeGothicSmall.drawString( instructions, 0, 0 );
+    ofPopMatrix();
+    
+    ofSetColor( 255, 255, 255 );
+    ofPushMatrix();
+    ofTranslate( ( ofGetWidth() - xOffset - instructionsRect.width ) - instructionsRect.x - 5, ofGetHeight() - instructionsRect.height - instructionsRect.y - 5 );
+    ofScale( scaleFactor, scaleFactor );
+    tradeGothicSmall.drawString( instructions, 0, 0 );
+    ofPopMatrix();
 }
 
 void testApp::emailAddressEntered( string & emailAddress ) {

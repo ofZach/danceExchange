@@ -56,6 +56,7 @@ class testApp : public ofBaseApp{
 		void update();
 		void draw();
         void drawNumberForPreviewView( int num, PreviewView *pv );
+        void drawInstructions( string instructions );
         void drawOldPreviews();
         void saveVideoFiles();
 		void keyPressed  (int key);

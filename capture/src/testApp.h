@@ -62,6 +62,7 @@ class testApp : public ofBaseApp{
 		void setup();
 		void update();
 		void draw();
+        void drawUploadMessage();
         void drawNumberForPreviewView( int num, PreviewView *pv );
         void drawInstructions( string instructions );
         void drawOldPreviews();

@@ -324,32 +324,27 @@ void testApp::drawUploadMessage() {
     
     float aspectWidth = ((float)ofGetHeight()) * ( 4.0 / 3.0 );
     float xOffset = ( ofGetWidth() - aspectWidth ) / 2.0;
+    float targetWidth = aspectWidth * .75;
     
     
     ofRectangle rect = tradeGothic.getStringBoundingBox( uploadMessage, 0, 0 );
-    float scaleFactor = (aspectWidth) / (float)rect.width;
+    float scaleFactor = targetWidth / (float)rect.width;
     rect.x *= scaleFactor;  rect.y *= scaleFactor;
     rect.width *= scaleFactor;  rect.height *= scaleFactor;
     
     ofSetColor( 0, 0, 0 );
     ofPushMatrix();
-    ofTranslate( xOffset - rect.x, -rect.y );
+    ofTranslate( xOffset + (aspectWidth-targetWidth)*.5 - rect.x, -rect.y + ofGetHeight() * .2 );
     ofScale( scaleFactor, scaleFactor );
     tradeGothic.drawString( uploadMessage, 0, 0 );
     ofPopMatrix();
     
     ofSetColor( 255, 255, 255 );
     ofPushMatrix();
-    ofTranslate( xOffset - rect.x - 5, -rect.y - 5 );
+    ofTranslate( xOffset + (aspectWidth-targetWidth)*.5 - rect.x - 5, -rect.y - 5 + ofGetHeight() * .2 );
     ofScale( scaleFactor, scaleFactor );
     tradeGothic.drawString( uploadMessage, 0, 0 );
     ofPopMatrix();
-    
-    
-//    float stringX = ofGetWidth() / 2.0 - stringRect.width / 2.0;
-//    float stringY = ofGetHeight() / 2.0 - 100;// - stringRect.height / 2.0;
-//    ofSetColor( 255, 255, 255, 200 );
-//    verdana.drawString( uploadMessage, stringX, stringY );
 }
 
 void testApp::emailAddressEntered( string & emailAddress ) {

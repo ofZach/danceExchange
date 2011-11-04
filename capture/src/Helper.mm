@@ -191,15 +191,17 @@
     
     [self setIsUploading:NO];
     
-    NSString *baseUrl = @"http://aaron-meyers.com/smirnoff/";
+//    NSString *baseUrl = @"http://aaron-meyers.com/smirnoff/";
+    NSString *baseUrl = @"http://dance-exchange.net/";
     
     NSError *error;
     NSDictionary *dictionary = [[CJSONDeserializer deserializer] deserializeAsDictionary:[request responseData] error:&error];
     NSString *imageLocation = [dictionary valueForKey:@"image_location"];
     NSDictionary *animInfo = [dictionary valueForKey:@"data"];
     NSString *hash = [animInfo valueForKey:@"hash"];
-//    [self setLastHash:[animInfo valueForKey:@"hash"]];
-    lastGifUrl = [NSString stringWithFormat:@"%@%@%@.gif", baseUrl, imageLocation, hash];
+    //    [self setLastHash:[animInfo valueForKey:@"hash"]];
+//    lastGifUrl = [NSString stringWithFormat:@"%@%@%@.gif", baseUrl, imageLocation, hash];
+    lastGifUrl = [NSString stringWithFormat:@"%@%@", baseUrl, hash];
     
 //    std::string hi = "";
     sup = [[self lastGifUrl] cStringUsingEncoding:[NSString defaultCStringEncoding]];

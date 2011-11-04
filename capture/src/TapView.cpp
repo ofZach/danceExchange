@@ -3,6 +3,9 @@
 
 static int MAX_TAPS = 8;
 
+static float minScale = 0.5;
+static float maxScale = 1.0;
+
 TapView::TapView() {
     circle.loadImage( "circle.png" );
     reset();
@@ -16,6 +19,7 @@ void TapView::reset() {
     lastTap = 0;
     average = 0;
     countdownTicks = 0;
+    finishedCountdown = false;
     tapDiffs.clear();
     isCountingDown = false;
 }
@@ -28,8 +32,18 @@ void TapView::update() {
     
     if ( !isCountingDown && numTaps > 0 && currentMillis - lastTap > 1000 ) {
         cout << "time out on taps" << std::endl;
+        for ( int i=0; i<MAX_TAPS; i++ ) {
+            if ( tapScaleTweens[i].isRunning() || tapScaleTweens[i].getTarget(0) > 0 ) {
+                tapScaleTweens[i].setParameters(easingQuad, ofxTween::easeInOut, tapScaleTweens[i].getTarget(0), 0.0, 300, i*30 );
+            }
+        }
+        
         numTaps = 0;
         lastTap = 0;
+    }
+    
+    for ( int i=0; i<MAX_TAPS; i++ ) {
+        tapScaleTweens[i].update();
     }
     
     if ( isCountingDown ) {
@@ -41,6 +55,7 @@ void TapView::update() {
             if ( countdownTicks == MAX_TAPS + 1 ) {
                 ofNotifyEvent( startCaptureEvent, average, this );
                 isCountingDown = false;
+                finishedCountdown = true;
             }
         }
     }
@@ -49,6 +64,9 @@ void TapView::update() {
 void TapView::draw() {
     
     if ( countdownTicks == MAX_TAPS + 1 )
+        return;
+    
+    if ( isCountingDown && countdownTicks > 0 )
         return;
     
     for ( int i=0; i<MAX_TAPS; i++ ) {
@@ -73,7 +91,13 @@ void TapView::draw() {
         float theY = ofGetHeight() / 2.0;
         float theX = ofMap( i, 0, MAX_TAPS-1, 150, aspectWidth-150 );
         
-        circle.draw( theX - circle.width / 2.0 + xOffset, theY - circle.height / 2.0 );
+        ofPushMatrix();
+        ofTranslate( theX + xOffset, theY );
+        float theScale = ofMap(tapScaleTweens[i].getTarget(0), 0, 1, minScale, maxScale);
+        ofScale( theScale, theScale );
+//        circle.draw( theX - circle.width / 2.0 + xOffset, theY - circle.height / 2.0 );
+        circle.draw( -circle.width / 2.0, -circle.height / 2.0 );
+        ofPopMatrix();
         
     }
 }
@@ -96,6 +120,8 @@ void TapView::tap() {
     if ( lastTap != 0 )
         tapDiffs.push_back( diff );
     
+    cout << "numTaps: " << numTaps << endl;
+    tapScaleTweens[numTaps].setParameters( easingBounce, ofxTween::easeOut, 0.0, 1.0, 400, 0 );
     numTaps++;
     if ( numTaps == MAX_TAPS ) {
         // start the countdown

@@ -8,6 +8,7 @@
 int main( ){
 
     ofAppGlutWindow window;
+    window.setGlutDisplayString("rgba double samples>=4 depth");
 //	ofxCocoaWindowNibless cocoaWindow;
 	ofSetupOpenGL(&window, 1024,768, OF_WINDOW);			// <-------- setup the GL context
 

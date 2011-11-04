@@ -62,11 +62,13 @@ class testApp : public ofBaseApp{
 		void setup();
 		void update();
 		void draw();
-        void drawUploadMessage();
+        void drawUploadMessage( string message );
+        void drawDanceMessage( string message );
         void drawProgressBar();
         void drawNumberForPreviewView( int num, PreviewView *pv );
         void drawInstructions( string instructions );
         void drawOldPreviews();
+        void drawCountdownNumber( int num );
         void saveVideoFiles();
 		void keyPressed  (int key);
 		void windowResized(int w, int h);

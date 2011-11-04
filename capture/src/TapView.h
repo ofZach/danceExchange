@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "ofEvents.h"
+#include "ofxTween.h"
 
 class TapView {
     
@@ -17,6 +18,13 @@ public:
     
     bool isCountingDown;
     double countdownMillis;
+    bool finishedCountdown;
+    
+    ofxTween tapScaleTweens[8];
+    float tapScales[8];
+    ofxEasingBounce easingBounce;
+    ofxEasingBack easingBack;
+    ofxEasingQuad easingQuad;
     
     
     vector<int> tapDiffs;

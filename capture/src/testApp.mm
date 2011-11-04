@@ -23,7 +23,7 @@ void testApp::setup(){
     tapView = new TapView();
     ofAddListener(tapView->startCaptureEvent, this, &testApp::startCapturing);
     
-    tradeGothic.loadFont( "TradeGothicLTStd-BdCn20.otf", 200 );
+    tradeGothic.loadFont( "TradeGothicLTStd-BdCn20.otf", 200, true, false, true );
     tradeGothicSmall.loadFont( "TradeGothicLTStd-BdCn20.otf", 50 );
 //    tradeGothicSmall.setLetterSpacing(.8);
     
@@ -167,8 +167,15 @@ void testApp::draw(){
     
     if ( tapView ) {
         tapView->draw();
-        if ( !tapView->isCountingDown ) {
+        if ( !tapView->isCountingDown && !tapView->finishedCountdown ) {
             drawInstructions( "TAP SPACE BAR TO THE BEAT OR C TO JUST START" );
+        }
+        if ( tapView->isCountingDown ) {
+            int countdownNum = 9 - tapView->countdownTicks;
+            if ( countdownNum <= 8 ) {
+                drawCountdownNumber( countdownNum );
+                drawDanceMessage( "GET READY TO DANCE!" );
+            }
         }
     }
     
@@ -200,9 +207,10 @@ void testApp::draw(){
             chosenPreviewView->draw();
         
         if ( uploadMessage != "" ) {
-            drawUploadMessage();
+            drawUploadMessage( uploadMessage );
         }
     }
+
     
     if ( whiteFlashTween.isRunning() ) {
         ofSetColor( 255, 255, 255, (int)(255.0 * whiteFlashTween.getTarget( 0 )) );
@@ -323,14 +331,14 @@ void testApp::drawInstructions( string instructions ) {
     ofPopMatrix();
 }
 
-void testApp::drawUploadMessage() {
+void testApp::drawUploadMessage( string message ) {
     
     float aspectWidth = ((float)ofGetHeight()) * ( 4.0 / 3.0 );
     float xOffset = ( ofGetWidth() - aspectWidth ) / 2.0;
     float targetWidth = aspectWidth * .75;
     
     
-    ofRectangle rect = tradeGothic.getStringBoundingBox( uploadMessage, 0, 0 );
+    ofRectangle rect = tradeGothic.getStringBoundingBox( message, 0, 0 );
     float scaleFactor = targetWidth / (float)rect.width;
     rect.x *= scaleFactor;  rect.y *= scaleFactor;
     rect.width *= scaleFactor;  rect.height *= scaleFactor;
@@ -339,14 +347,67 @@ void testApp::drawUploadMessage() {
     ofPushMatrix();
     ofTranslate( xOffset + (aspectWidth-targetWidth)*.5 - rect.x, -rect.y + ofGetHeight() * .2 );
     ofScale( scaleFactor, scaleFactor );
-    tradeGothic.drawString( uploadMessage, 0, 0 );
+    tradeGothic.drawString( message, 0, 0 );
     ofPopMatrix();
     
     ofSetColor( 255, 255, 255 );
     ofPushMatrix();
     ofTranslate( xOffset + (aspectWidth-targetWidth)*.5 - rect.x - 5, -rect.y - 5 + ofGetHeight() * .2 );
     ofScale( scaleFactor, scaleFactor );
-    tradeGothic.drawString( uploadMessage, 0, 0 );
+    tradeGothic.drawString( message, 0, 0 );
+    ofPopMatrix();
+}
+
+void testApp::drawDanceMessage( string message ) {
+    
+    float aspectWidth = ((float)ofGetHeight()) * ( 4.0 / 3.0 );
+    float xOffset = ( ofGetWidth() - aspectWidth ) / 2.0;
+    float targetWidth = aspectWidth * .75;
+    
+    
+    ofRectangle rect = tradeGothic.getStringBoundingBox( message, 0, 0 );
+    float scaleFactor = targetWidth / (float)rect.width;
+    rect.x *= scaleFactor;  rect.y *= scaleFactor;
+    rect.width *= scaleFactor;  rect.height *= scaleFactor;
+    
+    ofSetColor( 0, 0, 0 );
+    ofPushMatrix();
+    ofTranslate( xOffset + (aspectWidth-targetWidth)*.5 - rect.x, -rect.y + ofGetHeight() * .05 );
+    ofScale( scaleFactor, scaleFactor );
+    tradeGothic.drawString( message, 0, 0 );
+    ofPopMatrix();
+    
+    ofSetColor( 255, 255, 255 );
+    ofPushMatrix();
+    ofTranslate( xOffset + (aspectWidth-targetWidth)*.5 - rect.x - 5, -rect.y - 5 + ofGetHeight() * .05 );
+    ofScale( scaleFactor, scaleFactor );
+    tradeGothic.drawString( message, 0, 0 );
+    ofPopMatrix();
+}
+
+void testApp::drawCountdownNumber( int num ) {
+    cout << "countdown: " << num << endl;
+    
+    float aspectWidth = ((float)ofGetHeight()) * ( 4.0 / 3.0 );
+    float xOffset = ( ofGetWidth() - aspectWidth ) / 2.0;
+    
+    ofRectangle rect = tradeGothic.getStringBoundingBox( "4", 0, 0 );
+    float scaleFactor = ofGetHeight() * .6 / (float)rect.height;
+    rect.x *= scaleFactor;  rect.y *= scaleFactor;
+    rect.width *= scaleFactor;  rect.height *= scaleFactor;
+    
+    ofSetColor( 0, 0, 0 );
+    ofPushMatrix();
+    ofTranslate( ofGetWidth()/2 - rect.x - rect.width/2.0, -rect.y + (ofGetHeight()-rect.height) * .5 );
+    ofScale( scaleFactor, scaleFactor );
+    tradeGothic.drawStringAsShapes( ofToString( num ), 2.5, 2.5 );
+    ofPopMatrix();
+    
+    ofSetColor( 255, 255, 255 );
+    ofPushMatrix();
+    ofTranslate( ofGetWidth()/2 - rect.x - rect.width/2.0, -rect.y + (ofGetHeight()-rect.height) * .5 );
+    ofScale( scaleFactor, scaleFactor );
+    tradeGothic.drawStringAsShapes( ofToString( num ), -2.5, -2.5 );
     ofPopMatrix();
 }
 

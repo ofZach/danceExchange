@@ -18,6 +18,7 @@ class testApp;
     string sup;
     string lastHash;
     bool isRequestingHandshake;
+    bool heroku;
     string appUpdateUrl;
     
     testApp *app;
@@ -34,6 +35,7 @@ class testApp;
 @property (assign, nonatomic) NSString *lastGifUrl;
 @property (assign, nonatomic) string appUpdateUrl;
 @property (assign, nonatomic) bool isRequestingHandshake;
+@property (assign, nonatomic) bool heroku;
 
 
 - (void)requestHandshake:(int)version;

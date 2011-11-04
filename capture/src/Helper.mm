@@ -6,6 +6,7 @@
 @synthesize sup, lastHash;
 @synthesize app;
 @synthesize appUpdateUrl, isRequestingHandshake;
+@synthesize heroku;
 
 - (id)init {
     self = [super init];
@@ -17,6 +18,7 @@
         [self setUploadFailed:NO];
         [self setLastGifUrl:@""];
         [self setAppUpdateUrl:""];
+        [self setHeroku:NO];
         
         NSError *error = nil;
         NSURL * bundle = [[NSBundle mainBundle] bundleURL];

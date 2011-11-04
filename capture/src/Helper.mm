@@ -276,7 +276,11 @@
 
 - (void)sendEmailTo:(NSString *)emailAddress {
     
-    NSURL *url = [NSURL URLWithString:@"http://aaron-meyers.com/smirnoff/sendEmail.php"];
+    NSURL *url;
+    if ( [self heroku] )
+        url = [NSURL URLWithString:@"http://dance-exchange.herokuapp.com/email"];
+    else
+        url = [NSURL URLWithString:@"http://aaron-meyers.com/smirnoff/sendEmail.php"];
     ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
     [request setPostValue:emailAddress forKey:@"email"];
     NSString *hashString = [NSString stringWithCString:lastHash.c_str() encoding:[NSString defaultCStringEncoding]];

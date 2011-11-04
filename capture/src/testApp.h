@@ -8,6 +8,7 @@
 #include "EmailView.h"
 #include "ofxQtVideoSaver.h"
 #include "ofxTween.h"
+#include "citySelector.h"
 
 
 class testApp : public ofBaseApp{
@@ -53,6 +54,7 @@ class testApp : public ofBaseApp{
         int chosenCaptureIndex;
         bool showFrames;
 	
+		citySelector CS;
 	
 	
 		

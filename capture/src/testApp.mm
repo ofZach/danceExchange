@@ -60,12 +60,23 @@ void testApp::setup(){
     isRequestingHandshake = true;
     
     ofSetFullscreen( true );
-	
+	ofHideCursor();
 
+	
+	CS.setup();
 }
 
 void testApp::update(){
     
+	
+	
+	if (CS.bDone == false){
+		CS.update();
+		return;
+	}
+	
+	
+	
     int currentMillis = ofGetElapsedTimeMillis();
     int deltaMillis = currentMillis - lastMillis;
     lastMillis = currentMillis;
@@ -139,7 +150,14 @@ void testApp::update(){
 }
 
 void testApp::draw(){
-    ofBackground( 0, 0, 0 );
+   
+	
+	if (CS.bDone == false){
+		CS.draw();
+		return;
+	} else {
+		 ofBackground( 0, 0, 0 );
+	}
     
     ofSetColor( 255, 255, 255 );
     
@@ -467,6 +485,11 @@ void testApp::destroyPreview() {
 
 void testApp::keyPressed(int key){
     
+	if (CS.bDone == false){
+		CS.keyPressed(key);
+		return;
+	}
+	
     if ( emailView ) return;
     
     if ( key == 'f' ) {

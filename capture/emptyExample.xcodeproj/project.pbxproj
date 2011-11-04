@@ -8,6 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		92AC3A2E14642A7E005B8029 /* typer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92AC3A2C14642A7E005B8029 /* typer.cpp */; };
+		92AC3A8C146441B0005B8029 /* citySelector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92AC3A8B146441B0005B8029 /* citySelector.cpp */; };
+		92AC3A98146443F1005B8029 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92AC3A91146443F1005B8029 /* tinyxml.cpp */; };
+		92AC3A99146443F1005B8029 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92AC3A93146443F1005B8029 /* tinyxmlerror.cpp */; };
+		92AC3A9A146443F1005B8029 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92AC3A94146443F1005B8029 /* tinyxmlparser.cpp */; };
+		92AC3A9B146443F1005B8029 /* ofxXmlSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92AC3A96146443F1005B8029 /* ofxXmlSettings.cpp */; };
 		933D3F69143A648D00D26894 /* PreviewView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 933D3F68143A648D00D26894 /* PreviewView.cpp */; };
 		933D3F6E143A67E200D26894 /* TapView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 933D3F6D143A67E200D26894 /* TapView.cpp */; };
 		933D4021143BA55B00D26894 /* CDataScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 933D3FAC143BA55B00D26894 /* CDataScanner.m */; };
@@ -109,6 +114,15 @@
 /* Begin PBXFileReference section */
 		92AC3A2C14642A7E005B8029 /* typer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = typer.cpp; sourceTree = "<group>"; };
 		92AC3A2D14642A7E005B8029 /* typer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = typer.h; sourceTree = "<group>"; };
+		92AC3A8A146441B0005B8029 /* citySelector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = citySelector.h; sourceTree = "<group>"; };
+		92AC3A8B146441B0005B8029 /* citySelector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = citySelector.cpp; sourceTree = "<group>"; };
+		92AC3A8F146443F1005B8029 /* install.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = install.xml; sourceTree = "<group>"; };
+		92AC3A91146443F1005B8029 /* tinyxml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxml.cpp; sourceTree = "<group>"; };
+		92AC3A92146443F1005B8029 /* tinyxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tinyxml.h; sourceTree = "<group>"; };
+		92AC3A93146443F1005B8029 /* tinyxmlerror.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlerror.cpp; sourceTree = "<group>"; };
+		92AC3A94146443F1005B8029 /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlparser.cpp; sourceTree = "<group>"; };
+		92AC3A96146443F1005B8029 /* ofxXmlSettings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxXmlSettings.cpp; sourceTree = "<group>"; };
+		92AC3A97146443F1005B8029 /* ofxXmlSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxXmlSettings.h; sourceTree = "<group>"; };
 		933D3F68143A648D00D26894 /* PreviewView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PreviewView.cpp; sourceTree = "<group>"; };
 		933D3F6A143A649700D26894 /* PreviewView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreviewView.h; sourceTree = "<group>"; };
 		933D3F6C143A67D600D26894 /* TapView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TapView.h; sourceTree = "<group>"; };
@@ -341,6 +355,37 @@
 				92AC3A2D14642A7E005B8029 /* typer.h */,
 			);
 			path = utf8_help;
+			sourceTree = "<group>";
+		};
+		92AC3A8E146443F1005B8029 /* ofxXmlSettings */ = {
+			isa = PBXGroup;
+			children = (
+				92AC3A8F146443F1005B8029 /* install.xml */,
+				92AC3A90146443F1005B8029 /* libs */,
+				92AC3A95146443F1005B8029 /* src */,
+			);
+			name = ofxXmlSettings;
+			path = ../../../addons/ofxXmlSettings;
+			sourceTree = SOURCE_ROOT;
+		};
+		92AC3A90146443F1005B8029 /* libs */ = {
+			isa = PBXGroup;
+			children = (
+				92AC3A91146443F1005B8029 /* tinyxml.cpp */,
+				92AC3A92146443F1005B8029 /* tinyxml.h */,
+				92AC3A93146443F1005B8029 /* tinyxmlerror.cpp */,
+				92AC3A94146443F1005B8029 /* tinyxmlparser.cpp */,
+			);
+			path = libs;
+			sourceTree = "<group>";
+		};
+		92AC3A95146443F1005B8029 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				92AC3A96146443F1005B8029 /* ofxXmlSettings.cpp */,
+				92AC3A97146443F1005B8029 /* ofxXmlSettings.h */,
+			);
+			path = src;
 			sourceTree = "<group>";
 		};
 		933D3F80143BA55B00D26894 /* TouchJSON */ = {
@@ -781,6 +826,7 @@
 		BB4B014C10F69532006C3DED /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				92AC3A8E146443F1005B8029 /* ofxXmlSettings */,
 				934680A71454F0FF00CD6E1A /* ofxTween */,
 				9375F903143F5CE7008077AB /* ofxOpenCv */,
 			);
@@ -859,6 +905,8 @@
 				E4B69E1F0A3A1BDC003C02F2 /* testApp.h */,
 				93E65BE7142F82CF0077ED48 /* Helper.h */,
 				93E65BE8142F82CF0077ED48 /* Helper.mm */,
+				92AC3A8A146441B0005B8029 /* citySelector.h */,
+				92AC3A8B146441B0005B8029 /* citySelector.cpp */,
 				933D3F68143A648D00D26894 /* PreviewView.cpp */,
 				933D3F6A143A649700D26894 /* PreviewView.h */,
 				933D3F6C143A67D600D26894 /* TapView.h */,
@@ -1010,6 +1058,11 @@
 				934681451454F10000CD6E1A /* ofxEasingSine.cpp in Sources */,
 				934681461454F10000CD6E1A /* ofxTween.cpp in Sources */,
 				92AC3A2E14642A7E005B8029 /* typer.cpp in Sources */,
+				92AC3A8C146441B0005B8029 /* citySelector.cpp in Sources */,
+				92AC3A98146443F1005B8029 /* tinyxml.cpp in Sources */,
+				92AC3A99146443F1005B8029 /* tinyxmlerror.cpp in Sources */,
+				92AC3A9A146443F1005B8029 /* tinyxmlparser.cpp in Sources */,
+				92AC3A9B146443F1005B8029 /* ofxXmlSettings.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -10,6 +10,7 @@ class EmailView {
 public:
     
     ofTrueTypeFont verdana;
+    ofTrueTypeFont tradeGothic;
     string emailAddress;
     
     ofEvent<string> emailAddressEnteredEvent;

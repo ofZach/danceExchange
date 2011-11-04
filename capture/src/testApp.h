@@ -63,6 +63,7 @@ class testApp : public ofBaseApp{
 		void update();
 		void draw();
         void drawUploadMessage();
+        void drawProgressBar();
         void drawNumberForPreviewView( int num, PreviewView *pv );
         void drawInstructions( string instructions );
         void drawOldPreviews();

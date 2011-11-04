@@ -1,7 +1,7 @@
 #include "testApp.h"
 
 static int FRAMES_PER_BEAT = 6;
-static int BEATS_PER_CAPTURE = 1;
+static int BEATS_PER_CAPTURE = 4;
 static int LOCKED_BPM = 110;
 static int NUM_CAPTURES = 4;
 static int WHITE_FLASH = 200;
@@ -211,13 +211,16 @@ void testApp::draw(){
     
     if ( emailView ) {
         emailView->draw();
+        drawInstructions( "ENTER YOUR EMAIL OR LEAVE BLANK AND HIT ENTER" );
     }
     
     drawOldPreviews();
     
     if ( isUploading ) {
-        ofSetColor( 255, 255, 255, 100);
-        ofRect(0, 0, ofGetWidth() * [helper uploadProgress], ofGetHeight() );
+//        ofSetColor( 255, 255, 255, 100);
+//        ofRect(0, 0, ofGetWidth() * [helper uploadProgress], ofGetHeight() );
+        
+        drawProgressBar();
     }
     
 }
@@ -345,6 +348,42 @@ void testApp::drawUploadMessage() {
     ofScale( scaleFactor, scaleFactor );
     tradeGothic.drawString( uploadMessage, 0, 0 );
     ofPopMatrix();
+}
+
+void testApp::drawProgressBar() {
+    
+    float aspectWidth = ((float)ofGetHeight()) * ( 4.0 / 3.0 );
+    float xOffset = ( ofGetWidth() - aspectWidth ) / 2.0;
+    float targetWidth = aspectWidth * .75;
+    float inset = 4.0;
+    
+    string message = "UPLOADING...";
+    ofRectangle rect = tradeGothic.getStringBoundingBox( message, 0, 0 );
+    float scaleFactor = targetWidth / (float)rect.width;
+    rect.x *= scaleFactor;  rect.y *= scaleFactor;
+    rect.width *= scaleFactor;  rect.height *= scaleFactor;
+    
+    float textY = -rect.y + ofGetHeight() * .2;
+    
+    ofSetColor( 0, 0, 0 );
+    ofPushMatrix();
+    ofTranslate( xOffset + (aspectWidth-targetWidth)*.5 - rect.x, textY );
+    ofScale( scaleFactor, scaleFactor );
+    tradeGothic.drawString( message, 0, 0 );
+    ofPopMatrix();
+    
+    ofSetColor( 255, 255, 255 );
+    ofPushMatrix();
+    ofTranslate( xOffset + (aspectWidth-targetWidth)*.5 - rect.x - 5, textY - 5 );
+    ofScale( scaleFactor, scaleFactor );
+    tradeGothic.drawString( message, 0, 0 );
+    ofPopMatrix();
+    
+    
+    ofSetColor( 0, 0, 0 );
+    ofRect( xOffset + (aspectWidth-targetWidth)*.5, textY + rect.height * .1, targetWidth, ofGetHeight() * .2 );
+    ofSetColor( 255, 255, 255 );
+    ofRect( xOffset + (aspectWidth-targetWidth)*.5 + 4, textY + rect.height * .1 + 4, (targetWidth - 8) * [helper uploadProgress], ofGetHeight() * .2 - 8 );
 }
 
 void testApp::emailAddressEntered( string & emailAddress ) {

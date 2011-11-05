@@ -8,6 +8,7 @@ EmailView::EmailView() {
     emailAddress = "";
     
 	utf8_helper.setup();
+	bDisregardKeys = false;
 }
 
 EmailView::~EmailView() {
@@ -18,6 +19,10 @@ EmailView::~EmailView() {
 
 void EmailView::keyPressed( ofKeyEventArgs & args ) {
     
+	
+	if (bDisregardKeys == true){
+		return;
+	}
 	
 	bool bSendOn = true;
 	
@@ -67,6 +72,7 @@ void EmailView::keyPressed( ofKeyEventArgs & args ) {
    if ( args.key == OF_KEY_RETURN ) {
 		string email = utf8_helper.getString();
 	   cout << email <<endl;
+	   bDisregardKeys = true;
         ofNotifyEvent( emailAddressEnteredEvent,  email );
     }
     else {

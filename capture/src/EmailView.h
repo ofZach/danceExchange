@@ -25,4 +25,6 @@ public:
     void keyPressed( ofKeyEventArgs & args );
     
 	typer utf8_helper;
+	bool bDisregardKeys;
+	
 };

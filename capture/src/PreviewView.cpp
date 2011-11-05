@@ -47,15 +47,15 @@ void PreviewView::setCenter( float cX, float cY ) {
 void PreviewView::draw() {
     ofImage *img = frames[frameIndex];
     ofSetColor( 255, 255, 255, (int)(255*alpha) );
-//    img->draw( theX, theY, theWidth, theHeight );
-//    img->draw( centerX, centerY, width, height );
-    img->draw( centerX - width/2.0, centerY - height/2.0, width, height );
+//    img->draw( centerX - width/2.0, centerY - height/2.0, width, height );
+    img->draw( centerX - width/2.0 + width, centerY - height/2.0, -width, height );
 }
 
 void PreviewView::draw( float x, float y, float w, float h ) {
     ofImage *img = frames[frameIndex];
     ofSetColor( 255, 255, 255 );
-    img->draw( x, y, w, h );
+//    img->draw( x, y, w, h );
+    img->draw( x+w, y, -w, h );
 }
 
 void PreviewView::startFadeOut() {

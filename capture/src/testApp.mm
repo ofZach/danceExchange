@@ -164,7 +164,8 @@ void testApp::draw(){
     
     float aspectWidth = ((float)ofGetHeight()) * ( 4.0 / 3.0 );
     float xOffset = ( ofGetWidth() - aspectWidth ) / 2.0;
-    grabber.draw( xOffset, 0, aspectWidth, ofGetHeight() );
+//    grabber.draw( xOffset, 0, aspectWidth, ofGetHeight() );
+    grabber.draw( xOffset + aspectWidth, 0, -aspectWidth, ofGetHeight() );
     
     if ( tapView ) {
         tapView->draw();

@@ -87,17 +87,26 @@ void brandMode::update(){
 	} else {
 		energy = 0.96 * energy  + 0.04 * 0;
 	}
+	
+	
+	// get stuff into the pointilist: 
+	
+	
+	
+	
 }
 
 void brandMode::draw(){
 	
-	ofSetColor(255,255,255,energy*10);
+	
+	//just experimenting. 
+	//glRotatef(ofGetElapsedTimef()*10, 0,1,0);
+	
+	ofSetColor(255,255,255,energy*30);
 	eagle.draw(0,0,eagle.width*2, eagle.height*2);
 	
 	
 	int nVideos = DVM->danceVideos.size();
-	
-	
 		
 	ofSeedRandom(0);
 	
@@ -108,6 +117,14 @@ void brandMode::draw(){
 			ofSetColor(255,255,255,energy*255);
 			
 			int whichVideo = associations[i] % nVideos; 
+			
+			
+			pointilist->addPoint( rectangles[i].x + rectangles[i].width/2, rectangles[i].y + rectangles[i].height/2, 0,
+								 rectangles[i].width,
+								 1,1,1,energy,
+								 DVM->danceVideos[whichVideo]->texIndex, 0,  DVM->danceVideos[whichVideo]->firstFrame +  DVM->danceVideos[whichVideo]->currentFrame
+								 );
+			
 			//(int)ofRandom(0,nVideos) % nVideos;
 			// TODO:we need to fix this. 
 			//DVM->danceVideos[whichVideo]->draw(ofPoint(rectangles[i].x, rectangles[i].y), rectangles[i].width, rectangles[i].height);
@@ -115,10 +132,25 @@ void brandMode::draw(){
 		//ofRect(rectangles[i].x*2, rectangles[i].y*2, rectangles[i].width*2, rectangles[i].height*2);
 	}
 	
+	//for (int i = 0; i < particles.size(); i++){
+//		ofSetColor(255,255,255,255);
+//
+//		//particles[i].draw();
+//	}
+	
 	for (int i = 0; i < particles.size(); i++){
-		ofSetColor(255,255,255,255);
-
-		particles[i].draw();
+		
+		ofPoint pt = particles[i].mixPt;
+		float size = particles[i].origWH.x * particles[i].mixSize;
+		
+		
+		pointilist->addPoint( pt.x, pt.y, pt.z,
+							 size,
+							 1,1,1,1,
+							 particles[i].dvPtr->texIndex, 0,  particles[i].dvPtr->firstFrame +  particles[i].dvPtr->currentFrame
+							 );
 	}
 	
+	pointilist->draw();
 }
+

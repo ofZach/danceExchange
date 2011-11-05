@@ -631,13 +631,13 @@ void testApp::keyPressed(int key){
 	
     if ( emailView ) return;
     
-    if ( key == 'f' ) {
+    if ( key == 'f' || key == 'F' ) {
         ofToggleFullscreen();
     }
     
     // if the preview view is active, we handle things here differently
     if ( previewViews.size() > 0 && !isUploading ) {
-        if ( key == 'x' ) {
+        if ( key == 'x' || key == 'X' ) {
             destroyPreview();
         }
         else if ( key == '1' ) {
@@ -664,7 +664,7 @@ void testApp::keyPressed(int key){
         if ( key == 'p' ) {
             
         }
-        else if ( key == 'c' ) {
+        else if ( key == 'c' || key == 'C' ) {
             cout << " beginning countdown" << endl;
             tapView->beginCountdown( ( 60.0 / (double)LOCKED_BPM ) * 1000.0, true );
         }

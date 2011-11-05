@@ -160,7 +160,7 @@ void testApp::draw(){
 
 void testApp::danceVideoLoaded( danceVideo & dv ) {
     
-	printf("video loaded ! \n");
+//	printf("video loaded ! \n");
     dpManager.createParticle( &dv, dv.isNew );
 }
 

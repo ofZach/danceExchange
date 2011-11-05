@@ -54,7 +54,7 @@ void networkManager::update(){
         string updateUrl = [dbHelper appUpdateUrl];
         if ( updateUrl == "" ) {
 //            cout << "seems like everything was up to date" << endl;
-            [dbHelper requestInitial:50 withRandom:50];
+            [dbHelper requestInitial:NUM_RECENT_VIDEOS withRandom:NUM_RANDOM_VIDEOS];
             isRequestingInitialDances = true;
             
 //            [dbHelper requestRecentDances:200];

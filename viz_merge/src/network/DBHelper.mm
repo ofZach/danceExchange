@@ -220,7 +220,8 @@
         NSLog( @"failed to write %@", [[request userInfo] valueForKey:@"filename"] );
     
     // find the dance info file, add it to the danceInfos vector, remove it from the other vector
-    if ( danceInfosWithoutVideos.back().hash == [[[request userInfo] valueForKey:@"hash"] cStringUsingEncoding:[NSString defaultCStringEncoding]] ) {
+    string hashString = [[[request userInfo] valueForKey:@"hash"] cStringUsingEncoding:[NSString defaultCStringEncoding]];
+    if ( danceInfosWithoutVideos.back().hash == hashString ) {
         danceInfos.push_back( danceInfosWithoutVideos.back() );
         danceInfosWithoutVideos.pop_back();
     }
@@ -280,7 +281,10 @@
 
 - (void)processDanceInfos:(NSArray *)dances thatAreNew:(BOOL)areNew andAreRandom:(BOOL)areRandom {
     
-//    NSLog( @"processDanceInfos" );
+    if ( areRandom )
+        NSLog( @"processDanceInfos (random) with count %i", [dances count] );
+    else
+        NSLog( @"processDanceInfos (recent) with count %i", [dances count] );
     
     NSError *error;
     for ( NSDictionary *dance in dances ) {

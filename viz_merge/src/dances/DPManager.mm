@@ -200,6 +200,14 @@ void DPManager::particleZoomedOut( DanceParticle & dp ) {
 }
 
 void DPManager::createParticle( danceVideo * dv, bool shouldZoom ) {
+    // check if we already have a particle with this danceVideo
+    for ( int i=0; i<dpVector.size(); i++ ) {
+        if ( dpVector[i]->DV == dv ) {
+            zoomParticle( dpVector[i] );
+            return;
+        }
+    }
+    
     
     if ( shouldZoom ) {
         cout << "gonna zoom a particle with id: " << dv->id << " and hash: " << dv->hash << endl;

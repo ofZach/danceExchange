@@ -18,6 +18,10 @@ const int FRAMES_PER_TEX = FRAMES_PER_COL * FRAMES_PER_ROW;
 const int NUM_TEXTURES = 5;
 const int SIMULTANEOUS_LOADS = 5;
 
+const int NUM_RECENT_VIDEOS = 3;
+const int NUM_RANDOM_VIDEOS = 3;
+
+const int NUM_FRAMES_PER_VIDEO = 24;
 
 class DVManager {
 public:
@@ -32,6 +36,8 @@ public:
 	DanceInfo					loadersInfo[SIMULTANEOUS_LOADS];	// dance info for this loader. 
 	
 	vector<danceVideo*>         danceVideos;
+    vector<danceVideo*>         randomDanceVideos;
+    vector<danceVideo*>         recentDanceVideos;
 	vector <DanceInfo>			unloadedDanceVideos;
 	
 	
@@ -49,6 +55,7 @@ public:
     //void createDanceVideo( DanceInfo danceInfo );
 	void createDanceVideo( DanceInfo danceInfo );
 		
+    int findRandomOffset();
     void loadLargeVideo( string hash );
     void addFramesToTextures( danceVideo * dv, threadMovieLoader * TL );
     void allocateTexture(ofTexture &texture, int w, int h, int internalGlDataType, bool bUseARBExtention) {

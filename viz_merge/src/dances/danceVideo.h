@@ -18,6 +18,7 @@ public:
     string              creationTime; // the time it was created
     int                 numFrames; // number of frames in the loop
     bool                isNew; // tells whether this was in the first batch or freshly new
+    bool                isRandom;
     
     
     //bool                smallVideoLoaded;
@@ -42,15 +43,7 @@ public:
    
     danceVideo( DanceInfo info ) {
 //		printf("here \n");
-        this->info = info;
-        
-        this->id              = info.id;
-        this->hash            = info.hash;
-        this->city            = info.city;
-        this->url             = info.url;
-        this->creationTime    = info.creationTime;
-        this->numFrames       = info.numFrames;
-        this->isNew           = info.isNew;
+        setDanceInfo( info );
         
         
         //smallVideoLoaded = false;
@@ -65,6 +58,20 @@ public:
         currentFrame = 0;
         frameDelay = 100;
         milliCounter = 0;
+    }
+    
+    void setDanceInfo( DanceInfo info ) {
+        
+        this->info = info;
+        
+        this->id              = info.id;
+        this->hash            = info.hash;
+        this->city            = info.city;
+        this->url             = info.url;
+        this->creationTime    = info.creationTime;
+        this->numFrames       = info.numFrames;
+        this->isNew           = info.isNew;
+        this->isRandom        = info.isRandom;
     }
     
     //bool needsLargeVideo() {

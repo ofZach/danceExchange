@@ -155,7 +155,8 @@
     NSNumber *dbId = [NSNumber numberWithInt:di.id];
     NSString *filename = [NSString stringWithFormat:@"%@_s.mov", hash];
     NSString *idFilename = [NSString stringWithFormat:@"%@_s.mov", dbId];
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://aaron-meyers.com/smirnoff/gifs/%@%@", subDir, filename]];
+//    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://aaron-meyers.com/smirnoff/gifs/%@%@", subDir, filename]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithCString:di.smallVideoUrl.c_str() encoding:[NSString defaultCStringEncoding]]];
     NSLog( @"URL: %@", [url path] );
     
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
@@ -261,6 +262,8 @@
         di.url = [[dance valueForKey:@"url"] cStringUsingEncoding:[NSString defaultCStringEncoding]];
         di.creationTime = [[dance valueForKey:@"creation_time"] cStringUsingEncoding:[NSString defaultCStringEncoding]];
         di.numFrames = [[dance valueForKey:@"num_frames"] intValue];
+        di.smallVideoUrl = [[dance valueForKey:@"small_video_url"] cStringUsingEncoding:[NSString defaultCStringEncoding]];
+        di.regularVideoUrl = [[dance valueForKey:@"regular_video_url"] cStringUsingEncoding:[NSString defaultCStringEncoding]];
         di.isNew = areNew;
         
         if ( areNew ) {

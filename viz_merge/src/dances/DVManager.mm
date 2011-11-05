@@ -45,23 +45,23 @@ void DVManager::init( Pointilist *pointilist ) {
 
 void DVManager::update( int deltaMillis ) {
     
-	for (int i = 0; i < SIMULTANEOUS_LOADS; i++){
-		printf("threadedLoaders %i :", i);
-		switch (loaders[i]->state){
-			case TH_STATE_LOADING:
-				printf(" -- loading \n");
-				break;
-			case TH_STATE_JUST_LOADED:
-				printf(" -- just loading \n");
-				break;
-			case TH_STATE_LOADED: 
-				printf(" -- loaded \n");
-				break;
-			case TH_STATE_UNLOADED:
-				printf(" -- unloaded \n");
-				break;
-		}
-	}
+//	for (int i = 0; i < SIMULTANEOUS_LOADS; i++){
+//		printf("threadedLoaders %i :", i);
+//		switch (loaders[i]->state){
+//			case TH_STATE_LOADING:
+//				printf(" -- loading \n");
+//				break;
+//			case TH_STATE_JUST_LOADED:
+//				printf(" -- just loading \n");
+//				break;
+//			case TH_STATE_LOADED: 
+//				printf(" -- loaded \n");
+//				break;
+//			case TH_STATE_UNLOADED:
+//				printf(" -- unloaded \n");
+//				break;
+//		}
+//	}
 	
 	int howManyAvailableForLoading = 0;
 	for (int i = 0; i < SIMULTANEOUS_LOADS; i++){

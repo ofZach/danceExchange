@@ -10,6 +10,8 @@ struct DanceInfo {
     string city;
     string url;
     string creationTime;
+    string smallVideoUrl;
+    string regularVideoUrl;
     int numFrames;
     bool isNew;
     bool largeVideoDownloaded;

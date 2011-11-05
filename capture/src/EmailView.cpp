@@ -3,8 +3,8 @@
 EmailView::EmailView() {
     
     ofAddListener( ofEvents.keyPressed, this, &EmailView::keyPressed );
-    verdana.loadFont( "verdana.ttf", 24, true );
-    tradeGothic.loadFont( "TradeGothicLTStd-BdCn20.otf", 100 );
+    verdana.loadFont( "fonts/verdana.ttf", 24, true );
+    tradeGothic.loadFont( "fonts/TradeGothicLTStd-BdCn20.otf", 100 );
     emailAddress = "";
     
 	utf8_helper.setup();

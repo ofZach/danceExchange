@@ -136,8 +136,8 @@
     
     NSError *error = nil;
     NSURL * bundle = [[NSBundle mainBundle] bundleURL];
-    NSString *regPath = [NSString stringWithFormat:@"../data/%@mov", justFileName];
-    NSString *smallPath = [NSString stringWithFormat:@"../data/%@s.mov", justFileName];
+    NSString *regPath = [NSString stringWithFormat:@"../data/movies/%@mov", justFileName];
+    NSString *smallPath = [NSString stringWithFormat:@"../data/movies/%@s.mov", justFileName];
     
     NSURL *regUrl = [NSURL URLWithString:regPath relativeToURL:bundle];
     NSURL *smallUrl = [NSURL URLWithString:smallPath relativeToURL:bundle];

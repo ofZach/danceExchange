@@ -7,7 +7,7 @@ static float minScale = 0.5;
 static float maxScale = 1.0;
 
 TapView::TapView() {
-    circle.loadImage( "circle.png" );
+    circle.loadImage( "images/circle.png" );
     reset();
     
 }

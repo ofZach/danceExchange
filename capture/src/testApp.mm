@@ -24,8 +24,8 @@ void testApp::setup(){
     tapView = new TapView();
     ofAddListener(tapView->startCaptureEvent, this, &testApp::startCapturing);
     
-    tradeGothic.loadFont( "TradeGothicLTStd-BdCn20.otf", 200, true, false, true );
-    tradeGothicSmall.loadFont( "TradeGothicLTStd-BdCn20.otf", 50 );
+    tradeGothic.loadFont( "fonts/TradeGothicLTStd-BdCn20.otf", 200, true, false, true );
+    tradeGothicSmall.loadFont( "fonts/TradeGothicLTStd-BdCn20.otf", 50 );
 //    tradeGothicSmall.setLetterSpacing(.8);
     
     camWidth = 640;
@@ -48,7 +48,7 @@ void testApp::setup(){
     isEmailing = false;
     
     ofTrueTypeFont::setGlobalDpi(72);
-    verdana.loadFont( "verdana.ttf", 24, true );
+    verdana.loadFont( "fonts/verdana.ttf", 24, true );
 //    ofAddListener(ofxGifEncoder::OFX_GIF_SAVE_FINISHED, this, &testApp::onGifSaved);
     
     string thePath = ofToDataPath( "test.gif", true );
@@ -538,6 +538,7 @@ void testApp::saveVideoFiles() {
     }
     videoSaver.finishMovie();
     string fileNameMinusExtension = videoSaver.finalFileSavingSetting();
+	
     [helper startVideoUploadRequest:[NSString stringWithCString:fileNameMinusExtension.c_str() encoding:NSUTF8StringEncoding] withNumFrames:BEATS_PER_CAPTURE*FRAMES_PER_BEAT fromCity:[NSString stringWithCString:CS.getCity().c_str() encoding:NSUTF8StringEncoding]];
     
     isUploading = true;

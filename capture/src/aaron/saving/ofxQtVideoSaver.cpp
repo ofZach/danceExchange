@@ -35,6 +35,8 @@ void ofxQtVideoSaver::startMovie(string movieName){
     if ( movieName == "" ) {
         movieName = movieNameFromTime( false );
     }
+	
+	movieName = "movies/" + movieName;
 	fileName = ofToDataPath(movieName);
 	
 	

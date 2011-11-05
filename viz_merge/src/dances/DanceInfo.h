@@ -14,5 +14,6 @@ struct DanceInfo {
     string regularVideoUrl;
     int numFrames;
     bool isNew;
+    bool isRandom;
     bool largeVideoDownloaded;
 };

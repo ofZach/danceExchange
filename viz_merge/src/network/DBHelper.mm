@@ -4,6 +4,7 @@
 
 @synthesize danceInfos, danceHashesWithLargeVideos;
 @synthesize isRequestingRecentDanceInfos, isRequestingHandshake;
+@synthesize isRequestingInitialDanceInfos;
 @synthesize requestInterval;
 @synthesize newestId;
 @synthesize appUpdateUrl;
@@ -86,10 +87,13 @@
 
 - (void)requestDancesSince {
     
-//    NSLog( @"requestDancesSince %i", [self newestId] );
+    NSLog( @"requestDancesSince %i", [self newestId] );
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://aaron-meyers.com/smirnoff/getDancesSince.php?id=%i", [self newestId]]];
-    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+//    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://aaron-meyers.com/smirnoff/getDancesSince.php?id=%i", [self newestId]]];
+//    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    NSURL *url = [NSURL URLWithString:@"http://aaron-meyers.com/smirnoff/getDancesSince.php"];
+    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setPostValue:[NSNumber numberWithInt:[self newestId]] forKey:@"since_id"];
     [request setDelegate:self];
     [request setDidFinishSelector:@selector(dancesSinceRequestDidFinish:)];
     [request setDidFailSelector:@selector(dancesSinceRequestDidFail:)];
@@ -104,13 +108,46 @@
     NSError *error;
     NSArray *dances = [[CJSONDeserializer deserializer] deserialize:[request responseData] error:&error];
     
-    [self processDanceInfos:dances thatAreNew:YES];
+    [self processDanceInfos:dances thatAreNew:YES andAreRandom:NO];
     
     [self performSelector:@selector(requestDancesSince) withObject:self afterDelay:requestInterval];
 }
 
 - (void)dancesSinceRequestDidFail:(ASIHTTPRequest *)request {
     NSLog( @"dancesSinceRequestDidFail" );
+}
+
+- (void)requestInitial:(int)numRecent withRandom:(int)numRandom {
+    NSLog( @"requestInitial: %i withRandom: %i", numRecent, numRandom );
+    
+    NSURL *url;
+    url = [NSURL URLWithString:@"http://aaron-meyers.com/smirnoff/getInitial.php"];
+    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setPostValue:[NSNumber numberWithInt:numRecent] forKey:@"numRecent"];
+    [request setPostValue:[NSNumber numberWithInt:numRandom] forKey:@"numRandom"];
+    [request setDelegate:self];
+    [request setDidFinishSelector:@selector(initialRequestDidFinish:)];
+    [request setDidFailSelector:@selector(initialRequestDidFail:)];
+    [request setTimeOutSeconds:120];
+    [request startAsynchronous];
+    
+    [self setIsRequestingInitialDanceInfos:YES];
+}
+
+- (void)initialRequestDidFinish:(ASIHTTPRequest *)request {
+    NSLog( @"initialRequestDidFinish" );
+    
+    NSError *error;
+    NSDictionary *dances = [[CJSONDeserializer deserializer] deserialize:[request responseData] error:&error];
+    
+    [self processDanceInfos:[dances valueForKey:@"recent"] thatAreNew:NO andAreRandom:NO];
+    [self processDanceInfos:[dances valueForKey:@"random"] thatAreNew:NO andAreRandom:YES];
+    
+    [self setIsRequestingInitialDanceInfos:NO];
+}
+
+- (void)initialRequestDidFail:(ASIHTTPRequest *)request {
+    
 }
 
 - (void)requestRecentDances:(int)num {
@@ -136,7 +173,7 @@
     NSError *error;
     NSArray *dances = [[CJSONDeserializer deserializer] deserialize:[request responseData] error:&error];
     
-    [self processDanceInfos:dances thatAreNew:NO];  
+    [self processDanceInfos:dances thatAreNew:NO andAreRandom:NO];  
     
     [self setIsRequestingRecentDanceInfos:NO];
 }
@@ -241,7 +278,7 @@
     
 }
 
-- (void)processDanceInfos:(NSArray *)dances thatAreNew:(BOOL)areNew {
+- (void)processDanceInfos:(NSArray *)dances thatAreNew:(BOOL)areNew andAreRandom:(BOOL)areRandom {
     
 //    NSLog( @"processDanceInfos" );
     
@@ -265,6 +302,7 @@
         di.smallVideoUrl = [[dance valueForKey:@"small_video_url"] cStringUsingEncoding:[NSString defaultCStringEncoding]];
         di.regularVideoUrl = [[dance valueForKey:@"regular_video_url"] cStringUsingEncoding:[NSString defaultCStringEncoding]];
         di.isNew = areNew;
+        di.isRandom = areRandom;
         
         if ( areNew ) {
             NSLog( @"new dance info with id: %i and hash: %@", di.id, [dance valueForKey:@"hash"] );

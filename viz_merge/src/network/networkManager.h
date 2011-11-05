@@ -24,6 +24,7 @@ class networkManager {
         
         bool isRequestingHandshake;
 		bool isRequestingRecentDances;
+        bool isRequestingInitialDances;
 	
 	
 };

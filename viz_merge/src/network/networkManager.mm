@@ -17,6 +17,7 @@ void networkManager::setup(){
 //    [dbHelper requestRecentDances:300];
     isRequestingRecentDances = false;
     isRequestingHandshake = false;
+    isRequestingInitialDances = false;
 }
 
 void networkManager::requestLargeVideo( danceVideo *dv ) {
@@ -53,13 +54,24 @@ void networkManager::update(){
         string updateUrl = [dbHelper appUpdateUrl];
         if ( updateUrl == "" ) {
 //            cout << "seems like everything was up to date" << endl;
-            [dbHelper requestRecentDances:300];
+            [dbHelper requestInitial:50 withRandom:50];
+            isRequestingInitialDances = true;
+            
+//            [dbHelper requestRecentDances:200];
+//            isRequestingRecentDances = true;
+            
         }
         else {
 //            cout << "we need an update from this url: " << updateUrl << endl;
             ofLaunchBrowser( updateUrl );
             ofExit();
         }
+    }
+    
+    if ( isRequestingInitialDances && ![dbHelper isRequestingInitialDanceInfos] && ![dbHelper isProcessingDanceInfosWithoutVideos] ) {
+        cout << "initial request finished..." << endl;
+        isRequestingInitialDances = false;
+        [dbHelper requestDancesSince];
     }
     
     if ( isRequestingRecentDances && ![dbHelper isRequestingRecentDanceInfos] && ![dbHelper isProcessingDanceInfosWithoutVideos] ) {

@@ -16,6 +16,7 @@ using namespace std;
     vector<string> danceHashesWithLargeVideos;
     bool isRequestingRecentDanceInfos;
     bool isRequestingHandshake;
+    bool isRequestingInitialDanceInfos;
     string appUpdateUrl;
     NSTimeInterval requestInterval;
     int newestId;
@@ -25,6 +26,7 @@ using namespace std;
 @property (assign, nonatomic) vector<string> danceHashesWithLargeVideos;
 @property (assign, nonatomic) bool isRequestingRecentDanceInfos;
 @property (assign, nonatomic) bool isRequestingHandshake;
+@property (assign, nonatomic) bool isRequestingInitialDanceInfos;
 @property (assign, nonatomic) NSTimeInterval requestInterval;
 @property (assign, nonatomic) int newestId;
 @property (assign, nonatomic) string appUpdateUrl;
@@ -34,6 +36,10 @@ using namespace std;
 - (void)requestHandshake:(int)version;
 - (void)handshakeRequestDidFinish:(ASIHTTPRequest*)request;
 - (void)handshakeRequestDidFail:(ASIHTTPRequest*)request;
+
+- (void)requestInitial:(int)numRecent withRandom:(int)numRandom;
+- (void)initialRequestDidFinish:(ASIHTTPRequest*)request;
+- (void)initialRequestDidFail:(ASIHTTPRequest*)request;
 
 - (void)requestDancesSince;
 - (void)dancesSinceRequestDidFinish:(ASIHTTPRequest*)request;
@@ -51,7 +57,7 @@ using namespace std;
 - (void)videoRequestDidFinish:(ASIHTTPRequest*)request;
 - (void)videoRequestDidFail:(ASIHTTPRequest*)request;
 
-- (void)processDanceInfos:(NSArray *)dances thatAreNew:(BOOL)areNew;
+- (void)processDanceInfos:(NSArray *)dances thatAreNew:(BOOL)areNew andAreRandom:(BOOL)areRandom;
 - (void)clearDanceInfos;
 - (void)clearLargeVideoHashes;
 

@@ -336,13 +336,20 @@ void testApp::drawUploadMessage( string message ) {
     
     float aspectWidth = ((float)ofGetHeight()) * ( 4.0 / 3.0 );
     float xOffset = ( ofGetWidth() - aspectWidth ) / 2.0;
-    float targetWidth = aspectWidth * .75;
+    float targetWidth = aspectWidth * .7;
     
     
     ofRectangle rect = tradeGothic.getStringBoundingBox( message, 0, 0 );
     float scaleFactor = targetWidth / (float)rect.width;
     rect.x *= scaleFactor;  rect.y *= scaleFactor;
     rect.width *= scaleFactor;  rect.height *= scaleFactor;
+    
+    float bgWidth = aspectWidth * .75;
+//    float bgHeight = ( bgWidth / (float)rect.width ) * (float)rect.height;
+    float bgHeight = rect.height * 1.5;
+    ofSetColor( 226, 31, 42 );
+    ofRect( xOffset + (aspectWidth-bgWidth)*.5, ofGetHeight() * .2 - (bgHeight-rect.height)*.5, bgWidth, bgHeight );
+    
     
     ofSetColor( 0, 0, 0 );
     ofPushMatrix();
@@ -540,6 +547,13 @@ void testApp::saveVideoFiles() {
     string fileNameMinusExtension = videoSaver.finalFileSavingSetting();
 	
     [helper startVideoUploadRequest:[NSString stringWithCString:fileNameMinusExtension.c_str() encoding:NSUTF8StringEncoding] withNumFrames:BEATS_PER_CAPTURE*FRAMES_PER_BEAT fromCity:[NSString stringWithCString:CS.getCity().c_str() encoding:NSUTF8StringEncoding]];
+    
+    
+	string removeCommand = "rm -r " + fileNameMinusExtension + "mov";
+    system(removeCommand.c_str());
+    
+	string removeCommandSmall = "rm -r " + fileNameMinusExtension + "s.mov";
+    system(removeCommandSmall.c_str());
     
     isUploading = true;
     

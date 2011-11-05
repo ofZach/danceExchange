@@ -45,6 +45,7 @@ void testApp::setup() {
     ofAddListener( dvManager.danceVideoLoadedEvent, this, &testApp::danceVideoLoaded );
     
 	BM.DVM = &dvManager;
+	BM.pointilist = &pointilist;
 	
     // setup the networking
     NM.dvManager = &dvManager;

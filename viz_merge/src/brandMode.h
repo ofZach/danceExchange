@@ -2,7 +2,7 @@
 
 #include "ofMain.h"
 #include "ofxXmlSettings.h"
-
+#include "Pointilist.h"
 #include "DVManager.h"
 
 
@@ -90,6 +90,10 @@ public:
 class brandMode {
 
 public: 
+	
+	
+	
+	
 	void setup();
 	void loadSquareSettings();
 	void update();
@@ -108,6 +112,7 @@ public:
 	
 	ofImage eagle;
 	
+	Pointilist                              *pointilist;
 	
 	
 	

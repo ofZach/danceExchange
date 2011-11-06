@@ -8,10 +8,8 @@ void DVManager::createDanceVideo( DanceInfo danceInfo ) {
         cout << "a video had the wrong number of frames: " << danceInfo.id << endl;
         return;
     }
-    
-//	printf("creating %i \n", danceInfo.id);
 	
-    //danceVideo *dv = new danceVideo( danceInfo );
+	printf("a request to load %i \n", danceInfo.id);
     unloadedDanceVideos.push_back( danceInfo );
 }
 
@@ -203,6 +201,7 @@ void DVManager::addFramesToTextures( danceVideo * dv, threadMovieLoader * TL) {
             dv->firstFrame = randomFrames % FRAMES_PER_TEX;
             dv->texIndex = texIndex;
             
+			danceVideos.push_back( dv );	// zach <----- I added this, it seems right. 
             randomDanceVideos.push_back( dv );
             cout << "randomDanceVideos.size(): " << randomDanceVideos.size() << endl;
             

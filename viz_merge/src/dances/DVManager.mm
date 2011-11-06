@@ -181,7 +181,7 @@ void DVManager::addFramesToTextures( danceVideo * dv, threadMovieLoader * TL) {
             }
             // and add it back to the end of it
             danceVideos.push_back( oldDV );
-            recentDanceVideos.push_back( oldDV );
+            randomDanceVideos.push_back( oldDV );
             delete dv;
             // setting dv to oldDV to dispatch the event at the end of this function
             dv = oldDV;
@@ -275,12 +275,12 @@ void DVManager::addFramesToTextures( danceVideo * dv, threadMovieLoader * TL) {
 //    dv->firstFrame = frameCount % FRAMES_PER_TEX;
 //    dv->texIndex = texIndex;
     
-    if ( dv->isRandom ) {
-        cout << "adding frames for a random video into texIndex: " << texIndex << " with first frame: " << dv->firstFrame << endl;
-    }
-    else {
-        cout << "adding frames for a recent video into texIndex: " << texIndex << " with first frame: " << dv->firstFrame << endl;
-    }
+//    if ( dv->isRandom ) {
+//        cout << "adding frames for a random video into texIndex: " << texIndex << " with first frame: " << dv->firstFrame << endl;
+//    }
+//    else {
+//        cout << "adding frames for a recent video into texIndex: " << texIndex << " with first frame: " << dv->firstFrame << endl;
+//    }
     
     // if the texIndex is less than our maximum number of textures, we can proceed
     if ( texIndex < NUM_TEXTURES ) {

@@ -5,7 +5,7 @@
 void DVManager::createDanceVideo( DanceInfo danceInfo ) {
     
     if ( danceInfo.numFrames != NUM_FRAMES_PER_VIDEO ) {
-        cout << "a video had the wrong number of frames: " << danceInfo.id << endl;
+        cout << "a video had the wrong number of frames. id: " << danceInfo.id << " frames: " << danceInfo.numFrames << endl;
         return;
     }
 	

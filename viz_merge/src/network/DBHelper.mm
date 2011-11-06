@@ -271,11 +271,11 @@
         NSLog( @"failed to write %@", [[request userInfo] valueForKey:@"filename"] );
     
     // find the dance info file, add it to the danceInfos vector, remove it from the other vector
-    string hashString = [[[request userInfo] valueForKey:@"hash"] cStringUsingEncoding:[NSString defaultCStringEncoding]];
-    if ( danceInfosWithoutVideos.back().hash == hashString ) {
-        danceInfos.push_back( danceInfosWithoutVideos.back() );
+    //string hashString = [[[request userInfo] valueForKey:@"hash"] cStringUsingEncoding:[NSString defaultCStringEncoding]];
+    //if ( danceInfosWithoutVideos.back().hash == hashString ) {
+		danceInfos.push_back( danceInfosWithoutVideos.back() );
         danceInfosWithoutVideos.pop_back();
-    }
+    //}
     
     if ( danceInfosWithoutVideos.size() > 0 ) {
         DanceInfo &di = danceInfosWithoutVideos.back();

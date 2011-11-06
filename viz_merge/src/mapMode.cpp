@@ -78,13 +78,29 @@ void mapMode::setup(){
 
 void mapMode::start(){
 	
-	
-	
 	int which = (int)ofRandom(0,cityPts.size()+1) % cityPts.size();
 	scalePt = cityPts[which];
 	
+	
+	for (int i = 0; i < triangles.size(); i++){
+		triangles[i].calculateForNewCity(scalePt);
+		triangles[i].bIsSelectedCity = false;
+		if (i >= (triangles.size()-cityPts.size())){
+		
+			int who = i - ((triangles.size()-cityPts.size()));
+			if (who == which){
+				triangles[i].bIsSelectedCity = true;
+
+			}
+		}
+	}
+	
+	
 	offsetTarget =  scalePt - ofPoint(100,100);
 	offsetPt.set(0,0,0);
+	
+	
+	
 	
 	scale = 0;
 	
@@ -98,14 +114,16 @@ void mapMode::end(){
 void mapMode::update(){
 	
 	if (ofGetKeyPressed('k')){
-		scale = scale * 0.99 + 1.0 * 0.01;
-		offsetPt =offsetPt * 0.99 + offsetTarget * 0.01;
+		scale = scale * 0.95 + 1.0 * 0.05;
+		offsetPt =offsetPt * 0.95 + offsetTarget * 0.05;
 	} else {
-		scale = scale * 0.99 + 0.0 * 0.01;		
-		offsetPt = offsetPt * 0.99 + ofPoint(0,0,0) * 0.01;
+		scale = scale * 0.95 + 0.0 * 0.05;		
+		offsetPt = offsetPt * 0.95 + ofPoint(0,0,0) * 0.05;
 	}
 	
-	
+	for (int i = 0; i < triangles.size(); i++){
+		triangles[i].energy = scale;
+	}
 	
 }
 

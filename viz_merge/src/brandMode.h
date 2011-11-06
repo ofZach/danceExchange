@@ -115,5 +115,6 @@ public:
 	Pointilist                              *pointilist;
 	
 	
+	ofVideoPlayer							video;
 	
 };

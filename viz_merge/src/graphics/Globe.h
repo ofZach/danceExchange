@@ -39,8 +39,11 @@ public:
         
         ofImage earthTemp;
         earthTemp.setUseTexture( false );
-        earthTemp.loadImage( "earthlights.jpg" );
         
+        // oddly, this is failing. 
+        ofDisableDataPath();
+        earthTemp.loadImage( "../../../data/earthlights.jpg" );
+        ofEnableDataPath();
         earthTexture.allocate( earthTemp.width, earthTemp.height, GL_RGB, false );
         earthTexture.loadData( earthTemp.getPixels(), earthTemp.width, earthTemp.height, GL_RGB );
         

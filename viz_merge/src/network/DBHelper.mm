@@ -54,7 +54,8 @@
 - (void)requestRandomDances:(int)num {
     NSLog( @"requestRandomDances: %i", num );
     
-    // if there is already a request for "dances since x" in progress, 
+    if ( num > maxRandom )
+        num = maxRandom;
     
     NSURL *url;
     url = [NSURL URLWithString:@"http://aaron-meyers.com/smirnoff/getRandom.php"];
@@ -165,6 +166,7 @@
     NSLog( @"requestInitial: %i withRandom: %i", numRecent, numRandom );
     
     recentOffset = numRecent;
+    maxRandom = numRandom;
     
     NSURL *url;
     url = [NSURL URLWithString:@"http://aaron-meyers.com/smirnoff/getInitial.php"];

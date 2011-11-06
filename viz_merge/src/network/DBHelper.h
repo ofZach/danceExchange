@@ -25,6 +25,7 @@ using namespace std;
     NSTimeInterval requestInterval;
     int newestId;
     int recentOffset;
+    int maxRandom;
 }
 
 @property (assign, nonatomic) vector<DanceInfo> danceInfos;

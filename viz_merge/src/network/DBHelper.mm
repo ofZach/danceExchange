@@ -5,10 +5,12 @@
 @synthesize danceInfos, danceHashesWithLargeVideos;
 @synthesize isRequestingRecentDanceInfos, isRequestingHandshake;
 @synthesize isRequestingInitialDanceInfos, isRequestingRandomDanceInfos, isRequestingDancesSince;
+@synthesize isRequestingVideo;
 @synthesize requestInterval;
 @synthesize newestId;
 @synthesize appUpdateUrl;
 @synthesize queue;
+@synthesize heroku;
 
 - (id)init
 {
@@ -17,6 +19,7 @@
         
         [self setNewestId:0];
         [self setAppUpdateUrl:""];
+        [self setIsRequestingVideo:NO];
         // check to see that the videos directory exists...
         NSURL *videoPath = [NSURL URLWithString:@"../data/videos/" relativeToURL:[[NSBundle mainBundle] bundleURL]];
         NSURL *tempPath = [NSURL URLWithString:@"../data/temp/" relativeToURL:[[NSBundle mainBundle] bundleURL]];
@@ -58,7 +61,10 @@
         num = maxRandom;
     
     NSURL *url;
-    url = [NSURL URLWithString:@"http://aaron-meyers.com/smirnoff/getRandom.php"];
+    if ( [self heroku] )
+        url = [NSURL URLWithString:@"http://dance-exchange.herokuapp.com/dances/random"];
+    else
+        url = [NSURL URLWithString:@"http://aaron-meyers.com/smirnoff/getRandom.php"];
     ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
     [request setPostValue:[NSNumber numberWithInt:num] forKey:@"num"];
     [request setPostValue:[NSNumber numberWithInt:recentOffset] forKey:@"offset"];
@@ -74,10 +80,12 @@
 
 - (void)randomDanceRequestDidFinish:(ASIHTTPRequest *)request {
     
-    NSLog( @"randomDanceRequestDidFinish" );
+    NSLog( @"randomDanceRequestDidFinish: %@", [request responseString] );
     
     NSError *error;
     NSArray *dances = [[CJSONDeserializer deserializer] deserialize:[request responseData] error:&error];
+    
+    NSLog( @"random dances: %i", [dances count] );
     
     [self processDanceInfos:dances thatAreNew:NO andAreRandom:YES];
     
@@ -91,7 +99,14 @@
 }
 
 - (void)requestHandshake:(int)version {
-    NSURL *url = [NSURL URLWithString:@"http://aaron-meyers.com/smirnoff/handshake.php"];
+    
+    NSURL *url;
+    
+    if ( [self heroku] )
+        url = [NSURL URLWithString:@"http://dance-exchange.herokuapp.com/handshake"];
+    else
+        url = [NSURL URLWithString:@"http://aaron-meyers.com/smirnoff/handshake.php"];
+    
     ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
     [request setPostValue:@"viz" forKey:@"app"];
     [request setPostValue:[NSNumber numberWithInt:version] forKey:@"version"];
@@ -132,7 +147,12 @@
     
 //    NSLog( @"requestDancesSince %i", [self newestId] );
 
-    NSURL *url = [NSURL URLWithString:@"http://aaron-meyers.com/smirnoff/getDancesSince.php"];
+    NSURL *url;
+    if ( [self heroku] )
+        url = [NSURL URLWithString:@"http://dance-exchange.herokuapp.com/dances/since"];
+    else
+        url = [NSURL URLWithString:@"http://aaron-meyers.com/smirnoff/getDancesSince.php"];
+    
     ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
     [request setPostValue:[NSNumber numberWithInt:[self newestId]] forKey:@"since_id"];
     [request setDelegate:self];
@@ -169,7 +189,11 @@
     maxRandom = numRandom;
     
     NSURL *url;
-    url = [NSURL URLWithString:@"http://aaron-meyers.com/smirnoff/getInitial.php"];
+    
+    if ( [self heroku] )
+        url = [NSURL URLWithString:@"http://dance-exchange.herokuapp.com/dances/initial"];
+    else
+        url = [NSURL URLWithString:@"http://aaron-meyers.com/smirnoff/getInitial.php"];
     ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
     [request setPostValue:[NSNumber numberWithInt:numRecent] forKey:@"numRecent"];
     [request setPostValue:[NSNumber numberWithInt:numRandom] forKey:@"numRandom"];
@@ -188,6 +212,9 @@
     
     NSError *error;
     NSDictionary *dances = [[CJSONDeserializer deserializer] deserialize:[request responseData] error:&error];
+    
+    NSLog( @"recent dances to process: %i", [[dances valueForKey:@"recent"] count] );
+    NSLog( @"random dances to process: %i", [[dances valueForKey:@"random"] count] );
     
     [self processDanceInfos:[dances valueForKey:@"recent"] thatAreNew:NO andAreRandom:NO];
     [self processDanceInfos:[dances valueForKey:@"random"] thatAreNew:NO andAreRandom:YES];
@@ -257,6 +284,7 @@
     [dictionary setValue:idFilename forKey:@"filename"];
     [request setUserInfo:dictionary];
 //    [request startAsynchronous];
+    [self setIsRequestingVideo:YES];
     [[self queue] addOperation:request];
 }
 
@@ -271,11 +299,13 @@
         NSLog( @"failed to write %@", [[request userInfo] valueForKey:@"filename"] );
     
     // find the dance info file, add it to the danceInfos vector, remove it from the other vector
-    //string hashString = [[[request userInfo] valueForKey:@"hash"] cStringUsingEncoding:[NSString defaultCStringEncoding]];
-    //if ( danceInfosWithoutVideos.back().hash == hashString ) {
-		danceInfos.push_back( danceInfosWithoutVideos.back() );
+    string hashString = [[[request userInfo] valueForKey:@"hash"] cStringUsingEncoding:[NSString defaultCStringEncoding]];
+    if ( danceInfosWithoutVideos.back().hash == hashString ) {
+        danceInfos.push_back( danceInfosWithoutVideos.back() );
         danceInfosWithoutVideos.pop_back();
-    //}
+    }
+    
+    [self setIsRequestingVideo:NO];
     
     if ( danceInfosWithoutVideos.size() > 0 ) {
         DanceInfo &di = danceInfosWithoutVideos.back();
@@ -350,19 +380,23 @@
         
         DanceInfo di;
         di.id = [[dance valueForKey:@"id"] intValue];
-        di.hash = [[dance valueForKey:@"hash"] cStringUsingEncoding:[NSString defaultCStringEncoding]];
+        if ( [self heroku] ) {
+            di.hash = [[dance valueForKey:@"url_hash"] cStringUsingEncoding:[NSString defaultCStringEncoding]];
+            di.creationTime = [[dance valueForKey:@"created_at"] cStringUsingEncoding:[NSString defaultCStringEncoding]];
+            di.numFrames = [[dance valueForKey:@"frames"] intValue];
+        }
+        else {
+            di.hash = [[dance valueForKey:@"hash"] cStringUsingEncoding:[NSString defaultCStringEncoding]];
+            di.url = [[dance valueForKey:@"url"] cStringUsingEncoding:[NSString defaultCStringEncoding]];
+            di.creationTime = [[dance valueForKey:@"creation_time"] cStringUsingEncoding:[NSString defaultCStringEncoding]];
+            di.numFrames = [[dance valueForKey:@"num_frames"] intValue];
+        }
         di.city = [[dance valueForKey:@"city"] cStringUsingEncoding:[NSString defaultCStringEncoding]];
-        di.url = [[dance valueForKey:@"url"] cStringUsingEncoding:[NSString defaultCStringEncoding]];
-        di.creationTime = [[dance valueForKey:@"creation_time"] cStringUsingEncoding:[NSString defaultCStringEncoding]];
-        di.numFrames = [[dance valueForKey:@"num_frames"] intValue];
         di.smallVideoUrl = [[dance valueForKey:@"small_video_url"] cStringUsingEncoding:[NSString defaultCStringEncoding]];
         di.regularVideoUrl = [[dance valueForKey:@"regular_video_url"] cStringUsingEncoding:[NSString defaultCStringEncoding]];
         di.isNew = areNew;
         di.isRandom = areRandom;
         
-        if ( areNew ) {
-            NSLog( @"new dance info with id: %i and hash: %@", di.id, [dance valueForKey:@"hash"] );
-        }
         
         if ( di.id > [self newestId] )
             [self setNewestId:di.id];
@@ -381,13 +415,13 @@
             danceInfos.push_back( di );
         }
         else {
-            NSLog( @"dance info has no video %@", [dance valueForKey:@"hash"] );
+//            NSLog( @"dance info has no video %@", [dance valueForKey:@"hash"] );
             danceInfosWithoutVideos.push_back( di );
         }
     }
     
     // if there are dance infos with no downloaded videos, download them
-    if ( danceInfosWithoutVideos.size() > 0 ) {
+    if ( danceInfosWithoutVideos.size() > 0 && ![self isRequestingVideo] ) {
         DanceInfo &di = danceInfosWithoutVideos.back();
         [self requestVideoFile:di];
     }

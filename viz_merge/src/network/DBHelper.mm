@@ -129,7 +129,7 @@
 
 - (void)requestDancesSince {
     
-    NSLog( @"requestDancesSince %i", [self newestId] );
+//    NSLog( @"requestDancesSince %i", [self newestId] );
 
     NSURL *url = [NSURL URLWithString:@"http://aaron-meyers.com/smirnoff/getDancesSince.php"];
     ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
@@ -331,10 +331,10 @@
 
 - (void)processDanceInfos:(NSArray *)dances thatAreNew:(BOOL)areNew andAreRandom:(BOOL)areRandom {
     
-    if ( areRandom )
-        NSLog( @"processDanceInfos (random) with count %i", [dances count] );
-    else
-        NSLog( @"processDanceInfos (recent) with count %i", [dances count] );
+//    if ( areRandom )
+//        NSLog( @"processDanceInfos (random) with count %i", [dances count] );
+//    else
+//        NSLog( @"processDanceInfos (recent) with count %i", [dances count] );
     
     NSError *error;
     for ( NSDictionary *dance in dances ) {

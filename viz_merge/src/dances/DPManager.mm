@@ -210,6 +210,7 @@ void DPManager::createParticle( danceVideo * dv, bool shouldZoom ) {
                 zoomParticle( dpVector[i] );
             
             // return without adding to the vector or hash because its a replacement
+            cout << "returning without adding" << endl;
             return;
         }
     }

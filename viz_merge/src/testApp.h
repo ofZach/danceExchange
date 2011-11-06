@@ -14,6 +14,8 @@
 #include "DVManager.h"
 #include "VizModes.h"
 #include "brandMode.h"
+#include "mapMode.h"
+
 
 
 
@@ -65,6 +67,8 @@ public:
 		ofImage bg;
 	
 		brandMode BM;
+		mapMode MM;
+	
 	
 		
 };

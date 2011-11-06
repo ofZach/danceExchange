@@ -21,6 +21,7 @@
 		92A7C9A5145F82150027DEE5 /* ofxXmlSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92A7C9A0145F82150027DEE5 /* ofxXmlSettings.cpp */; };
 		92AC3C82146590F4005B8029 /* Pointilist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92AC3C7E146590F4005B8029 /* Pointilist.cpp */; };
 		92AC3C83146590F4005B8029 /* RadixSort.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92AC3C80146590F4005B8029 /* RadixSort.cpp */; };
+		92AC3FAA14670EFF005B8029 /* mapMode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92AC3FA914670EFF005B8029 /* mapMode.cpp */; };
 		92CFB33D1453207F008A440D /* danceVideo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92CFB33C1453207F008A440D /* danceVideo.cpp */; };
 		92F9D3B91450CA7C00E33783 /* locationManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 92F9D3B81450CA7C00E33783 /* locationManager.mm */; };
 		932011D6144F6B0D00DF18A8 /* ofxEasing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 932011A2144F6B0D00DF18A8 /* ofxEasing.cpp */; };
@@ -133,6 +134,8 @@
 		92AC3C7F146590F4005B8029 /* Pointilist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pointilist.h; sourceTree = "<group>"; };
 		92AC3C80146590F4005B8029 /* RadixSort.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RadixSort.cpp; sourceTree = "<group>"; };
 		92AC3C81146590F4005B8029 /* RadixSort.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RadixSort.h; sourceTree = "<group>"; };
+		92AC3FA814670EFF005B8029 /* mapMode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mapMode.h; sourceTree = "<group>"; };
+		92AC3FA914670EFF005B8029 /* mapMode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mapMode.cpp; sourceTree = "<group>"; };
 		92CFB33B1453207F008A440D /* danceVideo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = danceVideo.h; sourceTree = "<group>"; };
 		92CFB33C1453207F008A440D /* danceVideo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = danceVideo.cpp; sourceTree = "<group>"; };
 		92F9D3B71450CA7C00E33783 /* locationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = locationManager.h; sourceTree = "<group>"; };
@@ -572,6 +575,8 @@
 		E4B69E1C0A3A1BDC003C02F2 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				92AC3FA814670EFF005B8029 /* mapMode.h */,
+				92AC3FA914670EFF005B8029 /* mapMode.cpp */,
 				92A7C994145F810C0027DEE5 /* brandMode.h */,
 				92A7C995145F810C0027DEE5 /* brandMode.cpp */,
 				92AC3C7D146590F4005B8029 /* pointilist */,
@@ -728,6 +733,7 @@
 				92A7C9A5145F82150027DEE5 /* ofxXmlSettings.cpp in Sources */,
 				92AC3C82146590F4005B8029 /* Pointilist.cpp in Sources */,
 				92AC3C83146590F4005B8029 /* RadixSort.cpp in Sources */,
+				92AC3FAA14670EFF005B8029 /* mapMode.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -17,6 +17,7 @@ class networkManager {
 		void update();
         void requestLargeVideo( danceVideo *dv );
         void requestHandshake( int version );
+        void requestRandomDances( int num );
 	
 		DBHelper *dbHelper;
 		DPManager * dpManager;
@@ -25,6 +26,6 @@ class networkManager {
         bool isRequestingHandshake;
 		bool isRequestingRecentDances;
         bool isRequestingInitialDances;
-	
+        bool isRequestingRandomDances;
 	
 };

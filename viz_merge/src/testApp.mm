@@ -241,18 +241,6 @@ void testApp::keyPressed(int key){
             globeToRandomCity(0);
         }
     }
-    
-//    if ( key == OF_KEY_DOWN ) {
-//        if ( ++currentCityIndex >= cities.size() )
-//            currentCityIndex = 0;
-//        updateCity();
-//    }
-//    else if ( key == OF_KEY_UP ) {
-//        if ( --currentCityIndex < 0 )
-//            currentCityIndex = cities.size() - 1;
-//        updateCity();
-//    }
-    
     else if ( key == OF_KEY_LEFT ) {
     }
     else if ( key == OF_KEY_RIGHT ) {
@@ -261,6 +249,9 @@ void testApp::keyPressed(int key){
         DanceParticle *dp = dpManager.dpVector.at( (int)ofRandom( 0.0, dpManager.dpVector.size()-1.0 ) );
         dpManager.zoomParticle( dp );
         NM.requestLargeVideo( dp->DV );
+    }
+    else if ( key == 'r' ) {
+        NM.requestRandomDances( NUM_RANDOM_VIDEOS );
     }
     if ( key == ' ' ) {
         drawTextures = !drawTextures;

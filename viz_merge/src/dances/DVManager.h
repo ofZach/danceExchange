@@ -18,8 +18,8 @@ const int FRAMES_PER_TEX = FRAMES_PER_COL * FRAMES_PER_ROW;
 const int NUM_TEXTURES = 5;
 const int SIMULTANEOUS_LOADS = 5;
 
-const int NUM_RECENT_VIDEOS = 100;
-const int NUM_RANDOM_VIDEOS = 100;
+const int NUM_RECENT_VIDEOS = 1;
+const int NUM_RANDOM_VIDEOS = 3;
 
 const int NUM_FRAMES_PER_VIDEO = 24;
 

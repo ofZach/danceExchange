@@ -6,6 +6,9 @@
 void brandMode::setup(){
 	loadSquareSettings();
 	eagle.loadImage("images/eagle.png");
+	ofEnableArbTex();
+	video.loadMovie("movies/NEP-Title-v5.mov");
+	video.play();
 }
 
 
@@ -92,13 +95,13 @@ void brandMode::update(){
 	// get stuff into the pointilist: 
 	
 	
-	
+	video.update();
 	
 }
 
 void brandMode::draw(){
 	
-	
+	video.draw(0,0, 640,360);
 	//just experimenting. 
 	//glRotatef(ofGetElapsedTimef()*10, 0,1,0);
 	

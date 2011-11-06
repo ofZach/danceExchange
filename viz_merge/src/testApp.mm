@@ -46,6 +46,10 @@ void testApp::setup() {
     
 	BM.DVM = &dvManager;
 	BM.pointilist = &pointilist;
+
+	MM.DVM = &dvManager;
+	MM.pointilist = &pointilist;
+	
 	
     // setup the networking
     NM.dvManager = &dvManager;
@@ -60,7 +64,7 @@ void testApp::setup() {
 	
 	//bg.loadImage("images/bg.png");
 	BM.setup();
-
+	MM.setup();
 	
 }
 
@@ -86,12 +90,18 @@ void testApp::update(){
 	
 	int whichLast =lastMode;
 	if (whichLast != BRAND_MODE && mode == BRAND_MODE){
-	BM.start();	
+		BM.start();	
+	}
+	if (whichLast != MAP_MODE && mode == MAP_MODE){
+		MM.start();	
 	}
 	lastMode = mode;
 	
 	if (mode == BRAND_MODE){
 		BM.update();
+	}
+	if (mode == MAP_MODE){
+		MM.update();
 	}
 	
 	
@@ -154,7 +164,9 @@ void testApp::draw(){
 	
 	if (mode == BRAND_MODE){
 		BM.draw();
-
+	}
+	if (mode == MAP_MODE){
+		MM.draw();	
 	}
 }
 
@@ -220,6 +232,13 @@ void testApp::switchMode( VizMode nextMode ) {
 			// do something with dpManager ?
 			
 			break;
+		case MAP_MODE:
+			dpManager.transitionToGlobeMode( 500, 0 );
+			globe.tweenGlobeToScale( 0, 500 );
+			cityTextRect = tradeGothic.getStringBoundingBox( cityName, 0, 0 );
+            cityTextTween.setParameters( easingQuad, ofxTween::easeInOut, cityTextX, -(cityTextRect.width+20), 400, 0 );
+			// do something with dpManager ?
+			break;
     }
     
 }
@@ -232,15 +251,18 @@ void testApp::keyPressed(int key){
         switchMode( GLOBE_MODE );
     } else if (key == '3'){
 		switchMode( BRAND_MODE );
+	} else if (key == '4'){
+		switchMode( MAP_MODE );
 	}
     
-  
-    if ( key == 'c' ) {
-        // pick a random city for the globe to spin to if we are in globe mode
-        if ( mode == GLOBE_MODE ) {
-            globeToRandomCity(0);
-        }
-    }
+   // if ( key == 'c' ) {
+//        // pick a random city for the globe to spin to if we are in globe mode
+//        if ( mode == GLOBE_MODE ) {
+//            globeToRandomCity(0);
+//        }
+//    }
+
+
     else if ( key == OF_KEY_LEFT ) {
     }
     else if ( key == OF_KEY_RIGHT ) {

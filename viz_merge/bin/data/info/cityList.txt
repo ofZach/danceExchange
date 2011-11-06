@@ -1,0 +1,14 @@
+London,570,126
+Vancouver,125,137
+Sao Paolo,369,472
+Berlin,614,128
+Buenos Aires,332,518
+Istanbul,679,179
+New York,277,186
+Mexico City,155,274
+Lima,244,420
+Montevideo,348,520
+Santiago,286,519
+San jose,217,324
+Kingston,241,282
+Sofia,655,170

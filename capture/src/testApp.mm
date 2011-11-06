@@ -16,7 +16,7 @@ void testApp::setup(){
     
     helper = [[Helper alloc] init];
     [helper setApp:this];
-//    [helper setHeroku:YES];
+	[helper setHeroku:YES];
     
     previewView = 0;
     emailView = 0;

@@ -68,6 +68,11 @@ void networkManager::update(){
         }
     }
     
+    if ( isRequestingRandomDances && ![dbHelper isRequestingRandomDanceInfos] && ![dbHelper isProcessingDanceInfosWithoutVideos] ) {
+        cout << "random dance request finished... " << endl;
+        isRequestingRandomDances = false;
+    }
+    
     if ( isRequestingInitialDances && ![dbHelper isRequestingInitialDanceInfos] && ![dbHelper isProcessingDanceInfosWithoutVideos] ) {
         cout << "initial request finished..." << endl;
         isRequestingInitialDances = false;
@@ -79,4 +84,9 @@ void networkManager::update(){
         isRequestingRecentDances = false;
         [dbHelper requestDancesSince];
     }
+}
+
+void networkManager::requestRandomDances( int num ) {
+    [dbHelper requestRandomDances:num];
+    isRequestingRandomDances = true;
 }

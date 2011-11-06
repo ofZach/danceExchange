@@ -4,10 +4,11 @@
 
 @synthesize danceInfos, danceHashesWithLargeVideos;
 @synthesize isRequestingRecentDanceInfos, isRequestingHandshake;
-@synthesize isRequestingInitialDanceInfos;
+@synthesize isRequestingInitialDanceInfos, isRequestingRandomDanceInfos, isRequestingDancesSince;
 @synthesize requestInterval;
 @synthesize newestId;
 @synthesize appUpdateUrl;
+@synthesize queue;
 
 - (id)init
 {
@@ -39,6 +40,8 @@
             }
         }
         
+        [self setQueue:[[[NSOperationQueue alloc] init] autorelease]];
+        [[self queue] setMaxConcurrentOperationCount:1];
     }
     
     return self;
@@ -46,6 +49,44 @@
 
 - (bool)isProcessingDanceInfosWithoutVideos {
     return danceInfosWithoutVideos.size() > 0;
+}
+
+- (void)requestRandomDances:(int)num {
+    NSLog( @"requestRandomDances: %i", num );
+    
+    // if there is already a request for "dances since x" in progress, 
+    
+    NSURL *url;
+    url = [NSURL URLWithString:@"http://aaron-meyers.com/smirnoff/getRandom.php"];
+    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
+    [request setPostValue:[NSNumber numberWithInt:num] forKey:@"num"];
+    [request setPostValue:[NSNumber numberWithInt:recentOffset] forKey:@"offset"];
+    [request setDelegate:self];
+    [request setDidFinishSelector:@selector(randomDanceRequestDidFinish:)];
+    [request setDidFailSelector:@selector(randomDanceRequestDidFail:)];
+    [request setTimeOutSeconds:120];
+//    [request startAsynchronous];
+    [[self queue] addOperation:request];
+    
+    [self setIsRequestingRandomDanceInfos:YES];
+}
+
+- (void)randomDanceRequestDidFinish:(ASIHTTPRequest *)request {
+    
+    NSLog( @"randomDanceRequestDidFinish" );
+    
+    NSError *error;
+    NSArray *dances = [[CJSONDeserializer deserializer] deserialize:[request responseData] error:&error];
+    
+    [self processDanceInfos:dances thatAreNew:NO andAreRandom:YES];
+    
+    
+}
+
+- (void)randomDanceRequestDidFail:(ASIHTTPRequest *)request {
+    
+    NSLog( @"randomDanceRequestDidFail: %@", [[request error] localizedDescription] );
+    
 }
 
 - (void)requestHandshake:(int)version {
@@ -57,7 +98,8 @@
     [request setDidFinishSelector:@selector(handshakeRequestDidFinish:)];
     [request setDidFailSelector:@selector(handshakeRequestDidFail:)];
     [request setTimeOutSeconds:120];
-    [request startAsynchronous];
+//    [request startAsynchronous];
+    [[self queue] addOperation:request];
     
     [self setIsRequestingHandshake:YES];
 }
@@ -88,9 +130,7 @@
 - (void)requestDancesSince {
     
     NSLog( @"requestDancesSince %i", [self newestId] );
-    
-//    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://aaron-meyers.com/smirnoff/getDancesSince.php?id=%i", [self newestId]]];
-//    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+
     NSURL *url = [NSURL URLWithString:@"http://aaron-meyers.com/smirnoff/getDancesSince.php"];
     ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
     [request setPostValue:[NSNumber numberWithInt:[self newestId]] forKey:@"since_id"];
@@ -98,7 +138,10 @@
     [request setDidFinishSelector:@selector(dancesSinceRequestDidFinish:)];
     [request setDidFailSelector:@selector(dancesSinceRequestDidFail:)];
     [request setTimeOutSeconds:120];
-    [request startAsynchronous];
+//    [request startAsynchronous];
+    [[self queue] addOperation:request];
+    
+    [self setIsRequestingDancesSince:YES];
 }
 
 - (void)dancesSinceRequestDidFinish:(ASIHTTPRequest *)request {
@@ -110,6 +153,7 @@
     
     [self processDanceInfos:dances thatAreNew:YES andAreRandom:NO];
     
+    [self setIsRequestingDancesSince:NO];
     [self performSelector:@selector(requestDancesSince) withObject:self afterDelay:requestInterval];
 }
 
@@ -120,6 +164,8 @@
 - (void)requestInitial:(int)numRecent withRandom:(int)numRandom {
     NSLog( @"requestInitial: %i withRandom: %i", numRecent, numRandom );
     
+    recentOffset = numRecent;
+    
     NSURL *url;
     url = [NSURL URLWithString:@"http://aaron-meyers.com/smirnoff/getInitial.php"];
     ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
@@ -129,7 +175,8 @@
     [request setDidFinishSelector:@selector(initialRequestDidFinish:)];
     [request setDidFailSelector:@selector(initialRequestDidFail:)];
     [request setTimeOutSeconds:120];
-    [request startAsynchronous];
+//    [request startAsynchronous];
+    [[self queue] addOperation:request];
     
     [self setIsRequestingInitialDanceInfos:YES];
 }
@@ -162,7 +209,8 @@
     [request setDidFailSelector:@selector(recentDanceRequestDidFail:)];
     [request setDidFinishSelector:@selector(recentDanceRequestDidFinish:)];
     [request setTimeOutSeconds:120];
-    [request startAsynchronous];
+//    [request startAsynchronous];
+    [[self queue] addOperation:request];
     
     [self setIsRequestingRecentDanceInfos:YES];
 }
@@ -206,7 +254,8 @@
     [dictionary setValue:hash forKey:@"hash"];
     [dictionary setValue:idFilename forKey:@"filename"];
     [request setUserInfo:dictionary];
-    [request startAsynchronous];
+//    [request startAsynchronous];
+    [[self queue] addOperation:request];
 }
 
 - (void)videoRequestDidFinish:(ASIHTTPRequest *)request {
@@ -256,7 +305,8 @@
     [dictionary setValue:hash forKey:@"hash"];
     [dictionary setValue:idFilename forKey:@"filename"];
     [request setUserInfo:dictionary];
-    [request startAsynchronous];
+//    [request startAsynchronous];
+    [[self queue] addOperation:request];
 }
 
 - (void)largeVideoRequestDidFinish:(ASIHTTPRequest *)request {

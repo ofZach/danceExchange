@@ -11,15 +11,20 @@ using namespace std;
 @interface DBHelper : NSObject {
     
     
+    NSOperationQueue *queue;
+    
     vector<DanceInfo> danceInfosWithoutVideos;
     vector<DanceInfo> danceInfos;
     vector<string> danceHashesWithLargeVideos;
     bool isRequestingRecentDanceInfos;
     bool isRequestingHandshake;
     bool isRequestingInitialDanceInfos;
+    bool isRequestingRandomDanceInfos;
+    bool isRequestingDancesSince;
     string appUpdateUrl;
     NSTimeInterval requestInterval;
     int newestId;
+    int recentOffset;
 }
 
 @property (assign, nonatomic) vector<DanceInfo> danceInfos;
@@ -27,15 +32,22 @@ using namespace std;
 @property (assign, nonatomic) bool isRequestingRecentDanceInfos;
 @property (assign, nonatomic) bool isRequestingHandshake;
 @property (assign, nonatomic) bool isRequestingInitialDanceInfos;
+@property (assign, nonatomic) bool isRequestingRandomDanceInfos;
+@property (assign, nonatomic) bool isRequestingDancesSince;
 @property (assign, nonatomic) NSTimeInterval requestInterval;
 @property (assign, nonatomic) int newestId;
 @property (assign, nonatomic) string appUpdateUrl;
+@property (assign, nonatomic) NSOperationQueue *queue;
 
 - (bool)isProcessingDanceInfosWithoutVideos;
 
 - (void)requestHandshake:(int)version;
 - (void)handshakeRequestDidFinish:(ASIHTTPRequest*)request;
 - (void)handshakeRequestDidFail:(ASIHTTPRequest*)request;
+
+- (void)requestRandomDances:(int)num;
+- (void)randomDanceRequestDidFinish:(ASIHTTPRequest*)request;
+- (void)randomDanceRequestDidFail:(ASIHTTPRequest*)request;
 
 - (void)requestInitial:(int)numRecent withRandom:(int)numRandom;
 - (void)initialRequestDidFinish:(ASIHTTPRequest*)request;

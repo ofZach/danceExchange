@@ -255,7 +255,6 @@ void testApp::keyPressed(int key){
 		switchMode( MAP_MODE );
 	}
     
-  
    // if ( key == 'c' ) {
 //        // pick a random city for the globe to spin to if we are in globe mode
 //        if ( mode == GLOBE_MODE ) {
@@ -263,7 +262,7 @@ void testApp::keyPressed(int key){
 //        }
 //    }
 
-    
+
     else if ( key == OF_KEY_LEFT ) {
     }
     else if ( key == OF_KEY_RIGHT ) {
@@ -272,6 +271,9 @@ void testApp::keyPressed(int key){
         DanceParticle *dp = dpManager.dpVector.at( (int)ofRandom( 0.0, dpManager.dpVector.size()-1.0 ) );
         dpManager.zoomParticle( dp );
         NM.requestLargeVideo( dp->DV );
+    }
+    else if ( key == 'r' ) {
+        NM.requestRandomDances( NUM_RANDOM_VIDEOS );
     }
     if ( key == ' ' ) {
         drawTextures = !drawTextures;

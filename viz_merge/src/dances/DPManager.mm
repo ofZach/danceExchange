@@ -201,9 +201,15 @@ void DPManager::particleZoomedOut( DanceParticle & dp ) {
 
 void DPManager::createParticle( danceVideo * dv, bool shouldZoom ) {
     // check if we already have a particle with this danceVideo
+    
     for ( int i=0; i<dpVector.size(); i++ ) {
         if ( dpVector[i]->DV == dv ) {
-            zoomParticle( dpVector[i] );
+            
+            // if its not random and the danceVideo is already in here, its new so we should zoom
+            if ( !dv->isRandom )
+                zoomParticle( dpVector[i] );
+            
+            // return without adding to the vector or hash because its a replacement
             return;
         }
     }

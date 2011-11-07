@@ -17,11 +17,11 @@ void modUVs(int cols, int rows, int cell)
 	if ( !(cols==1 && rows == 1) )
 	{
 		int numCells = cols * rows;
-		cell -= (cell/numCells) * numCells;
+//		cell -= (cell/numCells) * numCells;
 		
 		uvs /= vec2( float(cols), float(rows) );
 		uvs.x += fract( float(cell) / float(cols));
-		uvs.y += float(cell / cols) / float(rows);
+		uvs.y += floor(float(cell / cols)) / float(rows);
 	}
 }
 

@@ -37,7 +37,9 @@ void testApp::setup() {
     dpManager.init( &pointilist );
     dpManager.frustumHelp = frustumHelp;
     
-    dvManager.init( &pointilist );
+    
+    bool isMacMini = false;
+    dvManager.init( &pointilist, isMacMini );
     ofAddListener( dvManager.danceVideoLoadedEvent, this, &testApp::danceVideoLoaded );
     
 	BM.DVM = &dvManager;
@@ -232,7 +234,7 @@ void testApp::keyPressed(int key){
         NM.requestLargeVideo( dp->DV );
     }
     else if ( key == 'r' ) {
-        NM.requestRandomDances( NUM_RANDOM_VIDEOS );
+        NM.requestRandomDances( dvManager.numRandomVideos );
     }
     if ( key == ' ' ) {
         drawTextures = !drawTextures;

@@ -17,16 +17,19 @@ const int TEX_HEIGHT = 53 * FRAME_HEIGHT;
 const int FRAMES_PER_ROW = TEX_WIDTH / FRAME_WIDTH;
 const int FRAMES_PER_COL = TEX_HEIGHT / FRAME_HEIGHT;
 const int FRAMES_PER_TEX = FRAMES_PER_COL * FRAMES_PER_ROW;
-const int NUM_TEXTURES = 5;
+//const int NUM_TEXTURES = 4;
+//const int NUM_RECENT_VIDEOS = 100;
+//const int NUM_RANDOM_VIDEOS = 100;
 const int SIMULTANEOUS_LOADS = 5;
-
-const int NUM_RECENT_VIDEOS = 100;
-const int NUM_RANDOM_VIDEOS = 100;
 
 const int NUM_FRAMES_PER_VIDEO = 24;
 
 class DVManager {
 public:
+    
+    int                         numRecentVideos;
+    int                         numRandomVideos;
+    int                         numTextures;
     
     Pointilist                  *pointilist;
     
@@ -52,7 +55,7 @@ public:
     ofEvent<danceVideo>        danceVideoLoadedEvent;
     
     
-    void init( Pointilist * pointilist );
+    void init( Pointilist * pointilist, bool macMini );
     void update( int deltaMillis );
     //void createDanceVideo( DanceInfo danceInfo );
 	void createDanceVideo( DanceInfo danceInfo );

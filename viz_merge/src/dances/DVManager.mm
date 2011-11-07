@@ -13,12 +13,23 @@ void DVManager::createDanceVideo( DanceInfo danceInfo ) {
     unloadedDanceVideos.push_back( danceInfo );
 }
 
-void DVManager::init( Pointilist *pointilist ) {
+void DVManager::init( Pointilist *pointilist, bool macMini ) {
+    if ( macMini ) {
+        numTextures = 2;
+        numRecentVideos = 88;
+        numRandomVideos = 88;
+    } else {
+        numTextures = 4;
+        numRecentVideos = 150;
+        numRandomVideos = 150;
+    }
+    
+    
     // set the pointilist pointer
     this->pointilist = pointilist;
     
     // push the textures into the vector first
-    for ( int i = 0; i < NUM_TEXTURES; i++ )
+    for ( int i = 0; i < numTextures; i++ )
         textures.push_back( ofTexture() );
     // this has to be a separate second step
     for ( int i = 0; i < textures.size(); i++ ) {
@@ -141,7 +152,7 @@ int DVManager::findRandomOffset() {
     int count = 0;
     int index = 0;
     int frame = 0;
-    for ( int i=0; i<NUM_RANDOM_VIDEOS; i++ ) {
+    for ( int i=0; i<numRandomVideos; i++ ) {
         index = count / FRAMES_PER_TEX;
         frame = count % FRAMES_PER_TEX;
         if ( NUM_FRAMES_PER_VIDEO + frame >= FRAMES_PER_TEX ) {
@@ -162,7 +173,7 @@ void DVManager::addFramesToTextures( danceVideo * dv, threadMovieLoader * TL) {
     
     // figure out the tex index
     if ( dv->isRandom ) {
-        if ( randomDanceVideos.size() >= NUM_RANDOM_VIDEOS ) {
+        if ( randomDanceVideos.size() >= numRandomVideos ) {
             cout << "replacing a random dance video" << endl;
             // if we are all full of random videos, get rid of the most recent one
             danceVideo *oldDV = *(randomDanceVideos.begin());
@@ -209,7 +220,7 @@ void DVManager::addFramesToTextures( danceVideo * dv, threadMovieLoader * TL) {
         }
     }
     else {
-        if ( recentDanceVideos.size() >= NUM_RECENT_VIDEOS ) {
+        if ( recentDanceVideos.size() >= numRecentVideos ) {
             cout << "replacing a recent dance video" << endl;
             // if we are all full of recent videos, we'll use the most recent one instead
             danceVideo *oldDV = *(recentDanceVideos.begin());
@@ -286,7 +297,7 @@ void DVManager::addFramesToTextures( danceVideo * dv, threadMovieLoader * TL) {
 //    }
     
     // if the texIndex is less than our maximum number of textures, we can proceed
-    if ( texIndex < NUM_TEXTURES ) {
+    if ( texIndex < numTextures ) {
         ofTexture &activeTexture = textures.at( texIndex );
         for ( int i = 0; i < dv->info.numFrames; i++ ) {
             texFrame = frameCount % FRAMES_PER_TEX;

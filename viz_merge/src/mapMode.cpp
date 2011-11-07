@@ -2,12 +2,15 @@
 
 #include "mapMode.h"
 
+// 
 
 void mapMode::setup(){
+	whichCity = 0;
 	mapImg.loadImage("images/map.png");
 	mapImg.setImageType(OF_IMAGE_GRAYSCALE);
 	
-	
+	tradeGothic.loadFont( "TradeGothicLTStd-BdCn20.otf",  84 );
+    
 	ofFile file;
 	file.open("info/cityList.txt");
 	ofBuffer temp = file.readToBuffer();
@@ -80,6 +83,7 @@ void mapMode::start(){
 	
 	int which = (int)ofRandom(0,cityPts.size()+1) % cityPts.size();
 	scalePt = cityPts[which];
+	whichCity = which;
 	
 	
 	for (int i = 0; i < triangles.size(); i++){
@@ -137,6 +141,25 @@ void mapMode::draw(){
 	for (int i = 0; i < triangles.size(); i++){
 		triangles[i].draw();
 	}
+	
+	//tradeGothic.drawString( cityNames[whichCity], scalePt.x, scalePt.y );
+    
+	
+	glPopMatrix();
+	
+	
+	
+	//207, 6, 34
+	
+	glPushMatrix();
+	ofSetColor(255,255,255, powf(scale,3)*255);
+	glTranslated(scalePt.x - offsetPt.x, scalePt.y - offsetPt.y, 0);
+	//glScalef(1 + scale*10, 1 + scale*10, 1);
+	glTranslated(-scalePt.x, -scalePt.y, 0);
+	
+	tradeGothic.drawString( cityNames[whichCity], scalePt.x + 160 * scale, scalePt.y + 80 * scale);
+    
+	
 	glPopMatrix();
 	
 }

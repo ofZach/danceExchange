@@ -39,17 +39,21 @@ public:
 		if (!bIsSelectedCity) ang = energy * angle + (1-energy) * 0;
 		
 		
+		//207,6,34
 		
 		float i = pos.x;
 		float j = pos.y;
-		if (bIsCity && !bIsSelectedCity) ofSetColor(255 - 200 * energy,0,255 - 200 * energy);
-		else if (bIsCity && bIsSelectedCity) ofSetColor(255 ,0,255 );
+		if (bIsCity && !bIsSelectedCity) ofSetColor(207,6,34, 255 - 100*energy);
+		else if (bIsCity && bIsSelectedCity) ofSetColor(207,6,34);
 		else ofSetColor(80,80,80);
 		ofFill();
 		
 		
 		
-		
+		if (dist < 100){
+			float pct = (dist/100.0);
+			if (!bIsCity) ofSetColor(80,80,80, 255 * (1-energy) + energy * 255*pct);
+		}
 		
 		ofPushMatrix();
 		
@@ -95,6 +99,9 @@ public:
 	vector < ofPoint > cityPts;
 	vector < string > cityNames;
 	vector  < tri > triangles;
+	int whichCity;
+	ofTrueTypeFont tradeGothic;
+    
 	
 	
 };

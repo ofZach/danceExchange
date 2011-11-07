@@ -17,6 +17,7 @@ public:
 		lockTarget = 0;
 		speed = ofRandom(0.8, 1.3);
 		diffT = ofRandom(-0.5, 0.5);
+		timeAdder = 0;
 	}
 	
 	void calc(danceVideo * DV, ofRectangle rect){
@@ -40,11 +41,24 @@ public:
 		
 		
 		origPt.x += speed;
-		origPt.y += ofSignedNoise(origPt.x/1000.0, ofGetElapsedTimef()*0.01 + diffT);
+		
+		origPt.y += ofSignedNoise(origPt.x/1000.0, timeAdder + diffT);
+		timeAdder += 0.01 * 1.0/60.0;
 		
 		if (origPt.x > ofGetWidth() + origWH.x/2){
 			origPt.x = 0 - origWH.x/2;
 		}
+		
+		if (origPt.y > ofGetHeight() + origWH.y/2){
+			origPt.y = 0 - origWH.y/2;
+		}
+		
+		if (origPt.y < 0 - origWH.y/2){
+			origPt.y = ofGetHeight() + origWH.y/2;
+		}
+		
+		
+		
 		
 		if (ofGetKeyPressed('g')){
 			lockTarget = 1;
@@ -83,6 +97,7 @@ public:
 	float mixSize;
 	danceVideo * dvPtr;
 	float speed;
+	float timeAdder;
 };
 
 
@@ -104,7 +119,11 @@ public:
 	
 	DVManager * DVM;
 	
+	
+	vector < ofRectangle > rectanglesPre;
 	vector < ofRectangle > rectangles;
+	vector < ofRectangle > rectanglesWithRandomness;
+	
 	vector < int > associations;
 	vector < bool > bIsParticle;
 	
@@ -114,7 +133,11 @@ public:
 	
 	Pointilist                              *pointilist;
 	
+	ofRectangle								videoRect;
+	ofRectangle								eagleRect;
 	
 	ofVideoPlayer							video;
+	float energy;
+	
 	
 };

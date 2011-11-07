@@ -20,10 +20,6 @@ void testApp::setup() {
     frustumHelp.setup( nearClip, farClip, fov, ofGetWidth()/(float)ofGetHeight() );
     
     cam.cacheMatrices();
-	
-    globe.init( 300 );
-    globe.pos.set( 300, 0, 0 );
-    ofAddListener( globe.latLonTweenEnded, this, &testApp::globeLatLonTweenEnded );
     
     tradeGothic.loadFont( "TradeGothicLTStd-BdCn20.otf",  64 );
     cityTextX = 0;
@@ -63,7 +59,7 @@ void testApp::setup() {
 	
 	LM.setup();
 	currentCityIndex = 8;
-	globe.setLatLon( LM.latLonForCity(currentCityIndex)  );
+//	globe.setLatLon( LM.latLonForCity(currentCityIndex)  );
 	
 	
 	//bg.loadImage("images/bg.png");
@@ -91,7 +87,7 @@ void testApp::update(){
     dpManager.frustumHelp.calcNearAndFarClipCoordinates( cam );
     dpManager.update( deltaMillis );
     
-    globe.update( deltaMillis );
+//    globe.update( deltaMillis );
 	
 	int whichLast =lastMode;
 	if (whichLast != BRAND_MODE && mode == BRAND_MODE){
@@ -135,18 +131,6 @@ void testApp::draw(){
     
     cam.begin();
     
-//    cam.enableOrtho();
-//    ofPushMatrix();
-//    ofTranslate( ofGetWidth()/2, -ofGetHeight()/2 );
-    globe.draw();
-//    ofPopMatrix();
-    
-    ofVec3f sf = globe.getWorldCoordForLatLon( LM.cityLatLonHash[ "San Francisco" ] );
-    ofVec3f sfScreen = cam.worldToScreen( sf );
-    
-    ofVec3f city = globe.getWorldCoordForLatLon( LM.cityLatLonHash[ LM.cities[currentCityIndex]] );
-    ofVec3f cityScreen = cam.worldToScreen( city );
-    
     glPushMatrix();
     dpManager.draw();
     glPopMatrix();
@@ -155,11 +139,6 @@ void testApp::draw(){
     
     ofSetupScreen();
     glDisable( GL_DEPTH_TEST );
-    
-//    ofSetColor( 255, 0, 0 );
-//    ofCircle( sfScreen.x, sfScreen.y, 16 );
-//    ofSetColor( 0, 255, 0 );
-//    ofCircle( cityScreen.x, cityScreen.y, 16 );
     ofSetColor( 255, 255, 255 );
     
 	ofDrawBitmapString( "fps: "+ofToString(ofGetFrameRate(),2) + "\nnum particles: " + ofToString(dpManager.dpVector.size(), 2), 10, ofGetHeight() - 40 );
@@ -190,57 +169,24 @@ void testApp::danceVideoLoaded( danceVideo & dv ) {
     dpManager.createParticle( &dv, dv.isNew );
 }
 
-void testApp::globeLatLonTweenEnded( int & theId ) {
-    
-    cout << "globe lat lon tween ended" << endl;
-    // tell the DPManager to do something with particles for the corresponding city
-    if ( mode == GLOBE_MODE ) {
-        dpManager.animateParticlesForCity( LM.cities[ currentCityIndex ], globe.getWorldCoordForLatLon( LM.latLonForCity( currentCityIndex ) ) );
-        cityName = LM.cities[currentCityIndex];
-        cityTextRect = tradeGothic.getStringBoundingBox( cityName, 0, 0 );
-        cityTextTween.setParameters( easingQuad, ofxTween::easeInOut, -(cityTextRect.width+20), 0, 400, 0);
-    }
-    
-}
-
-void testApp::globeToRandomCity( int delay ) {
-    if ( dpManager.dpVector.size() == 0 )
-        return;
-    
-    int numDancesInCity = 0;
-    while ( numDancesInCity == 0 ) {
-        currentCityIndex = ofRandom( 0, LM.cities.size() );
-        numDancesInCity = dpManager.getNumDancesInCity( LM.cities[ currentCityIndex ] );    
-    }
-    
-    globe.setLatLon( LM.latLonForCity(currentCityIndex), 500, delay );
-    cityTextRect = tradeGothic.getStringBoundingBox( cityName, 0, 0 );
-    cityTextTween.setParameters( easingQuad, ofxTween::easeInOut, cityTextX, -(cityTextRect.width+20), 400, delay );
-}
-
 void testApp::switchMode( VizMode nextMode ) {
     if ( mode == nextMode )
+        return;
+    
+    if ( nextMode == GLOBE_MODE )
         return;
     
     mode = nextMode;
     switch ( mode ) {
         case STARFIELD_MODE:
-            globe.tweenGlobeToScale( 0, 500 );
             dpManager.transitionToStarfieldMode( 500, 500 );
             cityTextRect = tradeGothic.getStringBoundingBox( cityName, 0, 0 );
             cityTextTween.setParameters( easingQuad, ofxTween::easeInOut, cityTextX, -(cityTextRect.width+20), 400, 0 );
-            break;
-            
-        case GLOBE_MODE:
-            globe.tweenGlobeToScale( 1, 500, 500 );
-            dpManager.transitionToGlobeMode( 500, 0 );
-            globeToRandomCity( 1000 );
             break;
 			
 		case BRAND_MODE:
 			
 			dpManager.transitionToGlobeMode( 500, 0 );
-			globe.tweenGlobeToScale( 0, 500 );
 			cityTextRect = tradeGothic.getStringBoundingBox( cityName, 0, 0 );
             cityTextTween.setParameters( easingQuad, ofxTween::easeInOut, cityTextX, -(cityTextRect.width+20), 400, 0 );
 			// do something with dpManager ?
@@ -248,7 +194,6 @@ void testApp::switchMode( VizMode nextMode ) {
 			break;
 		case MAP_MODE:
 			dpManager.transitionToGlobeMode( 500, 0 );
-			globe.tweenGlobeToScale( 0, 500 );
 			cityTextRect = tradeGothic.getStringBoundingBox( cityName, 0, 0 );
             cityTextTween.setParameters( easingQuad, ofxTween::easeInOut, cityTextX, -(cityTextRect.width+20), 400, 0 );
 			// do something with dpManager ?
@@ -277,15 +222,6 @@ void testApp::keyPressed(int key){
 	} else if (key == '5'){
 		switchMode( BURST_MODE );
 	}
-    
-   // if ( key == 'c' ) {
-//        // pick a random city for the globe to spin to if we are in globe mode
-//        if ( mode == GLOBE_MODE ) {
-//            globeToRandomCity(0);
-//        }
-//    }
-
-
     else if ( key == OF_KEY_LEFT ) {
     }
     else if ( key == OF_KEY_RIGHT ) {

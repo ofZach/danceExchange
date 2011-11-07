@@ -9,7 +9,7 @@
 #include "ofFbo.h"
 #include "FrustumHelp.h"
 #include "ofTexture.h"
-#include "Globe.h"
+//#include "Globe.h"
 #include "DPManager.h"
 #include "DVManager.h"
 #include "VizModes.h"
@@ -46,7 +46,7 @@ public:
         string cityName;
         ofRectangle cityTextRect;
         ofxEasingQuad easingQuad;
-        Globe globe;
+//        Globe globe;
         
         int lastMillis;
     
@@ -55,8 +55,6 @@ public:
 
 		void draw();
         void updateCity();
-        void globeToRandomCity( int delay );
-        void globeLatLonTweenEnded( int & theId );
         void danceVideoLoaded( danceVideo & dv );
         void switchMode( VizMode nextMode );
 

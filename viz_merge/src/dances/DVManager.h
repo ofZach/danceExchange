@@ -67,6 +67,10 @@ public:
     void addFramesToTextures( danceVideo * dv, threadMovieLoader * TL );
     void allocateTexture(ofTexture &texture, int w, int h, int internalGlDataType, bool bUseARBExtention) {
         
+        ofImage tempImage;
+        tempImage.setUseTexture( false );
+        tempImage.allocate( w, h, OF_IMAGE_COLOR_ALPHA );
+        
         
         ofTextureData &texData = texture.texData;
         texData.tex_w = w;
@@ -86,7 +90,8 @@ public:
         
         glEnable(texData.textureTarget);
         glBindTexture(texData.textureTarget, (GLuint)texData.textureID);
-        glTexImage2D(texData.textureTarget, 0, texData.glTypeInternal, (GLint)texData.tex_w, (GLint)texData.tex_h, 0, texData.glType, texData.pixelType, 0);  // init to black...
+//        glTexImage2D(texData.textureTarget, 0, texData.glTypeInternal, (GLint)texData.tex_w, (GLint)texData.tex_h, 0, texData.glType, texData.pixelType, 0);  // init to black...
+        glTexImage2D(texData.textureTarget, 0, texData.glTypeInternal, (GLint)texData.tex_w, (GLint)texData.tex_h, 0, texData.glType, texData.pixelType, tempImage.getPixels());  // init to black...
         
         
         glTexParameterf(texData.textureTarget, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

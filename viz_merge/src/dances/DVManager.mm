@@ -241,12 +241,8 @@ void DVManager::addFramesToTextures( danceVideo * dv, threadMovieLoader * TL) {
             // we need to offset it by the number of random videos we have space for
             int offset = findRandomOffset();
             if ( ( offset % FRAMES_PER_TEX ) + NUM_FRAMES_PER_VIDEO > FRAMES_PER_TEX ) {
-                cout << "RED FLAG YO!" << endl;
                 offset = ( ( offset + NUM_FRAMES_PER_VIDEO ) / FRAMES_PER_TEX ) * FRAMES_PER_TEX;
             }
-            
-            
-            cout << "offset from the random section is " << offset << endl;
             recentFrames += offset;
             
             texIndex = (recentFrames) / FRAMES_PER_TEX;

@@ -102,6 +102,9 @@ public:
 	int whichCity;
 	ofTrueTypeFont tradeGothic;
     
+	bool bWasZoomingThisFrame;
+	
+	danceVideo * dvForZoom;
 	
 	
 };

@@ -32,6 +32,9 @@ class threadMovieLoader : public ofThread {
 		threadMovieLoader( int totalFrames, int movieWidth, int movieHeight );
 		~threadMovieLoader();
 		
+		void exit(){
+			stop();
+		}
 		bool    start(string & _filename, string & _fileId );
 		void    stop();
 		void    threadedFunction();

@@ -55,6 +55,13 @@ public:
     //void createDanceVideo( DanceInfo danceInfo );
 	void createDanceVideo( DanceInfo danceInfo );
 		
+	void exit(){
+		for (int i = 0; i < SIMULTANEOUS_LOADS; i++){
+			loaders[i]->exit();
+			//ofSleepMillis(100);
+			//delete loaders[i];
+		}
+	}
     int findRandomOffset();
     void loadLargeVideo( string hash );
     void addFramesToTextures( danceVideo * dv, threadMovieLoader * TL );

@@ -108,8 +108,17 @@ void threadMovieLoader::loadMovieAsImageSequence() {
 	
 	nFrames = 0;
 	
+	//-------------------------------------
+	if (isThreadRunning() == false) return;		// let's get out of this for loop;
+	//-------------------------------------
+	
 	
     for (int i = 0; i < totalFrames; i++ ) {
+		
+		//-------------------------------------
+		if (isThreadRunning() == false) return;		// let's get out of this for loop;
+		//-------------------------------------
+		
 		temp.setUseTexture(false); // important !! threaded !!
 		
 		string nameT = ofToString(i+1);
@@ -141,9 +150,18 @@ void threadMovieLoader::loadMovieAsImageSequence() {
                 }
 			}
 			
+			//-------------------------------------
+			if (isThreadRunning() == false) return;		// let's get out of this for loop;
+			//-------------------------------------
+			
 			ofSleepMillis(10);
 			
 			memcpy(pixels + (i*movieHeight*movieWidth*TH_MOVIE_CHANNELS),temp.getPixels(), temp.width*temp.height*TH_MOVIE_CHANNELS);
+			
+			//-------------------------------------
+			if (isThreadRunning() == false) return;		// let's get out of this for loop;
+			//-------------------------------------
+			
 		}
 	}
 	

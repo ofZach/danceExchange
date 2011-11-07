@@ -6,6 +6,7 @@
 
 void mapMode::setup(){
 	whichCity = 0;
+	bWasZoomingThisFrame = false;
 	mapImg.loadImage("images/map.png");
 	mapImg.setImageType(OF_IMAGE_GRAYSCALE);
 	
@@ -81,11 +82,35 @@ void mapMode::setup(){
 
 void mapMode::start(){
 	
-	int which = (int)ofRandom(0,cityPts.size()+1) % cityPts.size();
-	scalePt = cityPts[which];
-	whichCity = which;
 	
+	// try to pick a random video, or city:
 	
+	dvForZoom = NULL;
+	int which  = 0;
+	
+	if (DVM->danceVideos.size() > 0){
+		int whichVid = (int)ofRandom(0,DVM->danceVideos.size()+1) % DVM->danceVideos.size();
+		string city = DVM->danceVideos[whichVid]->city;
+		for (int i = 0; i < cityNames.size(); i++){
+			if ((cityNames[i].compare( city )) == 0){
+				cout << cityNames[i] << " -- " << city << endl;
+				which = i;
+				whichCity = which;
+				scalePt = cityPts[which];
+
+				dvForZoom =  DVM->danceVideos[whichVid];
+			}
+			//cout <<  res << endl;
+		}
+		
+		//which = 0;
+	} else {
+		which = (int)ofRandom(0,cityPts.size()+1) % cityPts.size();
+		scalePt = cityPts[which];
+		whichCity = which;
+	}
+	
+	cout << which << endl;
 	for (int i = 0; i < triangles.size(); i++){
 		triangles[i].calculateForNewCity(scalePt);
 		triangles[i].bIsSelectedCity = false;
@@ -104,6 +129,9 @@ void mapMode::start(){
 	offsetPt.set(0,0,0);
 	
 	
+	//for (int i = 0; i < DVM->danceVideos.size(); i++){
+//		cout <<  DVM->danceVideos[i]->city << endl;
+//	}
 	
 	
 	scale = 0;
@@ -117,7 +145,9 @@ void mapMode::end(){
 
 void mapMode::update(){
 	
+	bool bPressed = false;
 	if (ofGetKeyPressed('k')){
+		bPressed = true;
 		scale = scale * 0.95 + 1.0 * 0.05;
 		offsetPt =offsetPt * 0.95 + offsetTarget * 0.05;
 	} else {
@@ -128,6 +158,11 @@ void mapMode::update(){
 	for (int i = 0; i < triangles.size(); i++){
 		triangles[i].energy = scale;
 	}
+	if (bPressed == true && bWasZoomingThisFrame == false){
+		start();
+	}
+	
+	bWasZoomingThisFrame = bPressed;
 	
 }
 
@@ -161,6 +196,33 @@ void mapMode::draw(){
     
 	
 	glPopMatrix();
+	
+	
+	glPushMatrix();
+	glTranslated(scalePt.x - offsetPt.x, scalePt.y - offsetPt.y, 0);
+	glScalef(1 + scale*10, 1 + scale*10, 1);
+	glTranslated(-scalePt.x, -scalePt.y, 0);
+	
+	if (dvForZoom != NULL){
+		//dvForZoom
+		
+		pointilist->addPoint( scalePt.x + (10 + 70 * scale)/2, scalePt.y + (10 + 70 * scale)/2, 0,
+							 10 + 70 * scale,
+							 1,1,1,scale*0.95,
+							 dvForZoom->texIndex, 0,  dvForZoom->firstFrame +  dvForZoom->currentFrame
+							 );
+		pointilist->draw();
+	}
+	
+	//tradeGothic.drawString( cityNames[whichCity], scalePt.x, scalePt.y );
+    
+	
+	glPopMatrix();
+	
+	
+	
+	
+	
 	
 }
 

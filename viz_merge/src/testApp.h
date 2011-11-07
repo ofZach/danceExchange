@@ -64,6 +64,7 @@ public:
         void keyReleased (int key);
         void mousePressed(int x, int y, int button);
 		void exit(){
+			dvManager.exit();
 			// TODO: let's kill all threads?
 			// dvManager.exit()
 			ofSleepMillis(200);

@@ -200,7 +200,7 @@ void testApp::switchMode( VizMode nextMode ) {
 			break;
 		case BURST_MODE:
 			dpManager.transitionToGlobeMode( 500, 0 );
-			globe.tweenGlobeToScale( 0, 500 );
+			//globe.tweenGlobeToScale( 0, 500 );
 			cityTextRect = tradeGothic.getStringBoundingBox( cityName, 0, 0 );
             cityTextTween.setParameters( easingQuad, ofxTween::easeInOut, cityTextX, -(cityTextRect.width+20), 400, 0 );
 			// do something with dpManager ?

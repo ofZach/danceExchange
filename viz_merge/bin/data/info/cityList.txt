@@ -9,6 +9,6 @@ Mexico City,155,274
 Lima,244,420
 Montevideo,348,520
 Santiago,286,519
-San jose,217,324
+San Jose,217,324
 Kingston,241,282
 Sofia,655,170

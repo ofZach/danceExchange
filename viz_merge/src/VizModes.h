@@ -4,5 +4,6 @@ enum VizMode {
     STARFIELD_MODE,
     GLOBE_MODE, 
 	BRAND_MODE, 
-	MAP_MODE
+	MAP_MODE, 
+	BURST_MODE
 };

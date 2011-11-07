@@ -15,7 +15,7 @@
 #include "VizModes.h"
 #include "brandMode.h"
 #include "mapMode.h"
-
+#include "burstMode.h"
 
 
 
@@ -73,6 +73,8 @@ public:
 	
 		brandMode BM;
 		mapMode MM;
+		burstMode BRSTM;
+	
 	
 	
 		

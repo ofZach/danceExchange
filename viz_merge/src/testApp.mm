@@ -50,6 +50,10 @@ void testApp::setup() {
 	MM.DVM = &dvManager;
 	MM.pointilist = &pointilist;
 	
+	BRSTM.DVM = &dvManager;
+	BRSTM.pointilist = &pointilist;
+	
+	
 	
     // setup the networking
     NM.dvManager = &dvManager;
@@ -65,6 +69,7 @@ void testApp::setup() {
 	//bg.loadImage("images/bg.png");
 	BM.setup();
 	MM.setup();
+	BRSTM.setup();
 	
 }
 
@@ -95,6 +100,9 @@ void testApp::update(){
 	if (whichLast != MAP_MODE && mode == MAP_MODE){
 		MM.start();	
 	}
+	if (whichLast != BURST_MODE && mode == BURST_MODE){
+		BRSTM.start();
+	}
 	lastMode = mode;
 	
 	if (mode == BRAND_MODE){
@@ -102,6 +110,9 @@ void testApp::update(){
 	}
 	if (mode == MAP_MODE){
 		MM.update();
+	}
+	if (mode == BURST_MODE){
+		BRSTM.update();
 	}
 	
 	
@@ -167,6 +178,9 @@ void testApp::draw(){
 	}
 	if (mode == MAP_MODE){
 		MM.draw();	
+	}
+	if (mode == BURST_MODE){
+		BRSTM.draw();
 	}
 }
 
@@ -239,6 +253,13 @@ void testApp::switchMode( VizMode nextMode ) {
             cityTextTween.setParameters( easingQuad, ofxTween::easeInOut, cityTextX, -(cityTextRect.width+20), 400, 0 );
 			// do something with dpManager ?
 			break;
+		case BURST_MODE:
+			dpManager.transitionToGlobeMode( 500, 0 );
+			globe.tweenGlobeToScale( 0, 500 );
+			cityTextRect = tradeGothic.getStringBoundingBox( cityName, 0, 0 );
+            cityTextTween.setParameters( easingQuad, ofxTween::easeInOut, cityTextX, -(cityTextRect.width+20), 400, 0 );
+			// do something with dpManager ?
+			break;
     }
     
 }
@@ -253,6 +274,8 @@ void testApp::keyPressed(int key){
 		switchMode( BRAND_MODE );
 	} else if (key == '4'){
 		switchMode( MAP_MODE );
+	} else if (key == '5'){
+		switchMode( BURST_MODE );
 	}
     
    // if ( key == 'c' ) {

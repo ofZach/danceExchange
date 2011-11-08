@@ -21,11 +21,7 @@ void testApp::setup() {
     
     cam.cacheMatrices();
     
-    tradeGothic.loadFont( "TradeGothicLTStd-BdCn20.otf",  64 );
-    cityTextX = 0;
-    cityName = "";
-    
-	ofEnableSmoothing();
+    ofEnableSmoothing();
     ofDisableArbTex();
     ofSetVerticalSync( true );
     ofSetFrameRate( 60.0 );
@@ -58,21 +54,57 @@ void testApp::setup() {
     NM.requestHandshake( VERSION_NUMBER );
 	
 	LM.setup();
-	currentCityIndex = 8;
-//	globe.setLatLon( LM.latLonForCity(currentCityIndex)  );
-	
-	
-	//bg.loadImage("images/bg.png");
 	BM.setup();
 	MM.setup();
 	BRSTM.setup();
+	
+	scenes.push_back(sceneAndDuration(0,12));
+	scenes.push_back(sceneAndDuration(2,12));
+	scenes.push_back(sceneAndDuration(3,5));
+	scenes.push_back(sceneAndDuration(4,5));
+	for (int i = 0; i < scenes.size(); i++){
+		totalTime += scenes[i].duration;
+	}
+	curSceneAndDur = scenes[0];
 	
 }
 
 
 int lastMode = -1;
 void testApp::update(){
-    // update the networking. 
+    
+	float t = ofGetElapsedTimef();
+	while (t > totalTime){
+		t -= totalTime;	
+	}
+	int whereAmI = 0;
+	float adder = 0;
+	for (int i = 0; i < scenes.size(); i++){
+		if (t >= adder && t < (adder + scenes[i].duration)){
+			whereAmI = i;
+		}
+		adder += scenes[i].duration;
+	}
+	
+	if (curSceneAndDur.mode !=  scenes[whereAmI].mode){
+			
+		switchMode((VizMode)scenes[whereAmI].mode);
+	}
+	curSceneAndDur = scenes[whereAmI];
+	
+	
+	
+	if (bAmChangingScenes == true){
+		if (ofGetElapsedTimef() - sceneChangeStartTime > sceneChangeTime){
+			bAmChangingScenes = false;	
+		}
+		if ((ofGetElapsedTimef() - sceneChangeStartTime) > (sceneChangeTime/2)){
+			mode = nextScene;
+		}
+	}
+	
+	
+	// update the networking. 
     NM.update();
     
 	int currentMillis = ofGetElapsedTimeMillis();
@@ -87,7 +119,6 @@ void testApp::update(){
     dpManager.frustumHelp.calcNearAndFarClipCoordinates( cam );
     dpManager.update( deltaMillis );
     
-//    globe.update( deltaMillis );
 	
 	int whichLast =lastMode;
 	if (whichLast != BRAND_MODE && mode == BRAND_MODE){
@@ -142,8 +173,6 @@ void testApp::draw(){
     ofSetColor( 255, 255, 255 );
     
 	ofDrawBitmapString( "fps: "+ofToString(ofGetFrameRate(),2) + "\nnum particles: " + ofToString(dpManager.dpVector.size(), 2), 10, ofGetHeight() - 40 );
-    if ( cityTextTween.isRunning() ) cityTextX = cityTextTween.update();
-    tradeGothic.drawString( cityName, cityTextX, 80 );
     
     if ( drawTextures ) {
         for ( int i = 0; i < dvManager.textures.size(); i++ ) {
@@ -161,6 +190,21 @@ void testApp::draw(){
 	if (mode == BURST_MODE){
 		BRSTM.draw();
 	}
+	
+	
+	if (bAmChangingScenes == true){
+		ofEnableAlphaBlending();
+		float pct = (ofGetElapsedTimef() - sceneChangeStartTime) / sceneChangeTime;
+	
+		float alpha = sin(pct * PI);
+		ofSetColor(0,0,0,255*alpha);
+		ofFill();
+		ofRect(0,0,ofGetWidth(), ofGetHeight());
+		
+	}
+	
+	
+	
 }
 
 void testApp::danceVideoLoaded( danceVideo & dv ) {
@@ -169,53 +213,49 @@ void testApp::danceVideoLoaded( danceVideo & dv ) {
     dpManager.createParticle( &dv, dv.isNew );
 }
 
+
+
 void testApp::switchMode( VizMode nextMode ) {
     if ( mode == nextMode )
         return;
     
-    if ( nextMode == GLOBE_MODE )
-        return;
+
     
-    mode = nextMode;
-    switch ( mode ) {
+    //mode = nextMode;
+    switch ( nextMode ) {
         case STARFIELD_MODE:
             dpManager.transitionToStarfieldMode( 500, 500 );
-            cityTextRect = tradeGothic.getStringBoundingBox( cityName, 0, 0 );
-            cityTextTween.setParameters( easingQuad, ofxTween::easeInOut, cityTextX, -(cityTextRect.width+20), 400, 0 );
             break;
 			
 		case BRAND_MODE:
 			
 			dpManager.transitionToGlobeMode( 500, 0 );
-			cityTextRect = tradeGothic.getStringBoundingBox( cityName, 0, 0 );
-            cityTextTween.setParameters( easingQuad, ofxTween::easeInOut, cityTextX, -(cityTextRect.width+20), 400, 0 );
 			// do something with dpManager ?
 			
 			break;
 		case MAP_MODE:
 			dpManager.transitionToGlobeMode( 500, 0 );
-			cityTextRect = tradeGothic.getStringBoundingBox( cityName, 0, 0 );
-            cityTextTween.setParameters( easingQuad, ofxTween::easeInOut, cityTextX, -(cityTextRect.width+20), 400, 0 );
 			// do something with dpManager ?
 			break;
 		case BURST_MODE:
 			dpManager.transitionToGlobeMode( 500, 0 );
 			//globe.tweenGlobeToScale( 0, 500 );
-			cityTextRect = tradeGothic.getStringBoundingBox( cityName, 0, 0 );
-            cityTextTween.setParameters( easingQuad, ofxTween::easeInOut, cityTextX, -(cityTextRect.width+20), 400, 0 );
 			// do something with dpManager ?
 			break;
     }
-    
+	
+	sceneChangeTime = 0.8;
+	sceneChangeStartTime = ofGetElapsedTimef();
+	bAmChangingScenes = true;
+	nextScene = nextMode;
+	
 }
 
 void testApp::keyPressed(int key){
     
     if ( key == '1' ) {
         switchMode( STARFIELD_MODE );
-    } else if ( key == '2' ) {
-        switchMode( GLOBE_MODE );
-    } else if (key == '3'){
+    }  else if (key == '3'){
 		switchMode( BRAND_MODE );
 	} else if (key == '4'){
 		switchMode( MAP_MODE );

@@ -18,6 +18,7 @@ public:
 		speed = ofRandom(0.8, 1.3);
 		diffT = ofRandom(-0.5, 0.5);
 		timeAdder = 0;
+		bLocking = false;
 	}
 	
 	void calc(danceVideo * DV, ofRectangle rect){
@@ -60,7 +61,7 @@ public:
 		
 		
 		
-		if (ofGetKeyPressed('g')){
+		if (bLocking){
 			lockTarget = 1;
 		} else {
 			lockTarget = 0;
@@ -84,6 +85,7 @@ public:
 	}
 	
 	float diffT;
+	bool bLocking;
 	
 	float lockAmount;
 	float lockTarget;
@@ -139,5 +141,7 @@ public:
 	ofVideoPlayer							video;
 	float energy;
 	
+	bool bHitPause;
+	float pauseTime;
 	
 };

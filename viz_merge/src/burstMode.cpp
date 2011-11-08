@@ -13,6 +13,8 @@ void burstMode::start(){
 	frameCount = 0;
 	bFirstFrame = true;
 	timeTotal = 0;
+	energy = 0;
+	startTime = ofGetElapsedTimef();
 	
 }
 
@@ -23,6 +25,13 @@ void burstMode::end(){
 
 void burstMode::update(){
 	
+	if ( (ofGetElapsedTimef() - startTime) < 17){
+		energy = 0.9985f * energy + 0.0015f * 1;	
+	} else {
+		energy = 0.996f * energy + 0.004f * 0;	
+		
+	}
+	 
 	float time = ofGetElapsedTimef();
 	if (bFirstFrame == true){
 		lastTimeF = time;
@@ -30,12 +39,15 @@ void burstMode::update(){
 	}
 	float diff = time - lastTimeF;
 	
-	float pctX = (float)ofGetMouseX() / (float)ofGetWidth();
-	timeTotal += (pctX*0.3)*diff;
+	float pctX = (float)(energy*300) / (float)ofGetWidth();
+	timeTotal += (0.0003 + pctX*0.1)*diff;
 	
 	//cout << timeTotal <<endl;
 	// how many frames did we advance?
 
+	
+	nFrames = DVM->danceVideos.size() * 24;
+	
 	float frameLength = 0.1f; // 100 millis?  faster ?
 	float totalLength = nFrames * frameLength;
 	
@@ -51,7 +63,7 @@ void burstMode::update(){
 }
 
 void burstMode::draw(){
-	float pctX = (float)ofGetMouseX() / (float)ofGetWidth();
+	//float pctX = (float)(energy*300)  / (float)ofGetWidth();
 	
 	
 	danceVideo * temp = NULL;
@@ -60,7 +72,7 @@ void burstMode::draw(){
 		temp = DVM->danceVideos[whichVideo];
 		
 		pointilist->addPoint( ofGetWidth()/2, ofGetHeight()/2, 0,
-							 200 + 2000*pctX,
+							 200 + (ofGetWidth()-200)*energy,
 							 1,1,1,0.96,
 							 temp->texIndex, 0,  temp->firstFrame +  whichFrame
 							 );

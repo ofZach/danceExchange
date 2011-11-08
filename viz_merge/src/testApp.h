@@ -18,6 +18,21 @@
 #include "burstMode.h"
 
 
+class sceneAndDuration{
+	
+	public:
+	sceneAndDuration(){};
+	sceneAndDuration(int m, float d){
+		mode = m;
+		duration = d;
+	}
+		int mode;
+		float duration;
+};
+
+
+
+
 
 class testApp : public ofBaseApp{
 
@@ -72,8 +87,15 @@ public:
 		brandMode BM;
 		mapMode MM;
 		burstMode BRSTM;
+		float	sceneChangeStartTime;
+		float	sceneChangeTime;
+		bool	bAmChangingScenes;
+		VizMode		nextScene;
 	
 	
+		vector < sceneAndDuration > scenes;
+		float totalTime;
+		sceneAndDuration curSceneAndDur;
 	
 		
 };

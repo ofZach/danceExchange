@@ -30,4 +30,8 @@ public:
 	float									lastTimeF;
 	float									timeTotal;
 	
+	float									energy;
+	
+	float									startTime;
+	
 };

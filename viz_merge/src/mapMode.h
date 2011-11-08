@@ -107,4 +107,15 @@ public:
 	danceVideo * dvForZoom;
 	
 	
+	ofRectangle								mapRect;
+	
+	void pickRandom();
+	int pickAGoodRandom();
+	vector < int > randoms;
+	
+	float textEnergy;
+	
+	float startTime;
+	
+	
 };

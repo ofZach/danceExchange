@@ -89,17 +89,32 @@ void threadMovieLoader::loadMovieAsImageSequence() {
 	
 	
 	
+	//-------------------------------------
+	if (isThreadRunning() == false) return;		// let's get out of this for loop;
+	//-------------------------------------
 	
 	string tempPath = ( movieWidth == 640 ? "big" : "" ) + fileId;
 	
 	//string tempPath = ( movieWidth == 640 ? "big" : "" ) + fileId;
 	string command = "mkdir " + ofToDataPath( tempPath );
-	system(command.c_str());
 	
+	
+	//-------------------------------------
+	if (isThreadRunning() == false) return;		// let's get out of this for loop;
+	//-------------------------------------
+	
+	system(command.c_str());
+	//-------------------------------------
+	if (isThreadRunning() == false) return;		// let's get out of this for loop;
+	//-------------------------------------
 	
 	
 #ifdef USING_QT_EXPORT
 	command = "../../../data/qt_export " + ofToDataPath(filename) + " --exporter=grex " + ofToDataPath(tempPath) + "/.png >/dev/null 2>&1";
+	//-------------------------------------
+	if (isThreadRunning() == false) return;		// let's get out of this for loop;
+	//-------------------------------------
+	
 	system(command.c_str());
 #else
 	command =  "../../../data/./ffmpeg -v quiet -i " + ofToDataPath(filename) + " " + ofToDataPath(tempPath) + "/%d.png >/dev/null 2>&1";

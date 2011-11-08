@@ -13,8 +13,10 @@
 
 void networkManager::setup(){
 	dbHelper = [[DBHelper alloc] init];
-    [dbHelper setRequestInterval:5.0];
+    [dbHelper setRecentRequestInterval:5.0];
+    [dbHelper setRandomRequestInterval:5.0];
     [dbHelper setHeroku:YES];
+    [dbHelper setNumRandomToRequest:5];
 //    [dbHelper requestRecentDances:300];
     isRequestingRecentDances = false;
     isRequestingHandshake = false;
@@ -55,7 +57,7 @@ void networkManager::update(){
         string updateUrl = [dbHelper appUpdateUrl];
         if ( updateUrl == "" ) {
 //            cout << "seems like everything was up to date" << endl;
-            [dbHelper requestInitial:NUM_RECENT_VIDEOS withRandom:NUM_RANDOM_VIDEOS];
+            [dbHelper requestInitial:dvManager->numRecentVideos withRandom:dvManager->numRandomVideos];
             isRequestingInitialDances = true;
             
 //            [dbHelper requestRecentDances:200];
@@ -78,13 +80,14 @@ void networkManager::update(){
         cout << "initial request finished..." << endl;
         isRequestingInitialDances = false;
         [dbHelper requestDancesSince];
+        [dbHelper requestRandomDances];
     }
     
-    if ( isRequestingRecentDances && ![dbHelper isRequestingRecentDanceInfos] && ![dbHelper isProcessingDanceInfosWithoutVideos] ) {
-        cout << "initial request finished..." << endl;
-        isRequestingRecentDances = false;
-        [dbHelper requestDancesSince];
-    }
+//    if ( isRequestingRecentDances && ![dbHelper isRequestingRecentDanceInfos] && ![dbHelper isProcessingDanceInfosWithoutVideos] ) {
+//        cout << "initial request finished..." << endl;
+//        isRequestingRecentDances = false;
+//        [dbHelper requestDancesSince];
+//    }
 }
 
 void networkManager::requestRandomDances( int num ) {

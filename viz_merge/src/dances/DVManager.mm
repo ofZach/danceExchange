@@ -13,12 +13,23 @@ void DVManager::createDanceVideo( DanceInfo danceInfo ) {
     unloadedDanceVideos.push_back( danceInfo );
 }
 
-void DVManager::init( Pointilist *pointilist ) {
+void DVManager::init( Pointilist *pointilist, bool macMini ) {
+    if ( macMini ) {
+        numTextures = 2;
+        numRecentVideos = 88;
+        numRandomVideos = 88;
+    } else {
+        numTextures = 4;
+        numRecentVideos = 150;
+        numRandomVideos = 150;
+    }
+    
+    
     // set the pointilist pointer
     this->pointilist = pointilist;
     
     // push the textures into the vector first
-    for ( int i = 0; i < NUM_TEXTURES; i++ )
+    for ( int i = 0; i < numTextures; i++ )
         textures.push_back( ofTexture() );
     // this has to be a separate second step
     for ( int i = 0; i < textures.size(); i++ ) {
@@ -141,7 +152,7 @@ int DVManager::findRandomOffset() {
     int count = 0;
     int index = 0;
     int frame = 0;
-    for ( int i=0; i<NUM_RANDOM_VIDEOS; i++ ) {
+    for ( int i=0; i<numRandomVideos; i++ ) {
         index = count / FRAMES_PER_TEX;
         frame = count % FRAMES_PER_TEX;
         if ( NUM_FRAMES_PER_VIDEO + frame >= FRAMES_PER_TEX ) {
@@ -162,16 +173,31 @@ void DVManager::addFramesToTextures( danceVideo * dv, threadMovieLoader * TL) {
     
     // figure out the tex index
     if ( dv->isRandom ) {
-        if ( randomDanceVideos.size() >= NUM_RANDOM_VIDEOS ) {
+        if ( randomDanceVideos.size() >= numRandomVideos ) {
             cout << "replacing a random dance video" << endl;
-            // if we are all full of random videos, get rid of the most recent one
-            danceVideo *oldDV = *(randomDanceVideos.begin());
+            
+            
+//            // if we are all full of random videos, get rid of the most recent one
+//            danceVideo *oldDV = *(randomDanceVideos.begin());
+            
+            // if we are full of random videos, find the first available for removal
+            vector<danceVideo*>::iterator available;
+            danceVideo* oldDV = 0;
+            for ( available = randomDanceVideos.begin(); available != randomDanceVideos.end(); available++ ) {
+                if ( !(*available)->isInUse ) {
+                    oldDV = *available;
+                    break;
+                }
+            }
+            // delete it from the random videos
+            randomDanceVideos.erase(available);
+            
+            
+            
             oldDV->setDanceInfo( dv->info );
             // copy over its locations in the atlas
             texIndex = oldDV->texIndex;
             texFrame = oldDV->firstFrame;
-            // delete it from the random videos
-            randomDanceVideos.erase(randomDanceVideos.begin());
             // delete it from the main vector
             for ( vector<danceVideo*>::iterator it=danceVideos.begin(); it!=danceVideos.end(); ) {
                 if ( oldDV == *(it) )
@@ -209,7 +235,7 @@ void DVManager::addFramesToTextures( danceVideo * dv, threadMovieLoader * TL) {
         }
     }
     else {
-        if ( recentDanceVideos.size() >= NUM_RECENT_VIDEOS ) {
+        if ( recentDanceVideos.size() >= numRecentVideos ) {
             cout << "replacing a recent dance video" << endl;
             // if we are all full of recent videos, we'll use the most recent one instead
             danceVideo *oldDV = *(recentDanceVideos.begin());
@@ -240,6 +266,9 @@ void DVManager::addFramesToTextures( danceVideo * dv, threadMovieLoader * TL) {
             int recentFrames = recentDanceVideos.size() * NUM_FRAMES_PER_VIDEO;
             // we need to offset it by the number of random videos we have space for
             int offset = findRandomOffset();
+            if ( ( offset % FRAMES_PER_TEX ) + NUM_FRAMES_PER_VIDEO > FRAMES_PER_TEX ) {
+                offset = ( ( offset + NUM_FRAMES_PER_VIDEO ) / FRAMES_PER_TEX ) * FRAMES_PER_TEX;
+            }
             recentFrames += offset;
             
             texIndex = (recentFrames) / FRAMES_PER_TEX;
@@ -283,7 +312,7 @@ void DVManager::addFramesToTextures( danceVideo * dv, threadMovieLoader * TL) {
 //    }
     
     // if the texIndex is less than our maximum number of textures, we can proceed
-    if ( texIndex < NUM_TEXTURES ) {
+    if ( texIndex < numTextures ) {
         ofTexture &activeTexture = textures.at( texIndex );
         for ( int i = 0; i < dv->info.numFrames; i++ ) {
             texFrame = frameCount % FRAMES_PER_TEX;

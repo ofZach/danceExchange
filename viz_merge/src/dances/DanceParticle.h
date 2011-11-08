@@ -40,7 +40,7 @@ public:
     
     void zoomTweenFinished( int & theId ) {
         ofRemoveListener( zoomTween.end_E, this, &DanceParticle::zoomTweenFinished );
-        this->vel.set( 0, 0, 0 );
+//        this->vel.set( 0, 0, 0 );
         ofNotifyEvent( zoomFinished, *this );
     }
     
@@ -68,8 +68,10 @@ public:
         }
         else if ( zoomOutTween.isRunning() ) {
             zoomOutTween.update();
+//            cout << zoomOutTween.getTarget( 0 ) << " -- zoomOutTween" << endl;
             alpha = 1.0 - zoomOutTween.getTarget( 0 );
-            pos.set( startPos.getInterpolated( targetPos, zoomOutTween.getTarget( 0 ) ) );
+            if ( zoomOutTween.getTarget( 0 ) < 1.0 )
+                pos.set( startPos.getInterpolated( targetPos, zoomOutTween.getTarget( 0 ) ) );
         }
         else {
         

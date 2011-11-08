@@ -158,7 +158,7 @@ void DPManager::transitionToStarfieldMode( int duration, int delay ) {
     cityParticles.clear();
     for ( vector<DanceParticle*>::iterator it = dpVector.begin(); it != dpVector.end(); it++ ) {
         DanceParticle *dp = *it;
-        dp->vel.set( 0, 0, -10 );
+        dp->vel.set( 0, 0, -ofRandom( 10.0, 20.0 ) );
     }
     nextMode = STARFIELD_MODE;
     modeChangeTween.setParameters( linearEasing, ofxTween::easeInOut, 0, 1, duration, 0 );

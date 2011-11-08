@@ -20,6 +20,8 @@ public:
     bool                isNew; // tells whether this was in the first batch or freshly new
     bool                isRandom;
     
+    bool                isInUse;
+    
     
     //bool                smallVideoLoaded;
 	//threadMovieLoader*  smallVideoLoader;
@@ -58,6 +60,8 @@ public:
         currentFrame = 0;
         frameDelay = 100;
         milliCounter = 0;
+        
+        isInUse = false;
     }
     
     void setDanceInfo( DanceInfo info ) {

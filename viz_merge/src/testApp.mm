@@ -221,6 +221,9 @@ void testApp::switchMode( VizMode nextMode ) {
     if ( mode == nextMode )
         return;
     
+	for (int i = 0; i < dvManager.danceVideos.size(); i++){
+		dvManager.danceVideos[i]->isInUse = false;
+	}
 
     
     //mode = nextMode;

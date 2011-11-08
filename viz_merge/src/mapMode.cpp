@@ -165,13 +165,22 @@ int mapMode::pickAGoodRandom(){
 void mapMode::pickRandom(){
 	// try to pick a random video, or city:
 	
+	for (int i = 0; i < DVM->danceVideos.size(); i++){
+		DVM->danceVideos[i]->isInUse = false;
+	}
+	
+	
+	
 	dvForZoom = NULL;
 	int which  = 0;
 	
 	if (DVM->danceVideos.size() > 0){
 		int whichVid = pickAGoodRandom();
 		string city = DVM->danceVideos[whichVid]->city;
-		cout << "selected video " << whichVid << " w/ city " << DVM->danceVideos[whichVid]->city << endl;
+		
+		DVM->danceVideos[whichVid]->isInUse = true;
+		
+		//cout << "selected video " << whichVid << " w/ city " << DVM->danceVideos[whichVid]->city << endl;
 		for (int i = 0; i < cityNames.size(); i++){
 			
 			bool bAnySubStringMatches = false;
@@ -279,6 +288,10 @@ void mapMode::end(){
 
 void mapMode::update(){
 	
+	if (DVM->danceVideos.size() == 0){
+		return;
+	}
+	
 	bool bPressed = false;
 	
 	float fmod;
@@ -310,6 +323,9 @@ void mapMode::update(){
 
 void mapMode::draw(){
 	
+	if (DVM->danceVideos.size() == 0){
+		return;
+	}
 	
 	//ofRect(mapRect.x, mapRect.y, mapRect.width, mapRect.height);
 	glPushMatrix();

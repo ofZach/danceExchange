@@ -45,6 +45,15 @@ void brandMode::loadSquareSettings(){
 
 void brandMode::start(){
 	
+	
+	if (DVM->danceVideos.size() == 0){
+		return;
+	}
+	
+	for (int i = 0; i < DVM->danceVideos.size(); i++){
+		DVM->danceVideos[i]->isInUse = false;
+	}
+	
 	ofSeedRandom(0);
 	bHitPause = false;
 	
@@ -110,6 +119,9 @@ void brandMode::start(){
 		brandParticle p;
 		p.setup();
 		p.calc(DVM->danceVideos[shuffleMe[i]], rectangles[i]);
+		
+		DVM->danceVideos[shuffleMe[i]]->isInUse = true;
+		
 		particles.push_back(p);
 		bIsParticle.push_back(true);
 		
@@ -155,6 +167,10 @@ void brandMode::end(){
 
 void brandMode::update(){
 	
+	
+	if (DVM->danceVideos.size() == 0){
+		return;
+	}
 	//cout << video.getPosition() << endl;
 	
 	if (video.getPosition() > 0.614){
@@ -214,6 +230,11 @@ void brandMode::update(){
 }
 
 void brandMode::draw(){
+	
+	
+	if (DVM->danceVideos.size() == 0){
+		return;
+	}
 	
 	ofEnableAlphaBlending();
 	//just experimenting. 

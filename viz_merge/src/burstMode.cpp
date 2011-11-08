@@ -25,6 +25,10 @@ void burstMode::end(){
 
 void burstMode::update(){
 	
+	if (DVM->danceVideos.size() == 0){
+		return;
+	}
+	
 	if ( (ofGetElapsedTimef() - startTime) < 17){
 		energy = 0.9985f * energy + 0.0015f * 1;	
 	} else {
@@ -65,6 +69,9 @@ void burstMode::update(){
 void burstMode::draw(){
 	//float pctX = (float)(energy*300)  / (float)ofGetWidth();
 	
+	if (DVM->danceVideos.size() == 0){
+		return;
+	}
 	
 	danceVideo * temp = NULL;
 	

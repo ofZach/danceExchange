@@ -303,3 +303,9 @@ void testApp::mousePressed(int x, int y, int button){
     cam.disableMouseInput();
     
 }
+
+void testApp::windowResized( int w, int h ) {
+    frustumHelp.setup( nearClip, farClip, fov, ofGetWidth()/(float)ofGetHeight() );
+    dpManager.frustumHelp = frustumHelp;
+    
+}

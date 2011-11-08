@@ -60,10 +60,10 @@ void testApp::setup() {
 	MM.setup();
 	BRSTM.setup();
 	
-	scenes.push_back(sceneAndDuration(0,12));
-	scenes.push_back(sceneAndDuration(2,12));
-	scenes.push_back(sceneAndDuration(3,5));
-	scenes.push_back(sceneAndDuration(4,5));
+	scenes.push_back(sceneAndDuration(STARFIELD_MODE,12));
+	scenes.push_back(sceneAndDuration(BRAND_MODE,12));
+	scenes.push_back(sceneAndDuration(MAP_MODE,5));
+	scenes.push_back(sceneAndDuration(BURST_MODE,5));
 	for (int i = 0; i < scenes.size(); i++){
 		totalTime += scenes[i].duration;
 	}
@@ -277,7 +277,7 @@ void testApp::keyPressed(int key){
         NM.requestLargeVideo( dp->DV );
     }
     else if ( key == 'r' ) {
-        NM.requestRandomDances( dvManager.numRandomVideos );
+//        NM.requestRandomDances( dvManager.numRandomVideos );
     }
     if ( key == ' ' ) {
         drawTextures = !drawTextures;

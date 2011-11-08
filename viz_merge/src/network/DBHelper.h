@@ -27,6 +27,7 @@ using namespace std;
     int newestId;
     int recentOffset;
     int maxRandom;
+    int numRandom;
     bool heroku;
 }
 
@@ -43,6 +44,7 @@ using namespace std;
 @property (assign, nonatomic) string appUpdateUrl;
 @property (assign, nonatomic) NSOperationQueue *queue;
 @property (assign, nonatomic) bool heroku;
+@property (assign, nonatomic) int numRandom;
 
 - (bool)isProcessingDanceInfosWithoutVideos;
 
@@ -50,6 +52,7 @@ using namespace std;
 - (void)handshakeRequestDidFinish:(ASIHTTPRequest*)request;
 - (void)handshakeRequestDidFail:(ASIHTTPRequest*)request;
 
+- (void)requestRandomDances;
 - (void)requestRandomDances:(int)num;
 - (void)randomDanceRequestDidFinish:(ASIHTTPRequest*)request;
 - (void)randomDanceRequestDidFail:(ASIHTTPRequest*)request;

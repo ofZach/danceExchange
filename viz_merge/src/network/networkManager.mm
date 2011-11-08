@@ -15,6 +15,7 @@ void networkManager::setup(){
 	dbHelper = [[DBHelper alloc] init];
     [dbHelper setRequestInterval:5.0];
     [dbHelper setHeroku:YES];
+    [dbHelper setNumRandom:5];
 //    [dbHelper requestRecentDances:300];
     isRequestingRecentDances = false;
     isRequestingHandshake = false;
@@ -78,13 +79,14 @@ void networkManager::update(){
         cout << "initial request finished..." << endl;
         isRequestingInitialDances = false;
         [dbHelper requestDancesSince];
+        [dbHelper requestRandomDances];
     }
     
-    if ( isRequestingRecentDances && ![dbHelper isRequestingRecentDanceInfos] && ![dbHelper isProcessingDanceInfosWithoutVideos] ) {
-        cout << "initial request finished..." << endl;
-        isRequestingRecentDances = false;
-        [dbHelper requestDancesSince];
-    }
+//    if ( isRequestingRecentDances && ![dbHelper isRequestingRecentDanceInfos] && ![dbHelper isProcessingDanceInfosWithoutVideos] ) {
+//        cout << "initial request finished..." << endl;
+//        isRequestingRecentDances = false;
+//        [dbHelper requestDancesSince];
+//    }
 }
 
 void networkManager::requestRandomDances( int num ) {

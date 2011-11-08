@@ -11,12 +11,13 @@
 @synthesize appUpdateUrl;
 @synthesize queue;
 @synthesize heroku;
+@synthesize numRandom;
 
-- (id)init
-{
+- (id)init {
     self = [super init];
     if (self) {        
         
+        [self setNumRandom:5];
         [self setNewestId:0];
         [self setAppUpdateUrl:""];
         [self setIsRequestingVideo:NO];
@@ -54,6 +55,10 @@
     return danceInfosWithoutVideos.size() > 0;
 }
 
+- (void)requestRandomDances {
+    [self requestRandomDances:[self numRandom]];
+}
+
 - (void)requestRandomDances:(int)num {
     NSLog( @"requestRandomDances: %i", num );
     
@@ -72,7 +77,6 @@
     [request setDidFinishSelector:@selector(randomDanceRequestDidFinish:)];
     [request setDidFailSelector:@selector(randomDanceRequestDidFail:)];
     [request setTimeOutSeconds:120];
-//    [request startAsynchronous];
     [[self queue] addOperation:request];
     
     [self setIsRequestingRandomDanceInfos:YES];
@@ -89,13 +93,16 @@
     
     [self processDanceInfos:dances thatAreNew:NO andAreRandom:YES];
     
-    
+    [self setIsRequestingRandomDanceInfos:NO];
+    [self performSelector:@selector(requestRandomDances) withObject:self afterDelay:requestInterval];
 }
 
 - (void)randomDanceRequestDidFail:(ASIHTTPRequest *)request {
     
     NSLog( @"randomDanceRequestDidFail: %@", [[request error] localizedDescription] );
     
+    [self setIsRequestingRandomDanceInfos:NO];
+    [self performSelector:@selector(requestRandomDances) withObject:self afterDelay:requestInterval];
 }
 
 - (void)requestHandshake:(int)version {
@@ -180,6 +187,8 @@
 
 - (void)dancesSinceRequestDidFail:(ASIHTTPRequest *)request {
     NSLog( @"dancesSinceRequestDidFail" );
+    [self setIsRequestingDancesSince:NO];
+    [self performSelector:@selector(requestDancesSince) withObject:self afterDelay:requestInterval];
 }
 
 - (void)requestInitial:(int)numRecent withRandom:(int)numRandom {

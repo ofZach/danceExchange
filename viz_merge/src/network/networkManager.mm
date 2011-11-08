@@ -13,9 +13,10 @@
 
 void networkManager::setup(){
 	dbHelper = [[DBHelper alloc] init];
-    [dbHelper setRequestInterval:5.0];
+    [dbHelper setRecentRequestInterval:5.0];
+    [dbHelper setRandomRequestInterval:5.0];
     [dbHelper setHeroku:YES];
-    [dbHelper setNumRandom:5];
+    [dbHelper setNumRandomToRequest:5];
 //    [dbHelper requestRecentDances:300];
     isRequestingRecentDances = false;
     isRequestingHandshake = false;

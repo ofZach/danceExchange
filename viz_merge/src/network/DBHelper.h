@@ -23,11 +23,13 @@ using namespace std;
     bool isRequestingDancesSince;
     bool isRequestingVideo;
     string appUpdateUrl;
-    NSTimeInterval requestInterval;
+    NSTimeInterval recentRequestInterval;
+    NSTimeInterval randomRequestInterval;
+    
     int newestId;
     int recentOffset;
     int maxRandom;
-    int numRandom;
+    int numRandomToRequest;
     bool heroku;
 }
 
@@ -39,12 +41,13 @@ using namespace std;
 @property (assign, nonatomic) bool isRequestingRandomDanceInfos;
 @property (assign, nonatomic) bool isRequestingDancesSince;
 @property (assign, nonatomic) bool isRequestingVideo;
-@property (assign, nonatomic) NSTimeInterval requestInterval;
+@property (assign, nonatomic) NSTimeInterval recentRequestInterval;
+@property (assign, nonatomic) NSTimeInterval randomRequestInterval;
 @property (assign, nonatomic) int newestId;
 @property (assign, nonatomic) string appUpdateUrl;
 @property (assign, nonatomic) NSOperationQueue *queue;
 @property (assign, nonatomic) bool heroku;
-@property (assign, nonatomic) int numRandom;
+@property (assign, nonatomic) int numRandomToRequest;
 
 - (bool)isProcessingDanceInfosWithoutVideos;
 

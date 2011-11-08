@@ -175,14 +175,29 @@ void DVManager::addFramesToTextures( danceVideo * dv, threadMovieLoader * TL) {
     if ( dv->isRandom ) {
         if ( randomDanceVideos.size() >= numRandomVideos ) {
             cout << "replacing a random dance video" << endl;
-            // if we are all full of random videos, get rid of the most recent one
-            danceVideo *oldDV = *(randomDanceVideos.begin());
+            
+            
+//            // if we are all full of random videos, get rid of the most recent one
+//            danceVideo *oldDV = *(randomDanceVideos.begin());
+            
+            // if we are full of random videos, find the first available for removal
+            vector<danceVideo*>::iterator available;
+            danceVideo* oldDV = 0;
+            for ( available = randomDanceVideos.begin(); available != randomDanceVideos.end(); available++ ) {
+                if ( !(*available)->isInUse ) {
+                    oldDV = *available;
+                    break;
+                }
+            }
+            // delete it from the random videos
+            randomDanceVideos.erase(available);
+            
+            
+            
             oldDV->setDanceInfo( dv->info );
             // copy over its locations in the atlas
             texIndex = oldDV->texIndex;
             texFrame = oldDV->firstFrame;
-            // delete it from the random videos
-            randomDanceVideos.erase(randomDanceVideos.begin());
             // delete it from the main vector
             for ( vector<danceVideo*>::iterator it=danceVideos.begin(); it!=danceVideos.end(); ) {
                 if ( oldDV == *(it) )

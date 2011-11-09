@@ -18,6 +18,9 @@
     self = [super init];
     if (self) {        
         
+        numHandshakeFailures = 0;
+        maxHandshakeFailures = 10;
+        
         [self setNumRandomToRequest:5];
         [self setNewestId:0];
         [self setAppUpdateUrl:""];
@@ -106,7 +109,15 @@
     [self performSelector:@selector(requestRandomDances) withObject:self afterDelay:randomRequestInterval];
 }
 
+- (void)requestHandshake {
+    [self requestHandshake:handshakeVersion];
+}
+
 - (void)requestHandshake:(int)version {
+    
+    NSLog( @"requestHandshake with version %i", version );
+    
+    handshakeVersion = version;
     
     NSURL *url;
     
@@ -114,6 +125,8 @@
         url = [NSURL URLWithString:@"http://dance-exchange.herokuapp.com/handshake"];
     else
         url = [NSURL URLWithString:@"http://aaron-meyers.com/smirnoff/handshake.php"];
+    
+    url = [NSURL URLWithString:@"bullshit"];
     
     ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
     [request setPostValue:@"viz" forKey:@"app"];
@@ -148,6 +161,11 @@
 }
 
 - (void)handshakeRequestDidFail:(ASIHTTPRequest *)request {
+    
+    if ( ++numHandshakeFailures < maxHandshakeFailures )
+        [self performSelector:@selector(requestHandshake) withObject:self afterDelay:60.0];
+    
+    NSLog( @"handshake fail #%i", numHandshakeFailures );
     
 }
 

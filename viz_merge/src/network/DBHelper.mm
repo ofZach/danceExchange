@@ -126,8 +126,6 @@
     else
         url = [NSURL URLWithString:@"http://aaron-meyers.com/smirnoff/handshake.php"];
     
-    url = [NSURL URLWithString:@"bullshit"];
-    
     ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
     [request setPostValue:@"viz" forKey:@"app"];
     [request setPostValue:[NSNumber numberWithInt:version] forKey:@"version"];
@@ -239,6 +237,8 @@
     NSLog( @"initialRequestDidFinish" );
     
     NSError *error;
+    
+//    [[request responseData] writeToFile:<#(NSString *)#> atomically:<#(BOOL)#>
     NSDictionary *dances = [[CJSONDeserializer deserializer] deserialize:[request responseData] error:&error];
     
     NSLog( @"recent dances to process: %i", [[dances valueForKey:@"recent"] count] );

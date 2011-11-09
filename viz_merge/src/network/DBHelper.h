@@ -55,6 +55,8 @@ using namespace std;
 
 - (bool)isProcessingDanceInfosWithoutVideos;
 
+- (void)loadOfflineData;
+
 - (void)requestHandshake;
 - (void)requestHandshake:(int)version;
 - (void)handshakeRequestDidFinish:(ASIHTTPRequest*)request;

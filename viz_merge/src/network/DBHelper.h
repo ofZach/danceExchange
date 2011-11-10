@@ -26,6 +26,10 @@ using namespace std;
     NSTimeInterval recentRequestInterval;
     NSTimeInterval randomRequestInterval;
     
+    int numHandshakeFailures;
+    int maxHandshakeFailures;
+    int handshakeVersion;
+    
     int newestId;
     int recentOffset;
     int maxRandom;
@@ -51,6 +55,9 @@ using namespace std;
 
 - (bool)isProcessingDanceInfosWithoutVideos;
 
+- (void)loadOfflineData;
+
+- (void)requestHandshake;
 - (void)requestHandshake:(int)version;
 - (void)handshakeRequestDidFinish:(ASIHTTPRequest*)request;
 - (void)handshakeRequestDidFail:(ASIHTTPRequest*)request;

@@ -18,6 +18,9 @@
     self = [super init];
     if (self) {        
         
+        numHandshakeFailures = 0;
+        maxHandshakeFailures = 10;
+        
         [self setNumRandomToRequest:5];
         [self setNewestId:0];
         [self setAppUpdateUrl:""];
@@ -106,7 +109,15 @@
     [self performSelector:@selector(requestRandomDances) withObject:self afterDelay:randomRequestInterval];
 }
 
+- (void)requestHandshake {
+    [self requestHandshake:handshakeVersion];
+}
+
 - (void)requestHandshake:(int)version {
+    
+    NSLog( @"requestHandshake with version %i", version );
+    
+    handshakeVersion = version;
     
     NSURL *url;
     
@@ -148,6 +159,11 @@
 }
 
 - (void)handshakeRequestDidFail:(ASIHTTPRequest *)request {
+    
+    if ( ++numHandshakeFailures < maxHandshakeFailures )
+        [self performSelector:@selector(requestHandshake) withObject:self afterDelay:60.0];
+    
+    NSLog( @"handshake fail #%i", numHandshakeFailures );
     
 }
 
@@ -192,6 +208,17 @@
     [self performSelector:@selector(requestDancesSince) withObject:self afterDelay:recentRequestInterval];
 }
 
+- (void)loadOfflineData {
+    NSString *loadPath = @"../data/db.info";
+    NSData *offlineData = [NSData dataWithContentsOfURL:[NSURL URLWithString:loadPath relativeToURL:[[NSBundle mainBundle] bundleURL]]];
+    
+    NSError *error;
+    NSDictionary *dances = [[CJSONDeserializer deserializer] deserialize:offlineData error:&error];
+    
+    [self processDanceInfos:[dances valueForKey:@"recent"] thatAreNew:NO andAreRandom:NO];
+    [self processDanceInfos:[dances valueForKey:@"random"] thatAreNew:NO andAreRandom:YES];
+}
+
 - (void)requestInitial:(int)numRecent withRandom:(int)numRandom {
     NSLog( @"requestInitial: %i withRandom: %i", numRecent, numRandom );
     
@@ -221,6 +248,9 @@
     NSLog( @"initialRequestDidFinish" );
     
     NSError *error;
+    NSString  *savePath = @"../data/db.info";
+    [[request responseData] writeToURL:[NSURL URLWithString:savePath relativeToURL:[[NSBundle mainBundle] bundleURL]] atomically:NO];
+    
     NSDictionary *dances = [[CJSONDeserializer deserializer] deserialize:[request responseData] error:&error];
     
     NSLog( @"recent dances to process: %i", [[dances valueForKey:@"recent"] count] );

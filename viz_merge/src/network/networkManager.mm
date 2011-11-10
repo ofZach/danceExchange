@@ -17,7 +17,6 @@ void networkManager::setup(){
     [dbHelper setRandomRequestInterval:5.0];
     [dbHelper setHeroku:YES];
     [dbHelper setNumRandomToRequest:5];
-//    [dbHelper requestRecentDances:300];
     isRequestingRecentDances = false;
     isRequestingHandshake = false;
     isRequestingInitialDances = false;
@@ -30,6 +29,10 @@ void networkManager::requestLargeVideo( danceVideo *dv ) {
 void networkManager::requestHandshake( int version ) {
     [dbHelper requestHandshake:version];
     isRequestingHandshake = true;
+}
+
+void networkManager::loadOfflineData() {
+    [dbHelper loadOfflineData];
 }
 
 void networkManager::update(){

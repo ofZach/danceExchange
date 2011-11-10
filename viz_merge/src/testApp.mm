@@ -54,6 +54,7 @@ void testApp::setup() {
 	NM.dpManager = &dpManager;
 	NM.setup();
     NM.requestHandshake( VERSION_NUMBER );
+//    NM.loadOfflineData();
 	
 	LM.setup();
 	BM.setup();

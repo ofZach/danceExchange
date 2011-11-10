@@ -18,6 +18,7 @@ class networkManager {
         void requestLargeVideo( danceVideo *dv );
         void requestHandshake( int version );
         void requestRandomDances( int num );
+        void loadOfflineData();
 	
 		DBHelper *dbHelper;
 		DPManager * dpManager;

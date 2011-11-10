@@ -21,12 +21,17 @@ void testApp::setup(){
     previewView = 0;
     emailView = 0;
     chosenPreviewView = 0;
+    
+    
     tapView = new TapView();
     ofAddListener(tapView->startCaptureEvent, this, &testApp::startCapturing);
     
     tradeGothic.loadFont( "fonts/TradeGothicLTStd-BdCn20.otf", 200, true, false, true );
     tradeGothicSmall.loadFont( "fonts/TradeGothicLTStd-BdCn20.otf", 50 );
 //    tradeGothicSmall.setLetterSpacing(.8);
+    
+    warningMessage = "WARNING: YOU CONSENT TO HAVE YOUR\nPICTURE TAKEN AND UPLOADED TO\nDANCE-EXCHANGE.NET";
+    warningView = new WarningView( tradeGothic, warningMessage );
     
     camWidth = 640;
     camHeight = 480;
@@ -167,7 +172,11 @@ void testApp::draw(){
 //    grabber.draw( xOffset, 0, aspectWidth, ofGetHeight() );
     grabber.draw( xOffset + aspectWidth, 0, -aspectWidth, ofGetHeight() );
     
-    if ( tapView ) {
+    if ( warningView ) {
+        warningView->draw();
+        drawInstructions( "PRESS ANY KEY TO PROCEED" );
+    }
+    else if ( tapView ) {
         tapView->draw();
         if ( !tapView->isCountingDown && !tapView->finishedCountdown ) {
             drawInstructions( "TAP SPACE BAR TO THE BEAT OR C TO JUST START" );
@@ -621,6 +630,7 @@ void testApp::destroyPreview() {
     uploadMessage = "";
     tapView->reset();
     
+    warningView = new WarningView( tradeGothic, warningMessage );
 }
 
 void testApp::keyPressed(int key){
@@ -632,9 +642,17 @@ void testApp::keyPressed(int key){
 	
     if ( emailView ) return;
     
+    if ( warningView ) {
+        
+        delete warningView;
+        warningView = 0;
+        return;
+    }
+    
     if ( key == 'f' || key == 'F' ) {
         ofToggleFullscreen();
     }
+    
     
     // if the preview view is active, we handle things here differently
     if ( previewViews.size() > 0 && !isUploading ) {

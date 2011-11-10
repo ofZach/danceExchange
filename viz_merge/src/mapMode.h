@@ -106,7 +106,7 @@ public:
 	
 	danceVideo * dvForZoom;
 	
-	
+	bool bHadVideosAtStart;
 	ofRectangle								mapRect;
 	
 	void pickRandom();

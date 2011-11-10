@@ -20,7 +20,7 @@ void testApp::setup() {
     frustumHelp.setup( nearClip, farClip, fov, ofGetWidth()/(float)ofGetHeight() );
     
     cam.cacheMatrices();
-    
+    ofHideCursor();
     ofEnableSmoothing();
     ofDisableArbTex();
     ofSetVerticalSync( true );
@@ -60,10 +60,12 @@ void testApp::setup() {
 	MM.setup();
 	BRSTM.setup();
 	
-	scenes.push_back(sceneAndDuration(STARFIELD_MODE,12));
-	scenes.push_back(sceneAndDuration(BRAND_MODE,12));
-	scenes.push_back(sceneAndDuration(MAP_MODE,5));
-	scenes.push_back(sceneAndDuration(BURST_MODE,5));
+	scenes.push_back(sceneAndDuration(STARFIELD_MODE,32));
+	scenes.push_back(sceneAndDuration(BRAND_MODE,15));
+	scenes.push_back(sceneAndDuration(MAP_MODE,40));
+	scenes.push_back(sceneAndDuration(BRAND_MODE,15));
+	scenes.push_back(sceneAndDuration(BURST_MODE,24));
+	scenes.push_back(sceneAndDuration(BRAND_MODE,15));
 	for (int i = 0; i < scenes.size(); i++){
 		totalTime += scenes[i].duration;
 	}
@@ -75,7 +77,10 @@ void testApp::setup() {
 int lastMode = -1;
 void testApp::update(){
     
-	float t = ofGetElapsedTimef();
+	float t = 0;
+	if (dvManager.danceVideos.size() > 0){
+		t = ofGetElapsedTimef();
+	}
 	while (t > totalTime){
 		t -= totalTime;	
 	}
@@ -174,7 +179,10 @@ void testApp::draw(){
     glDisable( GL_DEPTH_TEST );
     ofSetColor( 255, 255, 255 );
     
-	ofDrawBitmapString( "fps: "+ofToString(ofGetFrameRate(),2) + "\nnum particles: " + ofToString(dpManager.dpVector.size(), 2), 10, ofGetHeight() - 40 );
+	if (dpManager.dpVector.size() == 0){
+		ofDrawBitmapString("no videos loaded yet", 10, ofGetHeight() - 40 );
+	}
+	//ofDrawBitmapString( "fps: "+ofToString(ofGetFrameRate(),2) + "\nnum particles: " + ofToString(dpManager.dpVector.size(), 2), 10, ofGetHeight() - 40 );
     
     if ( drawTextures ) {
         for ( int i = 0; i < dvManager.textures.size(); i++ ) {

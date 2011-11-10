@@ -143,5 +143,5 @@ public:
 	
 	bool bHitPause;
 	float pauseTime;
-	
+	bool bHadVideosAtStart;
 };

@@ -12,7 +12,14 @@ void burstMode::start(){
 	nFrames = DVM->danceVideos.size() * 24;
 	frameCount = 0;
 	bFirstFrame = true;
-	timeTotal = 0;
+	
+	
+	nFrames = DVM->danceVideos.size() * 24;
+	float frameLength = 0.1f; // 100 millis?  faster ?
+	float totalLength = nFrames * frameLength;
+	
+	
+	timeTotal = ofRandom(0,totalLength);
 	energy = 0;
 	startTime = ofGetElapsedTimef();
 	

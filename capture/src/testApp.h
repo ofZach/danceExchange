@@ -9,7 +9,7 @@
 #include "ofxQtVideoSaver.h"
 #include "ofxTween.h"
 #include "citySelector.h"
-#include "WarningView.h"
+//#include "WarningView.h"
 
 
 
@@ -27,8 +27,8 @@ class testApp : public ofBaseApp{
         vector<PreviewView*> previewViews;
         vector<PreviewView*> oldPreviews;
     
-        string warningMessage;
-        WarningView *warningView;
+//        string warningMessage;
+//        WarningView *warningView;
         PreviewView *chosenPreviewView;
         TapView *tapView;
         EmailView *emailView;

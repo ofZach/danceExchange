@@ -7,6 +7,8 @@ EmailView::EmailView() {
     tradeGothic.loadFont( "fonts/TradeGothicLTStd-BdCn20.otf", 100 );
     emailAddress = "";
     
+    warningImage.loadImage( "images/warning.png" );
+    
 	utf8_helper.setup();
 	bDisregardKeys = false;
 }
@@ -98,7 +100,7 @@ void EmailView::draw() {
     
     ofSetColor( 255, 255, 255, 200 );
     ofPushMatrix();
-    ofTranslate( ofGetWidth()/2, ofGetHeight()/2 );
+    ofTranslate( ofGetWidth()/2, ofGetHeight() * .8 );
     int theWidth = aspectWidth * .75;
     int theHeight = ofGetHeight() * .2;
     ofRect( -theWidth/2, -theHeight/2, theWidth, theHeight );
@@ -120,5 +122,22 @@ void EmailView::draw() {
     ofSetColor( 0, 0, 0 );
     tradeGothic.drawString( utf8_helper.getString(), 0, 0 );
     
+    
     ofPopMatrix();
+    
+    ofPushMatrix();
+    
+    float warningScale = targetWidth / (float)warningImage.width;
+    ofTranslate(xOffset + (aspectWidth - targetWidth) * .5, ofGetHeight() * .25);
+    ofScale( warningScale, warningScale );
+    
+    ofSetColor( 0, 0, 0);
+    warningImage.draw( 3, 3 );
+    
+    ofSetColor( 255, 255, 255 );
+    warningImage.draw( 0, 0 );
+    
+    ofPopMatrix();
+    
+    
 }

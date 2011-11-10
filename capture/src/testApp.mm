@@ -30,8 +30,8 @@ void testApp::setup(){
     tradeGothicSmall.loadFont( "fonts/TradeGothicLTStd-BdCn20.otf", 50 );
 //    tradeGothicSmall.setLetterSpacing(.8);
     
-    warningMessage = "WARNING: YOU CONSENT TO HAVE YOUR\nPICTURE TAKEN AND UPLOADED TO\nDANCE-EXCHANGE.NET";
-    warningView = new WarningView( tradeGothic, warningMessage );
+//    warningMessage = "WARNING: YOU CONSENT TO HAVE YOUR\nPICTURE TAKEN AND UPLOADED TO\nDANCE-EXCHANGE.NET";
+//    warningView = new WarningView( tradeGothic, warningMessage );
     
     camWidth = 640;
     camHeight = 480;
@@ -172,11 +172,12 @@ void testApp::draw(){
 //    grabber.draw( xOffset, 0, aspectWidth, ofGetHeight() );
     grabber.draw( xOffset + aspectWidth, 0, -aspectWidth, ofGetHeight() );
     
-    if ( warningView ) {
-        warningView->draw();
-        drawInstructions( "PRESS ANY KEY TO PROCEED" );
-    }
-    else if ( tapView ) {
+//    if ( warningView ) {
+//        warningView->draw();
+//        drawInstructions( "PRESS ANY KEY TO PROCEED" );
+//    }
+//    else
+    if ( tapView ) {
         tapView->draw();
         if ( !tapView->isCountingDown && !tapView->finishedCountdown ) {
             drawInstructions( "TAP SPACE BAR TO THE BEAT OR C TO JUST START" );
@@ -358,19 +359,19 @@ void testApp::drawUploadMessage( string message ) {
 //    float bgHeight = ( bgWidth / (float)rect.width ) * (float)rect.height;
     float bgHeight = rect.height * 1.5;
     ofSetColor( 226, 31, 42 );
-    ofRect( xOffset + (aspectWidth-bgWidth)*.5, ofGetHeight() * .2 - (bgHeight-rect.height)*.5, bgWidth, bgHeight );
+    ofRect( xOffset + (aspectWidth-bgWidth)*.5, ofGetHeight() * .1 - (bgHeight-rect.height)*.5, bgWidth, bgHeight );
     
     
     ofSetColor( 0, 0, 0 );
     ofPushMatrix();
-    ofTranslate( xOffset + (aspectWidth-targetWidth)*.5 - rect.x, -rect.y + ofGetHeight() * .2 );
+    ofTranslate( xOffset + (aspectWidth-targetWidth)*.5 - rect.x, -rect.y + ofGetHeight() * .1 );
     ofScale( scaleFactor, scaleFactor );
     tradeGothic.drawString( message, 0, 0 );
     ofPopMatrix();
     
     ofSetColor( 255, 255, 255 );
     ofPushMatrix();
-    ofTranslate( xOffset + (aspectWidth-targetWidth)*.5 - rect.x - 5, -rect.y - 5 + ofGetHeight() * .2 );
+    ofTranslate( xOffset + (aspectWidth-targetWidth)*.5 - rect.x - 5, -rect.y - 5 + ofGetHeight() * .1 );
     ofScale( scaleFactor, scaleFactor );
     tradeGothic.drawString( message, 0, 0 );
     ofPopMatrix();
@@ -630,7 +631,7 @@ void testApp::destroyPreview() {
     uploadMessage = "";
     tapView->reset();
     
-    warningView = new WarningView( tradeGothic, warningMessage );
+//    warningView = new WarningView( tradeGothic, warningMessage );
 }
 
 void testApp::keyPressed(int key){
@@ -642,12 +643,12 @@ void testApp::keyPressed(int key){
 	
     if ( emailView ) return;
     
-    if ( warningView ) {
-        
-        delete warningView;
-        warningView = 0;
-        return;
-    }
+//    if ( warningView ) {
+//        
+//        delete warningView;
+//        warningView = 0;
+//        return;
+//    }
     
     if ( key == 'f' || key == 'F' ) {
         ofToggleFullscreen();

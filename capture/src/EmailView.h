@@ -13,6 +13,8 @@ public:
     ofTrueTypeFont tradeGothic;
     string emailAddress;
     
+    ofImage warningImage;
+    
     ofEvent<string> emailAddressEnteredEvent;
     ofEvent<string> emailAddressSkippedEvent;
     

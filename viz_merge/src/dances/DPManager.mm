@@ -27,12 +27,8 @@ void DPManager::update( int deltaMillis ) {
     if ( globalScaleTween.isRunning() ) {
         globalScale = globalScaleTween.update();    
         
-<<<<<<< HEAD
        // cout << "globalScale: " << globalScale << endl;
-=======
-//        cout << "globalScale: " << globalScale << endl;
->>>>>>> 1892c416c5589f4584cc3ea6c5544fa0c5592493
-    }
+  }
     
     modeChangeTween.update();
     
